@@ -10,5 +10,4 @@ public class DeliveryPlanningApplication {
 		System.out.println("Start app!");
 		SpringApplication.run(DeliveryPlanningApplication.class, args);
 	}
-
 }
