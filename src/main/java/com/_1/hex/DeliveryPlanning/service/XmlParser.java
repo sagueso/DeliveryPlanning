@@ -1,4 +1,4 @@
-package com._1.hex.DeliveryPlanning.utils;
+package com._1.hex.DeliveryPlanning.service;
 
 
 import com._1.hex.DeliveryPlanning.model.Intersection;
