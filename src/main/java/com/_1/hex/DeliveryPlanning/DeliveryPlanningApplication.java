@@ -8,10 +8,11 @@ import org.springframework.context.ApplicationContext;
 public class DeliveryPlanningApplication {
 
 	public static void main(String[] args) {
+
 		ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
 		// Retrieve LanchApp bean from Spring context and call lanch()
 		LanchApp lanchApp = context.getBean(LanchApp.class);
 		lanchApp.lanch();
-	}
 
+	}
 }
