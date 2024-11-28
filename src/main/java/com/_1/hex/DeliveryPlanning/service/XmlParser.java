@@ -1,8 +1,8 @@
-package com._1.hex.DeliveryPlanning.utils;
+package com._1.hex.DeliveryPlanning.service;
 
 
-import com._1.hex.DeliveryPlanning.domain.Intersection;
-import com._1.hex.DeliveryPlanning.domain.Street;
+import com._1.hex.DeliveryPlanning.model.Intersection;
+import com._1.hex.DeliveryPlanning.model.Street;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;

@@ -1,4 +1,4 @@
-package com._1.hex.DeliveryPlanning.domain;
+package com._1.hex.DeliveryPlanning.model;
 
 public class Street {
     Integer origin;
