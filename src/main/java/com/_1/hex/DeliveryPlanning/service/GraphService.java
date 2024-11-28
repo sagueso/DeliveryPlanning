@@ -36,7 +36,6 @@ public class GraphService {
         return graph.containsEdge(nodeSource, nodeDestination);
     }
 
-
     // Add edge with weight
         public void computeTheShortestPath(Integer source, Integer target) {
         // Compute the shortest path from vertex 2 to vertex 5
