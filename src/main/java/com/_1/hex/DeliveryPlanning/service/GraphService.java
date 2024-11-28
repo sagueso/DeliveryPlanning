@@ -43,6 +43,5 @@ public class GraphService {
         DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
         System.out.println("Shortest path from source to target: " + dijkstra.getPath(Math.toIntExact(source), Math.toIntExact(target)));
         System.out.println("Shortest path weight: " + dijkstra.getPathWeight(Math.toIntExact(source), Math.toIntExact(target)));
-
     }
 }
