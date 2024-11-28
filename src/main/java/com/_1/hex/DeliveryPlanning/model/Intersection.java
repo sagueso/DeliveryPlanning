@@ -1,17 +1,17 @@
 package com._1.hex.DeliveryPlanning.model;
 
 public class Intersection {
-    protected Integer id;
+    protected Long id;
     protected Double latitude;
     protected Double longitude;
 
-    public Intersection(Integer id, Double latitude, Double longitude) {
+    public Intersection(Long id, Double latitude, Double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

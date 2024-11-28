@@ -1,23 +1,23 @@
 package com._1.hex.DeliveryPlanning.model;
 
 public class Street {
-    Integer origin;
-    Integer destination;
+    Long origin;
+    Long destination;
     String name;
     Double length;
 
-    public Street(Integer origin, Integer destination, String name, Double length) {
+    public Street(Long origin, Long destination, String name, Double length) {
         this.origin = origin;
         this.destination = destination;
         this.name = name;
         this.length = length;
     }
 
-    public Integer getOrigin() {
+    public Long getOrigin() {
         return origin;
     }
 
-    public Integer getDestination() {
+    public Long getDestination() {
         return destination;
     }
 
