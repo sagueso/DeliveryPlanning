@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.sql.SQLOutput;
+
 @SpringBootApplication
 public class DeliveryPlanningApplication {
 
@@ -11,8 +13,14 @@ public class DeliveryPlanningApplication {
 
 		ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
 		// Retrieve LanchApp bean from Spring context and call lanch()
-		LanchApp lanchApp = context.getBean(LanchApp.class);
-		lanchApp.lanch();
-
+		//LanchApp lanchApp = context.getBean(LanchApp.class);
+		//lanchApp.lanch();
+		Mvp mvp = context.getBean(Mvp.class);
+		try {
+			mvp.launch();
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }

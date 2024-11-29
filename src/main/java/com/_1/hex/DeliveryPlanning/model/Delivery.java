@@ -5,10 +5,10 @@ public class Delivery {
     Intersection destinationPoint;
     Integer pickupDuration;
 
-    public Delivery(Intersection startPoint, Intersection destinationPoint, Integer pickupDuration) {
+    public Delivery(Intersection startPoint, Intersection destinationPoint/*, Integer pickupDuration*/) {
         this.startPoint = startPoint;
         this.destinationPoint = destinationPoint;
-        this.pickupDuration = pickupDuration;
+        //this.pickupDuration = pickupDuration;
     }
 
 
@@ -16,5 +16,5 @@ public class Delivery {
 
     public Intersection getDestinationPoint() {return destinationPoint; }
 
-    public Integer getPickupDuration() {return pickupDuration; }
+    //public Integer getPickupDuration() {return pickupDuration; }
 }

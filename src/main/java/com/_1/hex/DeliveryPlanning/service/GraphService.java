@@ -5,6 +5,7 @@ import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.alg.util.Pair;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,13 @@ public class GraphService {
     }
 
     // Add edge with weight
-        public List<Integer> computeTheShortestPath(Intersection source, Intersection target) {
+        public Pair<List<Integer>, Double> computeTheShortestPath(Intersection source, Intersection target) {
         // Compute the shortest path from vertex 2 to vertex 5
         DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
         GraphPath<Integer, DefaultWeightedEdge> graphPath =  dijkstra.getPath(source.getInternalId(), target.getInternalId());
         //System.out.println(graphPath);
-        System.out.println("Distance : "+dijkstra.getPathWeight(source.getInternalId(), Math.toIntExact(target.getInternalId())));
-        return graphPath.getVertexList();
+        Double distance = dijkstra.getPathWeight(source.getInternalId(), target.getInternalId());
+        return Pair.of(graphPath.getVertexList(),distance);
 
     }
 }

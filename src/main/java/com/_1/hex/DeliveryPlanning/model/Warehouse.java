@@ -8,6 +8,11 @@ public class Warehouse extends Intersection {
         this.name = name;
     }
 
+    public Warehouse(Intersection intersection, String name) {
+        super(intersection.getInternalId(), intersection.getId(), intersection.getLatitude(), intersection.getLongitude());
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
