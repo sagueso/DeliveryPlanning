@@ -31,6 +31,7 @@ public class LanchApp {
             Intersection destination = map.getIntersectionByLongId(25173820L);
             List<Integer> shortestPath = graphService.computeTheShortestPath(source,destination);
             List<Long> shortestPathLong = new ArrayList<>();
+
             for(Integer i : shortestPath) {
                 shortestPathLong.add( map.getIntersectionById(i).getId() ) ;
             }
