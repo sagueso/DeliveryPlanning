@@ -48,8 +48,8 @@ public class StreetMap {
         return intersections.get(intersectionsIds.get(id));
     }
 
-    public Intersection getIntersectionById(Integer internalId) {
-        return intersections.get(internalId);
+    public Intersection getIntersectionById(Integer id) {
+        return intersections.get(id);
     }
 
 }
