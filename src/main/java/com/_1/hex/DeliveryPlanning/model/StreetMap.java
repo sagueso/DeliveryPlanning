@@ -4,9 +4,9 @@ import java.util.*;
 
 public class StreetMap {
     private String name;
-    Map<Integer,Intersection> intersections;
-    Map<Long, Integer> intersectionsIds;
-    List<Street> streets;
+    private Map<Integer,Intersection> intersections;
+    private Map<Long, Integer> intersectionsIds;
+    private List<Street> streets;
 
     public StreetMap(String name) {
         this.name = name;
@@ -15,11 +15,18 @@ public class StreetMap {
         intersectionsIds = new HashMap<Long, Integer>();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Map<Integer, Intersection> getIntersections() {
+        return intersections;
+    }
+
     public List<Integer> getIntersectionsIds() {
         Set<Integer> keySet = intersections.keySet();
         return new ArrayList<>(keySet);
     }
-
 
     public List<Street> getStreets() {
         return streets;
@@ -37,11 +44,12 @@ public class StreetMap {
         streets.add(street);
     }
 
-    public Intersection getIntersectionByLongId(long id) {
+    public Intersection getIntersectionById(Long id) {
         return intersections.get(intersectionsIds.get(id));
     }
 
     public Intersection getIntersectionById(Integer id) {
         return intersections.get(id);
     }
+
 }

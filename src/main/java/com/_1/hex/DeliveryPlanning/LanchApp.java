@@ -36,6 +36,7 @@ public class LanchApp {
                 shortestPathLong.add( map.getIntersectionById(i).getId() ) ;
             }
             System.out.println("Shortest Path : "+shortestPathLong);
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (XMLStreamException e) {
