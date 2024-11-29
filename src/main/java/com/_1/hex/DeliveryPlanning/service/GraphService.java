@@ -1,5 +1,8 @@
 package com._1.hex.DeliveryPlanning.service;
 
+import com._1.hex.DeliveryPlanning.model.Intersection;
+import com._1.hex.DeliveryPlanning.model.Street;
+import com._1.hex.DeliveryPlanning.model.StreetMap;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -16,31 +19,24 @@ public class GraphService {
     }
 
 
-    public void  addNodes(Integer nodeId) {
+    public void  addMap(StreetMap maps) {
         // Add vertices
-        graph.addVertex(nodeId);
+        for(Integer i : maps.getIntersectionsIds()){
+            graph.addVertex(i);
+        }
+        // Add edges
+        for(Street street: maps.getStreets()){
+            DefaultWeightedEdge edge = graph.addEdge(street.getOrigin().getInternalId(), street.getDestination().getInternalId());
+            graph.setEdgeWeight(edge, street.getLength());
+        }
 
-    }
-    public void  addEdge(Integer nodeDep, Integer nodeArr, Double edgeLenth) {
-        // Add vertices
-        DefaultWeightedEdge edge = graph.addEdge(Math.toIntExact(nodeDep), Math.toIntExact(nodeArr));
-        graph.setEdgeWeight(edge, edgeLenth);
-    }
-    public boolean  checkIfNodeExists(Integer node) {
-        // Add vertices
-        return graph.containsVertex(node);
-    }
-
-    public boolean  checkIfEdgeExists(Integer nodeSource,Integer nodeDestination) {
-        // Add vertices
-        return graph.containsEdge(nodeSource, nodeDestination);
     }
 
     // Add edge with weight
-        public void computeTheShortestPath(Integer source, Integer target) {
+        public void computeTheShortestPath(Intersection source, Intersection target) {
         // Compute the shortest path from vertex 2 to vertex 5
         DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
-        System.out.println("Shortest path from source to target: " + dijkstra.getPath(Math.toIntExact(source), Math.toIntExact(target)));
-        System.out.println("Shortest path weight: " + dijkstra.getPathWeight(Math.toIntExact(source), Math.toIntExact(target)));
+        System.out.println("Shortest path from source to target: " + dijkstra.getPath(source.getInternalId(), target.getInternalId()));
+        System.out.println("Shortest path weight: " + dijkstra.getPathWeight(source.getInternalId(), Math.toIntExact(target.getInternalId())));
     }
 }

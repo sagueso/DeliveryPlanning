@@ -1,9 +1,6 @@
 package com._1.hex.DeliveryPlanning.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StreetMap {
     private String name;
@@ -18,6 +15,16 @@ public class StreetMap {
         intersectionsIds = new HashMap<Long, Integer>();
     }
 
+    public List<Integer> getIntersectionsIds() {
+        Set<Integer> keySet = intersections.keySet();
+        return new ArrayList<>(keySet);
+    }
+
+
+    public List<Street> getStreets() {
+        return streets;
+    }
+
     public void addIntersection(Intersection intersection) {
         intersections.put(intersection.getInternalId(), intersection);
         intersectionsIds.put(intersection.getId(), intersection.getInternalId());
@@ -27,6 +34,10 @@ public class StreetMap {
         Intersection origin = intersections.get(intersectionsIds.get(originId));
         Intersection destination = intersections.get(intersectionsIds.get(destinationId));
         Street street = new Street(origin, destination, name, length);
-        streets.add(street.hashCode(), street);
+        streets.add(street);
+    }
+
+    public Intersection getIntersectionByLongId(long id) {
+        return intersections.get(intersectionsIds.get(id));
     }
 }
