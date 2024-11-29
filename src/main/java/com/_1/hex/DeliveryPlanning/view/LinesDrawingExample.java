@@ -40,8 +40,8 @@ public class LinesDrawingExample extends JFrame {
     void drawLines(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        Intersection p1 = new Intersection(123L, 45.75, 105.26);
-        Intersection p2 = new Intersection(124L, 409.75, 105.56);
+        Intersection p1 = new Intersection(8,123L, 45.75, 105.26);
+        Intersection p2 = new Intersection(9,124L, 409.75, 105.56);
 
         Double latitude1 = p1.getLatitude();
         Double latitude2 = p2.getLatitude();
@@ -66,12 +66,12 @@ public class LinesDrawingExample extends JFrame {
     public void paint(Graphics g) {
         super.paint(g);
         //drawLines(g);
-        Intersection p1 = new Intersection(123L, 55.75, 105.26);
-        Intersection p2 = new Intersection(124L, 49.75, 105.56);
-        Intersection p3 = new Intersection(125L, 41.85, 106.26);
-        Intersection p4 = new Intersection(126L, 43.15, 103.26);
-        Intersection p5 = new Intersection(127L, 46.75, 153.26);
-        Intersection p6 = new Intersection(128L, 45.25, 158.26);
+        Intersection p1 = new Intersection(1,123L, 55.75, 105.26);
+        Intersection p2 = new Intersection(2,124L, 49.75, 105.56);
+        Intersection p3 = new Intersection(3,125L, 41.85, 106.26);
+        Intersection p4 = new Intersection(4,126L, 43.15, 103.26);
+        Intersection p5 = new Intersection(5,127L, 46.75, 153.26);
+        Intersection p6 = new Intersection(6,128L, 45.25, 158.26);
         Street l1 = new Street(p1, p2, "lala", 155.0);
         Street l2 = new Street(p3, p2, "lala", 155.0);
         Street l3 = new Street(p5, p6, "lala", 155.0);
