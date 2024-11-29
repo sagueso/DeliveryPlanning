@@ -43,7 +43,7 @@ public class StreetMap {
         Intersection origin = intersections.get(intersectionsIds.get(originId));
         Intersection destination = intersections.get(intersectionsIds.get(destinationId));
         Street street = new Street(origin, destination, name, length);
-        streets.add(street.hashCode(), street);
+        streets.add(street);
     }
 
     public Intersection getIntersectionById(Long id) {
