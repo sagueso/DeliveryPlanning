@@ -7,15 +7,31 @@ import java.util.Map;
 
 public class StreetMap {
     private String name;
-    Map<Integer,Intersection> intersections;
-    Map<Long, Integer> intersectionsIds;
-    List<Street> streets;
+    private Map<Integer,Intersection> intersections;
+    private Map<Long, Integer> intersectionsIds;
+    private List<Street> streets;
 
     public StreetMap(String name) {
         this.name = name;
         intersections = new HashMap<Integer, Intersection>();
         streets = new ArrayList<Street>();
         intersectionsIds = new HashMap<Long, Integer>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Map<Integer, Intersection> getIntersections() {
+        return intersections;
+    }
+
+    public Map<Long, Integer> getIntersectionsIds() {
+        return intersectionsIds;
+    }
+
+    public List<Street> getStreets() {
+        return streets;
     }
 
     public void addIntersection(Intersection intersection) {
@@ -29,4 +45,13 @@ public class StreetMap {
         Street street = new Street(origin, destination, name, length);
         streets.add(street.hashCode(), street);
     }
+
+    public Intersection getIntersectionById(Long id) {
+        return intersections.get(intersectionsIds.get(id));
+    }
+
+    public Intersection getIntersectionById(Integer internalId) {
+        return intersections.get(internalId);
+    }
+
 }
