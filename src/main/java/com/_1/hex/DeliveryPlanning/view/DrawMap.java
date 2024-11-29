@@ -4,38 +4,84 @@ package com._1.hex.DeliveryPlanning.view;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com._1.hex.DeliveryPlanning.LanchApp;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Street;
+import com._1.hex.DeliveryPlanning.model.StreetMap;
+import com._1.hex.DeliveryPlanning.service.GraphService;
+import com._1.hex.DeliveryPlanning.service.XmlParser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * This program demonstrates how to draw lines using Graphics2D object.
  * @author www.codejava.net
  *
  */
+
 public class DrawMap extends JFrame {
 
-    public DrawMap() {
-        super("Lines Drawing Demo");
+    StreetMap streetMap;
 
+    public DrawMap() {
+        super("Map");
         setSize(480, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
+    void defineStreetMap (StreetMap streetMap) {
+        this.streetMap = streetMap;
+    }
 
-    void readLines (List<Street> l, Graphics g) {
+    List<Double> findMinimum(List<Street> streets) {
+        List<Double> minimum = new ArrayList<>();
+        Double minlat = Double.MAX_VALUE;
+        Double minlon = Double.MAX_VALUE;
+        for (Street street : streets) {
+            if ((street.getOrigin().getLatitude()<minlat) || (street.getDestination().getLatitude()<minlat)) {
+                if (street.getOrigin().getLatitude()<street.getDestination().getLatitude()) {
+                    minlat = street.getOrigin().getLatitude();
+                }
+                else {
+                    minlat = street.getDestination().getLatitude();
+                }
+            }
+            if ((street.getOrigin().getLongitude()<minlon) || (street.getDestination().getLongitude()<minlon)) {
+                if (street.getOrigin().getLongitude()<street.getDestination().getLongitude()) {
+                    minlon = street.getOrigin().getLongitude();
+                }
+                else {
+                    minlon = street.getDestination().getLongitude();
+                }
+            }
+        }
+        minimum.add(minlat);
+        minimum.add(minlon);
+        return minimum;
+    }
+
+    void readLines (Graphics g) {
         Graphics2D g3d = (Graphics2D) g;
-        for (Street line : l) {
 
-            g3d.draw(new Line2D.Double(line.getOrigin().getLatitude(), line.getOrigin().getLongitude(), line.getDestination().getLatitude(), line.getDestination().getLongitude()));
+        List<Street> l = streetMap.getStreets();
+
+        for (Street line : l) {
+            System.out.println((line.getOrigin().getLatitude()-45)*100);
+            g3d.draw(new Line2D.Double((line.getOrigin().getLatitude()-45)*100, (line.getOrigin().getLongitude()-4.0)*100, (line.getDestination().getLatitude()-45)*100, (line.getDestination().getLongitude()-4.0)*100));
         }
 
     }
+    void sayHello(){}
 
     void drawLines(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
@@ -83,15 +129,19 @@ public class DrawMap extends JFrame {
         list.add(l3);
         list.add(l4);
         list.add(l5);
-        readLines (list, g);
+        //List<Street> list2= streetMap.getStreets();
+
+        readLines (g);
     }
 
+/*
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
+
             @Override
             public void run() {
-                new DrawMap().setVisible(true);
+                    new DrawMap().setVisible(true);
             }
         });
-    }
+    }*/
 }
