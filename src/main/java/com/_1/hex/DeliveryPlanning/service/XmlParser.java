@@ -3,6 +3,7 @@ package com._1.hex.DeliveryPlanning.service;
 
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Street;
+import com._1.hex.DeliveryPlanning.model.StreetMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,22 +29,14 @@ public class XmlParser {
     @Autowired
     GraphService graphService;
 
-    public Map<Long, Integer> getMapIds() {
-        return mapIds;
-    }
-
-    Map<Long,Integer> mapIds ;
-    int globalId;
-
     public XmlParser() {
-        this.mapIds = new HashMap<>();
-        this.globalId=1;
     }
 
 
-    public void parse(String xmlPath) throws FileNotFoundException, XMLStreamException {
-        List<Intersection> intersections = new ArrayList<Intersection>();
-        List<Street> streets = new ArrayList<Street>();
+    public StreetMap parse(String xmlPath) throws FileNotFoundException, XMLStreamException {
+
+        StreetMap map = new StreetMap(xmlPath);
+        Integer internalId = 0;
 
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileInputStream(xmlPath));
@@ -61,11 +54,11 @@ public class XmlParser {
                         Double latitude = lat == null? null : Double.parseDouble(lat.getValue());
                         Double longitude = lng == null? null : Double.parseDouble(lng.getValue());
 
-                        Intersection intersection = new Intersection(id, latitude, longitude);
-                        intersections.add(intersection);
-                        mapIds.put(id,globalId);
-                        graphService.addNodes(globalId);
-                        globalId++;
+
+                        Intersection intersection = new Intersection(internalId, id, latitude, longitude);
+                        internalId++;
+                        map.addIntersection(intersection);
+                        //graphService.addNodes(globalId);
                         break;
                     case "troncon":
                         Attribute dest = startElement.getAttributeByName(new QName("destination"));
@@ -78,9 +71,11 @@ public class XmlParser {
                         String name = nam == null? null : nam.getValue();
                         Long origin  = org == null? null : Long.parseLong(org.getValue());
 
-                        Street street = new Street(origin, destination, name, length);
-                        streets.add(street);
+                        map.addStreet(origin, destination, name, length);
+                        //Street street = new Street(origin, destination, name, length);
+                        //streets.add(street);
 
+                        /*
                         Integer idOrigin  = mapIds.get(origin);
                         Integer idDest  = mapIds.get(destination);
                         if (idOrigin!=null && idDest!=null && length!=null && length>0) {
@@ -95,10 +90,11 @@ public class XmlParser {
                             System.out.println("is there such a case ?");
                         }
                         break;
+                        */
                 }
             }
         }
-        return;
+        return map;
     }
 }
 
