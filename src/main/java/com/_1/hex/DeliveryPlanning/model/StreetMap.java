@@ -1,12 +1,15 @@
 package com._1.hex.DeliveryPlanning.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StreetMap {
     private String name;
-    Map<Integer,Intersection> intersections;
-    Map<Long, Integer> intersectionsIds;
-    List<Street> streets;
+    private Map<Integer,Intersection> intersections;
+    private Map<Long, Integer> intersectionsIds;
+    private List<Street> streets;
 
     public StreetMap(String name) {
         this.name = name;
@@ -15,11 +18,17 @@ public class StreetMap {
         intersectionsIds = new HashMap<Long, Integer>();
     }
 
-    public List<Integer> getIntersectionsIds() {
-        Set<Integer> keySet = intersections.keySet();
-        return new ArrayList<>(keySet);
+    public String getName() {
+        return name;
     }
 
+    public Map<Integer, Intersection> getIntersections() {
+        return intersections;
+    }
+
+    public Map<Long, Integer> getIntersectionsIds() {
+        return intersectionsIds;
+    }
 
     public List<Street> getStreets() {
         return streets;
@@ -37,7 +46,12 @@ public class StreetMap {
         streets.add(street);
     }
 
-    public Intersection getIntersectionByLongId(long id) {
+    public Intersection getIntersectionById(Long id) {
         return intersections.get(intersectionsIds.get(id));
     }
+
+    public Intersection getIntersectionById(Integer internalId) {
+        return intersections.get(internalId);
+    }
+
 }
