@@ -1,9 +1,6 @@
 package com._1.hex.DeliveryPlanning.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StreetMap {
     private String name;
@@ -26,8 +23,9 @@ public class StreetMap {
         return intersections;
     }
 
-    public Map<Long, Integer> getIntersectionsIds() {
-        return intersectionsIds;
+    public List<Integer> getIntersectionsIds() {
+        Set<Integer> keySet = intersections.keySet();
+        return new ArrayList<>(keySet);
     }
 
     public List<Street> getStreets() {

@@ -24,8 +24,9 @@ public class LanchApp {
         String xmlPath = "src/main/java/com/_1/hex/DeliveryPlanning/utils/petitPlan.xml";
         try {
             StreetMap map = xmlParser.parse(xmlPath);
-            Intersection source = map.getIntersectionByLongId(208769039L);
-            Intersection destination = map.getIntersectionByLongId(208769039L);
+            graphService.addMap(map);
+            Intersection source = map.getIntersectionById(208769039L);
+            Intersection destination = map.getIntersectionById(25173820L);
             //Integer source = Intersection(208769039L);
             //Integer destination = dict.get(25173820L);
             //System.out.println(source);
