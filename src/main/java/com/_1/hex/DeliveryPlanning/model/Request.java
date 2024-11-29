@@ -10,5 +10,6 @@ public class Request {
         trip = new ArrayList<Delivery>();
     }
 
+
     public List<Delivery> getTrip() {return trip; }
 }
