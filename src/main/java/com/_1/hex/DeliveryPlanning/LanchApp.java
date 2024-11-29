@@ -27,8 +27,8 @@ public class LanchApp {
         try {
             StreetMap map = xmlParser.parse(xmlPath);
             graphService.addMap(map);
-            Intersection source = map.getIntersectionByLongId(208769039L);
-            Intersection destination = map.getIntersectionByLongId(25173820L);
+            Intersection source = map.getIntersectionById(208769039L);
+            Intersection destination = map.getIntersectionById(25173820L);
             List<Integer> shortestPath = graphService.computeTheShortestPath(source,destination);
             List<Long> shortestPathLong = new ArrayList<>();
 
