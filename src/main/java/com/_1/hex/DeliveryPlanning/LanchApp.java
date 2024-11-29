@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -24,17 +26,15 @@ public class LanchApp {
         String xmlPath = "src/main/java/com/_1/hex/DeliveryPlanning/utils/petitPlan.xml";
         try {
             StreetMap map = xmlParser.parse(xmlPath);
+            graphService.addMap(map);
             Intersection source = map.getIntersectionByLongId(208769039L);
-            Intersection destination = map.getIntersectionByLongId(208769039L);
-            //Integer source = Intersection(208769039L);
-            //Integer destination = dict.get(25173820L);
-            //System.out.println(source);
-            //System.out.println(destination);
-            //boolean test1 = graphService.checkIfNodeExists(source);
-            //boolean test2 = graphService.checkIfNodeExists(destination);
-            //boolean test3 = graphService.checkIfEdgeExists(source, destination);
-            graphService.computeTheShortestPath(source,destination);
-            int a = 1;
+            Intersection destination = map.getIntersectionByLongId(25173820L);
+            List<Integer> shortestPath = graphService.computeTheShortestPath(source,destination);
+            List<Long> shortestPathLong = new ArrayList<>();
+            for(Integer i : shortestPath) {
+                shortestPathLong.add( map.getIntersectionById(i).getId() ) ;
+            }
+            System.out.println("Shortest Path : "+shortestPathLong);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (XMLStreamException e) {

@@ -40,4 +40,8 @@ public class StreetMap {
     public Intersection getIntersectionByLongId(long id) {
         return intersections.get(intersectionsIds.get(id));
     }
+
+    public Intersection getIntersectionById(Integer id) {
+        return intersections.get(id);
+    }
 }
