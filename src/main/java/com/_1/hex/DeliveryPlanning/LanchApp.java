@@ -1,6 +1,7 @@
 package com._1.hex.DeliveryPlanning;
 
 import com._1.hex.DeliveryPlanning.model.Intersection;
+import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.XmlParser;
@@ -27,19 +28,9 @@ public class LanchApp {
         try {
             StreetMap map = xmlParser.parse(xmlPath);
             graphService.addMap(map);
-            Intersection source = map.getIntersectionById(208769039L);
-            Intersection destination = map.getIntersectionById(25173820L);
-            List<Integer> shortestPath = graphService.computeTheShortestPath(source,destination);
-            List<Long> shortestPathLong = new ArrayList<>();
-
-            for(Integer i : shortestPath) {
-                shortestPathLong.add( map.getIntersectionById(i).getId() ) ;
-            }
-            System.out.println("Shortest Path : "+shortestPathLong);
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
