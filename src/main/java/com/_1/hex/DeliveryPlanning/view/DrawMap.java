@@ -1,6 +1,7 @@
 package com._1.hex.DeliveryPlanning.view;
 
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
@@ -15,6 +16,7 @@ import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.XmlParser;
+import com._1.hex.DeliveryPlanning.view.DrawPoints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -69,6 +71,7 @@ public class DrawMap extends JFrame {
 
     void readLines (Graphics g) {
         Graphics2D g3d = (Graphics2D) g;
+        g3d.setColor(Color.black);
 
         List<Street> l = streetMap.getStreets();
         Map<Integer, Intersection> m = streetMap.getIntersections();
@@ -80,6 +83,12 @@ public class DrawMap extends JFrame {
             g3d.draw(new Line2D.Double((line.getOrigin().getLatitude()-minlat)*zoom/(maxlat-minlat), (line.getOrigin().getLongitude()-minlon)*zoom/(maxlon-minlon), (line.getDestination().getLatitude()-minlat)*zoom/(maxlat-minlat), (line.getDestination().getLongitude()-minlon)*zoom/(maxlon-minlon)));
         }
 
+    }
+
+    void drawPoints(Graphics g, Intersection point){
+        Graphics2D g2d = (Graphics2D) g;
+        DrawPoints drawPoints = new DrawPoints();
+        drawPoints.drawPoints(g2d, point);
     }
 
     void drawRoutes (Graphics g, List<Integer> route) {
@@ -115,7 +124,7 @@ public class DrawMap extends JFrame {
     public void paint(Graphics g) {
         super.paint(g);
         //drawLines(g);
-        Intersection p1 = new Intersection(1,123L, 55.75, 105.26);
+        Intersection p1 = new Intersection(1,123L, 100.00, 100.26);
         Intersection p2 = new Intersection(2,124L, 49.75, 105.56);
         Intersection p3 = new Intersection(3,125L, 41.85, 106.26);
         Intersection p4 = new Intersection(4,126L, 43.15, 103.26);
@@ -133,7 +142,7 @@ public class DrawMap extends JFrame {
         list.add(l4);
         list.add(l5);
         //List<Street> list2= streetMap.getStreets();
-
+        drawPoints(g, p1);
         readLines (g);
     }
 
