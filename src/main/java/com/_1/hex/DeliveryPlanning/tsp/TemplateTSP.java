@@ -22,7 +22,7 @@ public abstract class TemplateTSP implements TSP {
 		bestSolCost = Integer.MAX_VALUE;
 		Map<Integer,Integer> costBetweenTakeUpAndReturn = new HashMap<>();
 		costBetweenTakeUpAndReturn.put(0,0);
-		Integer max_cost = 4;
+		Integer max_cost = 20;
 		if (branchAndBound(0, unvisited, visited, 0,costBetweenTakeUpAndReturn,max_cost)){
 			System.out.println("Solution found");
 		}
@@ -71,17 +71,26 @@ public abstract class TemplateTSP implements TSP {
 	 * @param currentCost the cost of the path corresponding to <code>visited</code>
 	 */	
 	private boolean branchAndBound(int currentVertex, Collection<Integer> unvisited,
-			Collection<Integer> visited, int currentCost, Map<Integer,Integer> costBetweenTakeUpAndReturn,Integer maximum_cost){
+								   Collection<Integer> visited, int currentCost, Map<Integer,Integer> costBetweenTakeUpAndReturn,Integer maximum_cost){
 
 		costBetweenTakeUpAndReturn.put(currentVertex,currentCost);
-		if (true || currentCost-costBetweenTakeUpAndReturn.get(this.g.getPredecessor(currentVertex))>maximum_cost){
-			return false;
-		}
+
 
 		if (System.currentTimeMillis() - startTime > timeLimit) return false;
-	    if (unvisited.size() == 0){ 
-	    	if (g.isArc(currentVertex,0)){ 
-	    		if (currentCost+g.getCost(currentVertex,0) < bestSolCost){ 
+		Integer predecessor = g.getPredecessor(currentVertex);
+		if (predecessor!=-1 && !visited.contains(predecessor)) return false;
+
+
+		if (costBetweenTakeUpAndReturn.containsKey(predecessor)){
+			Integer predecessorCost = costBetweenTakeUpAndReturn.get(predecessor);
+			Integer differanceCost = currentCost-predecessorCost;
+			if(differanceCost>maximum_cost)return false;
+		}
+
+
+		if (unvisited.size() == 0){
+	    	if (g.isArc(currentVertex,0)){
+	    		if (currentCost+g.getCost(currentVertex,0) < bestSolCost){
 	    			visited.toArray(bestSol);
 	    			bestSolCost = currentCost+g.getCost(currentVertex,0);
 					return true;
@@ -92,17 +101,19 @@ public abstract class TemplateTSP implements TSP {
 	        boolean test = false;
 			while (it.hasNext()){
 	        	Integer nextVertex = it.next();
-	        	visited.add(nextVertex);
-	            unvisited.remove(nextVertex);
-				//if(g.getPredecessors(nextVertex)){}
-				test = test || branchAndBound(nextVertex, unvisited, visited,
-	            		currentCost+g.getCost(currentVertex, nextVertex),costBetweenTakeUpAndReturn,maximum_cost);
-	            visited.remove(nextVertex);
-	            unvisited.add(nextVertex);
-	        }
+					visited.add(nextVertex);
+					unvisited.remove(nextVertex);
+					boolean currentTest =  branchAndBound(nextVertex, unvisited, visited,
+							currentCost + g.getCost(currentVertex, nextVertex),costBetweenTakeUpAndReturn,maximum_cost);
+					test = test || currentTest;
+					visited.remove(nextVertex);
+					unvisited.add(nextVertex);
+	    	}
 			return test;
-	    }
+
+		}
 		return false;
-	}
+		}
 
 }
+
