@@ -2,6 +2,8 @@ package com._1.hex.DeliveryPlanning.view;
 
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.io.FileNotFoundException;
@@ -44,6 +46,12 @@ public class DrawMap extends JFrame {
         setSize(1000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Mouse clicked");
+            }
+        });
     }
 
     void defineStreetMap (StreetMap streetMap) {
@@ -142,6 +150,31 @@ void drawPoints(Graphics g,Intersection point){
         }
     }
 
+    void createIntersectionsClickable (Graphics g) {
+        Graphics2D graph = (Graphics2D) g;
+        ArrayList<Shape> circles = new ArrayList<Shape>();
+
+        for (Intersection intersection : streetMap.getIntersections().values()) {
+            Double latitude = intersection.getLatitude();
+            Double longitude = intersection.getLongitude();
+
+            Double latTrasf = transfLatitude(latitude);
+            Double lonTrasf = transfLongitude(longitude);
+
+            graph.setColor(Color.RED);
+            circles.add(new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10));
+
+        }
+
+        for (Shape circle : circles) {
+            graph.draw(circle);
+        }
+    }
+
+    void listenToClicks (Graphics g) {
+        createIntersectionsClickable(g);
+    }
+
 
     public void paint(Graphics g) {
         super.paint(g);
@@ -155,6 +188,10 @@ void drawPoints(Graphics g,Intersection point){
 
         drawPoints(g, streetMap.getIntersectionById(route.get(2)));
     }
+
+
+
+    public void mousePressed(MouseEvent e) { }
 
 /*
     public static void main(String[] args) {
