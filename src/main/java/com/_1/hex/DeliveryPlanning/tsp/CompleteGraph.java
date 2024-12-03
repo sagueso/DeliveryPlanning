@@ -1,14 +1,12 @@
 package com._1.hex.DeliveryPlanning.tsp;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CompleteGraph implements Graph {
 	private static final int MAX_COST = 40;
 	private static final int MIN_COST = 10;
-	private Map<Integer, Integer> predecessor;
+	private Map<Integer, Integer> predecessors;
 	int nbVertices;
 	int[][] cost;
 	
@@ -18,6 +16,7 @@ public class CompleteGraph implements Graph {
 	 */
 	public CompleteGraph(int nbVertices){
 		this.nbVertices = nbVertices;
+		this.predecessors = new HashMap<Integer, Integer>();
 		int iseed = 1;
 		cost = new int[nbVertices][nbVertices];
 		for (int i=0; i<nbVertices; i++){
@@ -31,6 +30,21 @@ public class CompleteGraph implements Graph {
 		        }
 		    }
 		}
+	}
+
+	public CompleteGraph(CompleteGraph graph, Map<Integer, Integer> predecessors){
+		this.nbVertices = graph.getNbVertices();
+		this.predecessors = predecessors;
+		cost = new int[nbVertices][nbVertices];
+		for (int i=0; i<nbVertices; i++){
+			for (int j=0; j<nbVertices; j++){
+				if (i == j) cost[i][j] = -1;
+				else {
+					cost[i][j] = graph.getCost(i, j);
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -55,7 +69,7 @@ public class CompleteGraph implements Graph {
 	@Override
 	public Integer getPredecessor(int i) {
 		//Has no predecessors
-		return -1;
+		return predecessors.getOrDefault(i, -1);
 	}
 
 }
