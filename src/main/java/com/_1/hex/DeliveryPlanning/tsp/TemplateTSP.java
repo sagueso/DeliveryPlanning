@@ -81,6 +81,7 @@ public abstract class TemplateTSP implements TSP {
 	        	Integer nextVertex = it.next();
 	        	visited.add(nextVertex);
 	            unvisited.remove(nextVertex);
+				//if(g.getPredecessors(nextVertex)){}
 	            branchAndBound(nextVertex, unvisited, visited, 
 	            		currentCost+g.getCost(currentVertex, nextVertex));
 	            visited.remove(nextVertex);
