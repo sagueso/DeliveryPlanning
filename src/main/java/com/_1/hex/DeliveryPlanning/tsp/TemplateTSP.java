@@ -26,7 +26,8 @@ public abstract class TemplateTSP implements TSP {
 		//Map<Integer,Integer> timeBetweenTakeUpAndReturn = new Map<Integer,Integer>();
 		branchAndBound(0, unvisited, visited, 0);
 	}
-	
+
+
 	public Integer getSolution(int i){
 		if (g != null && i>=0 && i<g.getNbVertices())
 			return bestSol[i];
