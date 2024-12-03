@@ -1,9 +1,6 @@
 package com._1.hex.DeliveryPlanning.view;
 
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.io.FileNotFoundException;
@@ -115,6 +112,8 @@ public class DrawMap extends JFrame {
         if(route != null) {
             drawRoutes(g);
         }
+
+        drawPoints(g, streetMap.getIntersectionById(route.get(2)));
     }
 
 /*
