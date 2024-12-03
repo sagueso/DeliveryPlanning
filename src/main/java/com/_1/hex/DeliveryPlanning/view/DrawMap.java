@@ -7,6 +7,7 @@ import java.awt.geom.Line2D;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com._1.hex.DeliveryPlanning.LanchApp;
 import com._1.hex.DeliveryPlanning.model.Intersection;
@@ -31,6 +32,10 @@ import javax.xml.stream.XMLStreamException;
 public class DrawMap extends JFrame {
 
     StreetMap streetMap;
+    Double minlat = Double.MAX_VALUE;
+    Double maxlat = Double.MIN_VALUE;
+    Double minlon = Double.MAX_VALUE;
+    Double maxlon = Double.MIN_VALUE;
 
     public DrawMap() {
         super("Map");
@@ -43,46 +48,44 @@ public class DrawMap extends JFrame {
         this.streetMap = streetMap;
     }
 
-    List<Double> findMinimum(List<Street> streets) {
-        List<Double> minimum = new ArrayList<>();
-        Double minlat = Double.MAX_VALUE;
-        Double minlon = Double.MAX_VALUE;
-        for (Street street : streets) {
-            if ((street.getOrigin().getLatitude()<minlat) || (street.getDestination().getLatitude()<minlat)) {
-                if (street.getOrigin().getLatitude()<street.getDestination().getLatitude()) {
-                    minlat = street.getOrigin().getLatitude();
-                }
-                else {
-                    minlat = street.getDestination().getLatitude();
-                }
+
+    void findMinMax(Map<Integer, Intersection> intersections) {
+        for (Integer key : intersections.keySet()) {
+            Intersection intersection = intersections.get(key);
+            if(intersection.getLatitude()<minlat){
+                minlat = intersection.getLatitude();
             }
-            if ((street.getOrigin().getLongitude()<minlon) || (street.getDestination().getLongitude()<minlon)) {
-                if (street.getOrigin().getLongitude()<street.getDestination().getLongitude()) {
-                    minlon = street.getOrigin().getLongitude();
-                }
-                else {
-                    minlon = street.getDestination().getLongitude();
-                }
+            if(intersection.getLongitude()<minlon){
+                minlon = intersection.getLongitude();
+            }
+            if(intersection.getLatitude()>maxlat){
+                maxlat = intersection.getLatitude();
+            }
+            if(intersection.getLongitude()>maxlon){
+                maxlon = intersection.getLongitude();
             }
         }
-        minimum.add(minlat);
-        minimum.add(minlon);
-        return minimum;
     }
 
     void readLines (Graphics g) {
         Graphics2D g3d = (Graphics2D) g;
 
         List<Street> l = streetMap.getStreets();
+        Map<Integer, Intersection> m = streetMap.getIntersections();
+        findMinMax(m);
+        Integer zoom = 1000;
 
         for (Street line : l) {
-            System.out.println((line.getOrigin().getLatitude()-45)*100);
-            g3d.draw(new Line2D.Double((line.getOrigin().getLatitude()-45)*100, (line.getOrigin().getLongitude()-4.0)*100, (line.getDestination().getLatitude()-45)*100, (line.getDestination().getLongitude()-4.0)*100));
+            //System.out.println((line.getOrigin().getLatitude()-45)*100);
+            g3d.draw(new Line2D.Double((line.getOrigin().getLatitude()-minlat)*zoom/(maxlat-minlat), (line.getOrigin().getLongitude()-minlon)*zoom/(maxlon-minlon), (line.getDestination().getLatitude()-minlat)*zoom/(maxlat-minlat), (line.getDestination().getLongitude()-minlon)*zoom/(maxlon-minlon)));
         }
 
     }
-    void sayHello(){}
 
+    void drawRoutes (Graphics g, List<Integer> route) {
+        Graphics2D g2d = (Graphics2D) g;
+
+    }
     void drawLines(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
