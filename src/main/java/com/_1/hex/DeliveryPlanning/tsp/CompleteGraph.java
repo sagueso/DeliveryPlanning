@@ -1,8 +1,14 @@
 package com._1.hex.DeliveryPlanning.tsp;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class CompleteGraph implements Graph {
 	private static final int MAX_COST = 40;
 	private static final int MIN_COST = 10;
+	private Map<Integer, Integer> predecessor;
 	int nbVertices;
 	int[][] cost;
 	
@@ -15,7 +21,7 @@ public class CompleteGraph implements Graph {
 		int iseed = 1;
 		cost = new int[nbVertices][nbVertices];
 		for (int i=0; i<nbVertices; i++){
-		    for (int j=0; j<nbVertices; j++){
+			for (int j=0; j<nbVertices; j++){
 		        if (i == j) cost[i][j] = -1;
 		        else {
 		            int it = 16807 * (iseed % 127773) - 2836 * (iseed / 127773);
@@ -44,6 +50,12 @@ public class CompleteGraph implements Graph {
 		if (i<0 || i>=nbVertices || j<0 || j>=nbVertices)
 			return false;
 		return i != j;
+	}
+
+	@Override
+	public Integer getPredecessor(int i) {
+		//Has no predecessors
+		return -1;
 	}
 
 }

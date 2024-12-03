@@ -1,5 +1,7 @@
 package com._1.hex.DeliveryPlanning.tsp;
 
+import java.util.List;
+
 public interface Graph {
 	/**
 	 * @return the number of vertices in <code>this</code>
@@ -20,4 +22,9 @@ public interface Graph {
 	 */
 	public abstract boolean isArc(int i, int j);
 
+	/**
+	 * @param i
+	 * @return The node that has to come before i, -1 if none
+	 */
+	public abstract Integer getPredecessor(int i);
 }
