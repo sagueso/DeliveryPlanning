@@ -44,8 +44,7 @@ public class MainDrawMap {
                     //boolean test2 = graphService.checkIfNodeExists(destination);
                     //boolean test3 = graphService.checkIfEdgeExists(source, destination);
                     Pair<List<Integer>, Double> path = graphService.computeTheShortestPath(source,destination);
-                    System.out.println(path.getFirst());
-                    System.out.println(path.getSecond());
+                    drawMap.defineRoute(path.getFirst());
                     int a = 1;
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);

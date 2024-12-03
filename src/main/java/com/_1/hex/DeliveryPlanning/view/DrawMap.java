@@ -4,6 +4,7 @@ package com._1.hex.DeliveryPlanning.view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class DrawMap extends JFrame {
     Double maxlat = Double.MIN_VALUE;
     Double minlon = Double.MAX_VALUE;
     Double maxlon = Double.MIN_VALUE;
+    List<Integer> route;
 
     public DrawMap() {
         super("Map");
@@ -49,7 +51,7 @@ public class DrawMap extends JFrame {
     void defineStreetMap (StreetMap streetMap) {
         this.streetMap = streetMap;
     }
-
+    void defineRoute (List<Integer> route) {this.route = route;}
 
     void findMinMax(Map<Integer, Intersection> intersections) {
         for (Integer key : intersections.keySet()) {
@@ -91,59 +93,28 @@ public class DrawMap extends JFrame {
         drawPoints.drawPoints(g2d, point);
     }
 
-    void drawRoutes (Graphics g, List<Integer> route) {
+    void drawRoutes (Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-
+        Integer zoom = 1000;
+        g2d.setColor(Color.GREEN);
+        g2d.setStroke(new BasicStroke(2f));
+        for (int i=0; i<route.size()-1; i++){
+            Integer id1 = route.get(i);
+            Integer id2 = route.get(i+1);
+            Intersection source = streetMap.getIntersectionById(id1);
+            Intersection destination = streetMap.getIntersectionById(id2);
+            g2d.draw(new Line2D.Double((source.getLatitude()-minlat)*zoom/(maxlat-minlat), (source.getLongitude()-minlon)*zoom/(maxlon-minlon), (destination.getLatitude()-minlat)*zoom/(maxlat-minlat), (destination.getLongitude()-minlon)*zoom/(maxlon-minlon)));
+        }
     }
-    void drawLines(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
 
-        Intersection p1 = new Intersection(8,123L, 45.75, 105.26);
-        Intersection p2 = new Intersection(9,124L, 409.75, 105.56);
-
-        Double latitude1 = p1.getLatitude();
-        Double latitude2 = p2.getLatitude();
-        Double longitude1 = p1.getLongitude();
-        Double longitude2 = p2.getLongitude();
-
-        g2d.draw(new Line2D.Double(latitude1,longitude1, latitude2, longitude2));
-
-        System.out.printf("%.2f", latitude2);
-        System.out.printf("%.2f", longitude2);
-        System.out.printf("%.2f", 45.75f);
-        //g2d.drawLine(120, 50, 360, 50);
-
-        //g2d.draw(new Line2D.Double(59.2d, 99.8d, 419.1d, 99.8d));
-
-        g2d.draw(new Line2D.Float(21.50f, 132.50f, 459.50f, 132.50f));
-        //g2d.draw(new Line2D.Float(45.75f, 105.26f, 409.75f, 105.26f));
-
-
-    }
 
     public void paint(Graphics g) {
         super.paint(g);
-        //drawLines(g);
-        Intersection p1 = new Intersection(1,123L, 100.00, 100.26);
-        Intersection p2 = new Intersection(2,124L, 49.75, 105.56);
-        Intersection p3 = new Intersection(3,125L, 41.85, 106.26);
-        Intersection p4 = new Intersection(4,126L, 43.15, 103.26);
-        Intersection p5 = new Intersection(5,127L, 46.75, 153.26);
-        Intersection p6 = new Intersection(6,128L, 45.25, 158.26);
-        Street l1 = new Street(p1, p2, "lala", 155.0);
-        Street l2 = new Street(p3, p2, "lala", 155.0);
-        Street l3 = new Street(p5, p6, "lala", 155.0);
-        Street l4 = new Street(p4, p5, "lala", 155.0);
-        Street l5 = new Street(p1, p6, "lala", 155.0);
-        List<Street> list=new ArrayList<Street>();
-        list.add(l1);
-        list.add(l2);
-        list.add(l3);
-        list.add(l4);
-        list.add(l5);
-        //List<Street> list2= streetMap.getStreets();
-        drawPoints(g, p1);
+
         readLines (g);
+        if(route != null) {
+            drawRoutes(g);
+        }
     }
 
 /*
