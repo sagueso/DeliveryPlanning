@@ -79,13 +79,15 @@ public abstract class TemplateTSP implements TSP {
 	        Iterator<Integer> it = iterator(currentVertex, unvisited, g);
 	        while (it.hasNext()){
 	        	Integer nextVertex = it.next();
-	        	visited.add(nextVertex);
-	            unvisited.remove(nextVertex);
-				//if(g.getPredecessors(nextVertex)){}
-	            branchAndBound(nextVertex, unvisited, visited, 
-	            		currentCost+g.getCost(currentVertex, nextVertex));
-	            visited.remove(nextVertex);
-	            unvisited.add(nextVertex);
+				Integer predecessor = g.getPredecessor(nextVertex);
+				if(predecessor == -1 || visited.contains(predecessor)) {
+					visited.add(nextVertex);
+					unvisited.remove(nextVertex);
+					branchAndBound(nextVertex, unvisited, visited,
+							currentCost + g.getCost(currentVertex, nextVertex));
+					visited.remove(nextVertex);
+					unvisited.add(nextVertex);
+				}
 	        }	    
 	    }
 	}
