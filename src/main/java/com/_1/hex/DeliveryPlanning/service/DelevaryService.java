@@ -27,6 +27,7 @@ public class DelevaryService {
         index++;
         if (index == 1 ){
             this.warehouse = new Warehouse(intersection,"Lyon");
+            this.request = new Request(this.warehouse);
         }
         else {
 

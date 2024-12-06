@@ -29,10 +29,12 @@ public class MainDrawMap {
             @Override
             public void run() {
                 //DrawMap drawMap = new DrawMap();
+
                 ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
                 DrawMap drawMap = context.getBean(DrawMap.class);
+                GraphService graphService =  context.getBean(GraphService.class);
                 XmlParser xmlParser = new XmlParser();
-                GraphService graphService = new GraphService();
+
 
                 StreetMap map;
                 String xmlPath = "src/main/java/com/_1/hex/DeliveryPlanning/utils/petitPlan.xml";
