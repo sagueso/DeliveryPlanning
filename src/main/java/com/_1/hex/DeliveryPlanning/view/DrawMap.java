@@ -2,25 +2,17 @@ package com._1.hex.DeliveryPlanning.view;
 
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com._1.hex.DeliveryPlanning.LanchApp;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
-import com._1.hex.DeliveryPlanning.service.GraphService;
-import com._1.hex.DeliveryPlanning.service.XmlParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.xml.stream.XMLStreamException;
 
 /**
  * This program demonstrates how to draw lines using Graphics2D object.
@@ -31,15 +23,15 @@ import javax.xml.stream.XMLStreamException;
 public class DrawMap extends JFrame {
 
     StreetMap streetMap;
-    Double minlat = Double.MAX_VALUE;
-    Double maxlat = Double.MIN_VALUE;
-    Double minlon = Double.MAX_VALUE;
-    Double maxlon = Double.MIN_VALUE;
+    Double minLatitudeValue = Double.MAX_VALUE;
+    Double maxLatitudeValue = Double.MIN_VALUE;
+    Double minLongitudeValue = Double.MAX_VALUE;
+    Double maxLongitudeValue = Double.MIN_VALUE;
     List<Integer> route;
 
     public DrawMap() {
         super("Map");
-        setSize(480, 200);
+        setSize(1000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }
@@ -47,73 +39,124 @@ public class DrawMap extends JFrame {
     void defineStreetMap (StreetMap streetMap) {
         this.streetMap = streetMap;
     }
+
     void defineRoute (List<Integer> route) {this.route = route;}
 
-    void findMinMax(Map<Integer, Intersection> intersections) {
+    Double normalizeLatitude(Double latitude){
+        return (latitude - minLatitudeValue) * 1000 /(maxLatitudeValue-minLatitudeValue);
+    }
+
+    Double normalizeLongitude(Double longitude){
+        return (longitude - minLongitudeValue) * 1000 /(maxLongitudeValue-minLongitudeValue);
+    }
+
+    
+    void intialise_MinAndMaxValues_For_LatitudeAndLongitude(Map<Integer, Intersection> intersections) {
         for (Integer key : intersections.keySet()) {
             Intersection intersection = intersections.get(key);
-            if(intersection.getLatitude()<minlat){
-                minlat = intersection.getLatitude();
+            if(intersection.getLatitude()<minLatitudeValue){
+                minLatitudeValue = intersection.getLatitude();
             }
-            if(intersection.getLongitude()<minlon){
-                minlon = intersection.getLongitude();
+            if(intersection.getLongitude()<minLongitudeValue){
+                minLongitudeValue = intersection.getLongitude();
             }
-            if(intersection.getLatitude()>maxlat){
-                maxlat = intersection.getLatitude();
+            if(intersection.getLatitude()>maxLatitudeValue){
+                maxLatitudeValue = intersection.getLatitude();
             }
-            if(intersection.getLongitude()>maxlon){
-                maxlon = intersection.getLongitude();
+            if(intersection.getLongitude()>maxLongitudeValue){
+                maxLongitudeValue = intersection.getLongitude();
             }
         }
     }
 
-    void readLines (Graphics g) {
+
+    void drawStreetsOnJFrame_FromStreetMap (Graphics g) {
         Graphics2D g3d = (Graphics2D) g;
+        g3d.setColor(Color.black);
 
         List<Street> l = streetMap.getStreets();
-        Map<Integer, Intersection> m = streetMap.getIntersections();
-        findMinMax(m);
-        Integer zoom = 1000;
+        Double latitudeOrigin, longitudeOrigin, latitudeDestination, longitudeDestination;
 
         for (Street line : l) {
-            //System.out.println((line.getOrigin().getLatitude()-45)*100);
-            g3d.draw(new Line2D.Double((line.getOrigin().getLatitude()-minlat)*zoom/(maxlat-minlat), (line.getOrigin().getLongitude()-minlon)*zoom/(maxlon-minlon), (line.getDestination().getLatitude()-minlat)*zoom/(maxlat-minlat), (line.getDestination().getLongitude()-minlon)*zoom/(maxlon-minlon)));
+            latitudeOrigin = normalizeLatitude(line.getOrigin().getLatitude());
+            longitudeOrigin = normalizeLongitude(line.getOrigin().getLongitude());
+            latitudeDestination = normalizeLatitude(line.getDestination().getLatitude());
+            longitudeDestination = normalizeLongitude(line.getDestination().getLongitude());
+            g3d.draw(new Line2D.Double(latitudeOrigin, longitudeOrigin, latitudeDestination, longitudeDestination));
         }
-
     }
 
-    void drawRoutes (Graphics g) {
+
+    void drawPoints(Graphics g,Intersection point){
+        Graphics2D graph = (Graphics2D) g;
+
+        Double latitude = point.getLatitude();
+        Double longitude = point.getLongitude();
+
+        Double latTrasf = normalizeLatitude(latitude);
+        Double lonTrasf = normalizeLongitude(longitude);
+
+        System.out.println("Latitude: " + latitude + " Longitude: " + longitude);
+
+        System.out.println("Latitude: " + latTrasf + " Longitude: " + lonTrasf);
+
+        graph.setColor(Color.RED);
+        Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10);
+        graph.draw(circle);
+        graph.fill(circle);    
+    }
+
+
+    void drawRoutes_FromTheOriginAndDestination (Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        Integer zoom = 1000;
         g2d.setColor(Color.GREEN);
         g2d.setStroke(new BasicStroke(2f));
+        Double x1, y1, x2, y2;
         for (int i=0; i<route.size()-1; i++){
             Integer id1 = route.get(i);
             Integer id2 = route.get(i+1);
             Intersection source = streetMap.getIntersectionById(id1);
             Intersection destination = streetMap.getIntersectionById(id2);
-            g2d.draw(new Line2D.Double((source.getLatitude()-minlat)*zoom/(maxlat-minlat), (source.getLongitude()-minlon)*zoom/(maxlon-minlon), (destination.getLatitude()-minlat)*zoom/(maxlat-minlat), (destination.getLongitude()-minlon)*zoom/(maxlon-minlon)));
+            x1 = normalizeLatitude(source.getLatitude());
+            y1 = normalizeLongitude(source.getLongitude());
+            x2 = normalizeLatitude(destination.getLatitude());
+            y2 = normalizeLongitude(destination.getLongitude());
+            g2d.draw(new Line2D.Double(x1, y1, x2, y2));
         }
     }
 
+
+    void listenToClicksOnIntersections (Graphics g) {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                for (Intersection intersection : streetMap.getIntersections().values()) {
+                    Double latTrasf = normalizeLatitude(intersection.getLatitude());
+                    Double lonTrasf = normalizeLongitude(intersection.getLongitude());
+                    Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10);
+                    if (circle.contains(e.getPoint())) {
+                    System.out.println("Intersection clicked: Latitude: " + intersection.getLatitude() + ", Longitude: " + intersection.getLongitude());
+                    break;
+                    }
+                }
+            }
+        });
+    }
+ 
 
     public void paint(Graphics g) {
         super.paint(g);
 
-        readLines (g);
+        intialise_MinAndMaxValues_For_LatitudeAndLongitude(streetMap.getIntersections());
+
+        drawStreetsOnJFrame_FromStreetMap (g);
         if(route != null) {
-            drawRoutes(g);
+            drawRoutes_FromTheOriginAndDestination(g);
         }
+
+        listenToClicksOnIntersections(g);
+
+        drawPoints(g, streetMap.getIntersectionById(route.get(2)));
     }
 
-/*
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                    new DrawMap().setVisible(true);
-            }
-        });
-    }*/
 }
