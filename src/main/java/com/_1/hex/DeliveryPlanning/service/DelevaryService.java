@@ -4,6 +4,7 @@ import com._1.hex.DeliveryPlanning.model.Delivery;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Request;
 import com._1.hex.DeliveryPlanning.model.Warehouse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,10 +18,13 @@ public class DelevaryService {
     Request request;
     int index=0;
     GraphService graphService;
+    @Autowired
+    TspService tspService ;
     List<Long> solution = new ArrayList<>();
-    public DelevaryService(GraphService graphService) {
+    public DelevaryService(GraphService graphService,TspService tspService) {
         this.selectedIntersections = new ArrayList<Intersection>();
         this.graphService = graphService;
+        this.tspService = tspService;
     }
 
     public int addInergection(Intersection intersection) {
@@ -44,7 +48,7 @@ public class DelevaryService {
         return index;
     }
     public List<Long> computeGraph(){
-        TspService tspService = new TspService();
+
         solution = tspService.searchSolution(100000,this.request,graphService);
         return solution;
     }
