@@ -1,6 +1,6 @@
 package com._1.hex.DeliveryPlanning.model;
 
-import com._1.hex.DeliveryPlanning.service.GraphService;
+
 import org.jgrapht.alg.util.Pair;
 
 import java.util.*;
@@ -12,8 +12,7 @@ public class Request {
     //TODO LIST INTEGER
     private final Map<Pair<Long, Long>, Pair<List<Integer>, Double>> distances;
 
-    //TODO: is this the right way to do it?
-    public Request(GraphService graphService, Warehouse warehouse) {
+    public Request(Warehouse warehouse) {
         this.warehouse = warehouse;
         this.trip = new ArrayList<Delivery>();
         this.distances = new HashMap<>();
