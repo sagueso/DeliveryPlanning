@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class DrawMap extends JFrame {
         return (longitude - minLongitudeValue) * 1000 /(maxLongitudeValue-minLongitudeValue);
     }
 
-    
+
     void intialise_MinAndMaxValues_For_LatitudeAndLongitude(Map<Integer, Intersection> intersections) {
         for (Integer key : intersections.keySet()) {
             Intersection intersection = intersections.get(key);
@@ -87,23 +88,52 @@ public class DrawMap extends JFrame {
     }
 
 
-    void drawPoints(Graphics g,Intersection point){
-        Graphics2D graph = (Graphics2D) g;
+    void drawPointsWhenIntersectionsIsClicked(){
+        List<Integer> clicksCounter = new ArrayList<>();
+        clicksCounter.add(0);
 
-        Double latitude = point.getLatitude();
-        Double longitude = point.getLongitude();
-
-        Double latTrasf = normalizeLatitude(latitude);
-        Double lonTrasf = normalizeLongitude(longitude);
-
-        System.out.println("Latitude: " + latitude + " Longitude: " + longitude);
-
-        System.out.println("Latitude: " + latTrasf + " Longitude: " + lonTrasf);
-
-        graph.setColor(Color.RED);
-        Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10);
-        graph.draw(circle);
-        graph.fill(circle);    
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                
+                for (Intersection intersection : streetMap.getIntersections().values()) {
+                    Ellipse2D.Double circle = new Ellipse2D.Double(normalizeLatitude(intersection.getLatitude()) - 5, normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
+                    
+                    if (circle.contains(e.getPoint())) {
+                        if (clicksCounter.get(0) == 0) {
+                            Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width, circle.height);
+                            Graphics g = getGraphics();
+                            Graphics2D graph = (Graphics2D) g;
+                            graph.setColor(Color.DARK_GRAY);
+                            graph.fill(rectangle);
+                            clicksCounter.set(0, -1);
+                            clicksCounter.add(0);
+                        }
+                    
+                        else {
+                            for (Integer i : clicksCounter)
+                            if (i == 0)
+                            {
+                                Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width, circle.height);
+                                Graphics g = getGraphics();
+                                Graphics2D graph = (Graphics2D) g;
+                                graph.setColor(Color.RED);
+                                graph.fill(rectangle);
+                                clicksCounter.set(i, 1);
+                            }
+                            else if (i == 1)
+                            {
+                                Graphics g = getGraphics();
+                                Graphics2D graph = (Graphics2D) g;
+                                graph.setColor(Color.RED);
+                                graph.fill(circle);clicksCounter.set(i, 2);
+                                clicksCounter.add(0);
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
 
@@ -125,8 +155,9 @@ public class DrawMap extends JFrame {
         }
     }
 
-
+/*
     void listenToClicksOnIntersections (Graphics g) {
+        
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -135,14 +166,15 @@ public class DrawMap extends JFrame {
                     Double lonTrasf = normalizeLongitude(intersection.getLongitude());
                     Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10);
                     if (circle.contains(e.getPoint())) {
-                    System.out.println("Intersection clicked: Latitude: " + intersection.getLatitude() + ", Longitude: " + intersection.getLongitude());
-                    break;
+                        System.out.println("Intersection clicked: Latitude: " + intersection.getLatitude() + ", Longitude: " + intersection.getLongitude());
+                        clickedIntersectionId[0] = intersection.getId();
+                        break;
                     }
                 }
             }
         });
     }
- 
+ */
 
     public void paint(Graphics g) {
         super.paint(g);
@@ -154,9 +186,11 @@ public class DrawMap extends JFrame {
             drawRoutes_FromTheOriginAndDestination(g);
         }
 
-        listenToClicksOnIntersections(g);
+        drawPointsWhenIntersectionsIsClicked();
 
-        drawPoints(g, streetMap.getIntersectionById(route.get(2)));
+        //listenToClicksOnIntersections();
+
+        //drawPoints(g, streetMap.getIntersectionById(route.get(2)));
     }
 
 }

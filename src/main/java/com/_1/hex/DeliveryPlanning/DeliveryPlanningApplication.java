@@ -14,9 +14,9 @@ public class DeliveryPlanningApplication {
 		// Retrieve LanchApp bean from Spring context and call lanch()
 		//LanchApp lanchApp = context.getBean(LanchApp.class);
 		//lanchApp.lanch();
-		Mvp mvp = context.getBean(Mvp.class);
+		//Mvp mvp = context.getBean(Mvp.class);
 		try {
-			mvp.launch();
+		//	mvp.launch();
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
