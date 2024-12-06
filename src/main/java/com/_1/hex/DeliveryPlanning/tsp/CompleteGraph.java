@@ -8,7 +8,7 @@ public class CompleteGraph implements Graph {
 	private static final int MIN_COST = 10;
 	private Map<Integer, Integer> predecessors;
 	int nbVertices;
-	int[][] cost;
+	double[][] cost;
 	
 	/**
 	 * Create a complete directed graph such that each edge has a weight within [MIN_COST,MAX_COST]
@@ -18,7 +18,7 @@ public class CompleteGraph implements Graph {
 		this.nbVertices = nbVertices;
 		this.predecessors = new HashMap<Integer, Integer>();
 		int iseed = 1;
-		cost = new int[nbVertices][nbVertices];
+		cost = new double[nbVertices][nbVertices];
 		for (int i=0; i<nbVertices; i++){
 			for (int j=0; j<nbVertices; j++){
 		        if (i == j) cost[i][j] = -1;
@@ -35,7 +35,7 @@ public class CompleteGraph implements Graph {
 	public CompleteGraph(CompleteGraph graph, Map<Integer, Integer> predecessors){
 		this.nbVertices = graph.getNbVertices();
 		this.predecessors = predecessors;
-		cost = new int[nbVertices][nbVertices];
+		cost = new double[nbVertices][nbVertices];
 		for (int i=0; i<nbVertices; i++){
 			for (int j=0; j<nbVertices; j++){
 				if (i == j) cost[i][j] = -1;
@@ -53,7 +53,7 @@ public class CompleteGraph implements Graph {
 	}
 
 	@Override
-	public int getCost(int i, int j) {
+	public double getCost(int i, int j) {
 		if (i<0 || i>=nbVertices || j<0 || j>=nbVertices)
 			return -1;
 		return cost[i][j];

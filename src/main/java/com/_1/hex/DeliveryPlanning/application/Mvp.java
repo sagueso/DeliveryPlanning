@@ -1,4 +1,4 @@
-package com._1.hex.DeliveryPlanning;
+package com._1.hex.DeliveryPlanning.application;
 
 import java.io.BufferedReader;
 import java.io.IOException;

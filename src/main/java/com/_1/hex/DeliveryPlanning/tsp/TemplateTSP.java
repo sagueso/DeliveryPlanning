@@ -5,7 +5,7 @@ import java.util.*;
 public abstract class TemplateTSP implements TSP {
 	private Integer[] bestSol;
 	protected Graph g;
-	private int bestSolCost;
+	private double bestSolCost;
 	private int timeLimit;
 	private long startTime;
 	
@@ -20,8 +20,8 @@ public abstract class TemplateTSP implements TSP {
 		Collection<Integer> visited = new ArrayList<Integer>(g.getNbVertices());
 		visited.add(0); // The first visited vertex is 0
 		bestSolCost = Integer.MAX_VALUE;
-		Map<Integer,Integer> costBetweenTakeUpAndReturn = new HashMap<>();
-		costBetweenTakeUpAndReturn.put(0,0);
+		Map<Integer,Double> costBetweenTakeUpAndReturn = new HashMap<>();
+		costBetweenTakeUpAndReturn.put(0,0.0);
 		Integer max_cost = 20;
 		if (branchAndBound(0, unvisited, visited, 0,costBetweenTakeUpAndReturn,max_cost)){
 			System.out.println("Solution found");
@@ -39,7 +39,7 @@ public abstract class TemplateTSP implements TSP {
 		return -1;
 	}
 	
-	public int getSolutionCost(){
+	public double getSolutionCost(){
 		if (g != null)
 			return bestSolCost;
 		return -1;
@@ -71,7 +71,7 @@ public abstract class TemplateTSP implements TSP {
 	 * @param currentCost the cost of the path corresponding to <code>visited</code>
 	 */	
 	private boolean branchAndBound(int currentVertex, Collection<Integer> unvisited,
-								   Collection<Integer> visited, int currentCost, Map<Integer,Integer> costBetweenTakeUpAndReturn,Integer maximum_cost){
+								   Collection<Integer> visited, double currentCost, Map<Integer,Double> costBetweenTakeUpAndReturn,Integer maximum_cost){
 
 		costBetweenTakeUpAndReturn.put(currentVertex,currentCost);
 
@@ -82,8 +82,8 @@ public abstract class TemplateTSP implements TSP {
 
 
 		if (costBetweenTakeUpAndReturn.containsKey(predecessor)){
-			Integer predecessorCost = costBetweenTakeUpAndReturn.get(predecessor);
-			Integer differanceCost = currentCost-predecessorCost;
+			Double predecessorCost = costBetweenTakeUpAndReturn.get(predecessor);
+			Double differanceCost = currentCost-predecessorCost;
 			if(differanceCost>maximum_cost)return false;
 		}
 
