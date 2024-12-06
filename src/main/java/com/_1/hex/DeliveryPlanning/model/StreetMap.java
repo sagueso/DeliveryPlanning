@@ -1,6 +1,9 @@
 package com._1.hex.DeliveryPlanning.model;
 
+import org.springframework.stereotype.Component;
+
 import java.util.*;
+
 
 public class StreetMap {
     private String name;
