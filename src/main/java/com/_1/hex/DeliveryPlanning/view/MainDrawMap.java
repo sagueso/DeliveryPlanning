@@ -6,7 +6,6 @@ import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.XmlParser;
 import org.jgrapht.alg.util.Pair;
-import org.springframework.boot.autoconfigure.graphql.GraphQlAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -42,7 +41,6 @@ public class MainDrawMap {
                     //boolean test3 = graphService.checkIfEdgeExists(source, destination);
                     Pair<List<Integer>, Double> path = graphService.computeTheShortestPath(source,destination);
                     drawMap.defineRoute(path.getFirst());
-                    int a = 1;
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (XMLStreamException e) {
