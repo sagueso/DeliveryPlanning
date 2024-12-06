@@ -1,7 +1,5 @@
 package com._1.hex.DeliveryPlanning;
 
-import com._1.hex.DeliveryPlanning.model.Intersection;
-import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.XmlParser;
@@ -10,9 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Component
 public class LanchApp {
