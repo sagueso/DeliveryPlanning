@@ -1,17 +1,20 @@
 package com._1.hex.DeliveryPlanning.tsp;
 
+import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Request;
 import com._1.hex.DeliveryPlanning.service.GraphService;
-import com._1.hex.DeliveryPlanning.service.TspService;
+import org.jgrapht.alg.util.Pair;
+
+import java.util.List;
 
 public class StreetGraph implements Graph{
 
     private Request request;
-    private TspService tspService;
+    private GraphService graphService;
 
     public StreetGraph(Request request, GraphService graphService) {
         this.request = request;
-        this.tspService = new TspService(request, graphService);
+        this.graphService = graphService;
     }
 
     @Override
@@ -21,8 +24,43 @@ public class StreetGraph implements Graph{
 
     @Override
     //getCost return double
-    public int getCost(int i, int j) {
-        return (int) tspService.getCost(i, j);
+    public double getCost(int i, int j) {
+        if(i < 0 || j < 0 || i >= 2*request.getTrip().size() || j >= 2*request.getTrip().size() || i == j) {
+            return -1; // Error here bad call
+        }
+
+        Intersection int1;
+        Intersection int2;
+        if(i == 0) {
+            int1 = request.getWarehouse();// Warehouse
+        }
+        else {
+            int1 = i % 2 == 1 ? request.getTrip().get(i / 2).getStartPoint() : request.getTrip().get(i / 2).getDestinationPoint();
+        }
+        if(j == 0) {
+            int2 = request.getWarehouse();// Warehouse
+        }
+        else {
+            int2 = j % 2 == 1 ? request.getTrip().get(j / 2).getStartPoint() : request.getTrip().get(j / 2).getDestinationPoint();
+        }
+        Long id1 = int1.getId();
+        Long id2 = int2.getId();
+
+        Double distance = request.getDistance(id1, id2);
+        if(distance != null) {
+            return distance;
+        }
+        else {
+            distance = request.getDistance(id2, id1);
+            if (distance != null) {
+                return distance;
+            } else {
+                Pair<List<Integer>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
+                //TODO List of Long ids
+                request.addDistance(id1, id2, shortestPath.getFirst(), shortestPath.getSecond());
+                return shortestPath.getSecond();
+            }
+        }
     }
 
     @Override
