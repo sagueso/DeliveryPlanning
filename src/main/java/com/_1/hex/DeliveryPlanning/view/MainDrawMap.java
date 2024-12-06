@@ -30,15 +30,10 @@ public class MainDrawMap {
                 try {
                     map = xmlParser.parse(xmlPath);
                     graphService.addMap(map);
+                    
                     Intersection source = map.getIntersectionById(208769039L);
                     Intersection destination = map.getIntersectionById(25173820L);
-                    //Integer source = Intersection(208769039L);
-                    //Integer destination = dict.get(25173820L);
-                    //System.out.println(source);
-                    //System.out.println(destination);
-                    //boolean test1 = graphService.checkIfNodeExists(source);
-                    //boolean test2 = graphService.checkIfNodeExists(destination);
-                    //boolean test3 = graphService.checkIfEdgeExists(source, destination);
+                
                     Pair<List<Integer>, Double> path = graphService.computeTheShortestPath(source,destination);
                     drawMap.defineRoute(path.getFirst());
                 } catch (FileNotFoundException e) {
