@@ -4,7 +4,9 @@ import com._1.hex.DeliveryPlanning.model.Courrier;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.model.Warehouse;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Services {
 
     public Services() {

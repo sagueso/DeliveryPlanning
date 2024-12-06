@@ -18,26 +18,27 @@ public class TspService {
     public TspService() {
     }
 
-    public void searchSolution(int time, Request request, GraphService GraphService){
+    public List<Long> searchSolution(int time, Request request, GraphService GraphService){
         this.request = request;
         this.graph = new StreetGraph(request, GraphService);
         tsp.searchSolution(time, graph);
+        return getSolutions();
     }
 
-    public List<Intersection> getSolutions(){
+    private List<Long> getSolutions(){
         List<Integer> nodes_int = new ArrayList<>();
-        List<Intersection> nodes = new ArrayList<>();
+        List<Long> nodes = new ArrayList<>();
         for (int i=0; i<this.graph.getNbVertices(); i++) {
             nodes_int.add(tsp.getSolution(i));
         }
         for (Integer integer : nodes_int) {
             if (integer == 0) {
-                nodes.add(this.request.getWarehouse());
+                nodes.add(this.request.getWarehouse().getId());
             } else {
                 if (integer % 2 == 1) {
-                    nodes.add(this.request.getTrip().get(integer / 2).getStartPoint());
+                    nodes.add(this.request.getTrip().get(integer / 2).getStartPoint().getId());
                 } else {
-                    nodes.add(this.request.getTrip().get(integer / 2).getDestinationPoint());
+                    nodes.add(this.request.getTrip().get(integer / 2).getDestinationPoint().getId());
                 }
             }
         }

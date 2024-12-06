@@ -12,6 +12,10 @@ import java.util.Map;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
+import com._1.hex.DeliveryPlanning.service.DelevaryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.swing.JFrame;
 
 /**
@@ -19,9 +23,9 @@ import javax.swing.JFrame;
  * @author www.codejava.net
  *
  */
-
+@Component
 public class DrawMap extends JFrame {
-
+    private final DelevaryService delevaryService;
     StreetMap streetMap;
     Double minLatitudeValue = Double.MAX_VALUE;
     Double maxLatitudeValue = Double.MIN_VALUE;
@@ -29,8 +33,10 @@ public class DrawMap extends JFrame {
     Double maxLongitudeValue = Double.MIN_VALUE;
     List<Integer> route;
 
-    public DrawMap() {
+    @Autowired
+    public DrawMap(DelevaryService delevaryService) {
         super("Map");
+        this.delevaryService = delevaryService;
         setSize(1000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -135,7 +141,12 @@ public class DrawMap extends JFrame {
                     Double lonTrasf = normalizeLongitude(intersection.getLongitude());
                     Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10);
                     if (circle.contains(e.getPoint())) {
+                    int index = delevaryService.addInergection(intersection);
                     System.out.println("Intersection clicked: Latitude: " + intersection.getLatitude() + ", Longitude: " + intersection.getLongitude());
+                    if (index>=5){
+                        List<Long> l = delevaryService.computeGraph();
+                        System.out.println(l);
+                    }
                     break;
                     }
                 }
