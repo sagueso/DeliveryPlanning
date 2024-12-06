@@ -1,4 +1,4 @@
-package com._1.hex.DeliveryPlanning;
+package com._1.hex.DeliveryPlanning.application;
 
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.GraphService;
