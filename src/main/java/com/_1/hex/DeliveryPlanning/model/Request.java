@@ -10,7 +10,7 @@ public class Request {
     private final List<Delivery> trip;
     //Key id paire d'id intersections, value paire de longueur et liste des id intersection chemin entre les deux intersections
     //TODO LIST INTEGER
-    private final Map<Pair<Long, Long>, Pair<List<Integer>, Double>> distances;
+    private final Map<Pair<Long, Long>, Pair<List<Long>, Double>> distances;
 
     public Request(Warehouse warehouse) {
         this.warehouse = warehouse;
@@ -28,6 +28,10 @@ public class Request {
         return this.distances.containsKey(key) ? this.distances.get(key).getSecond() : null;
     }
 
+    public List<Long> getDistancesRoute(long originId, long destinationId) {
+        return distances.get(new Pair<>(originId,destinationId)).getFirst();
+    }
+
     public List<Delivery> getTrip() {
         return trip;
     }
@@ -36,9 +40,9 @@ public class Request {
         return warehouse;
     }
 
-    public Double addDistance(Long originId, Long destinationId, List<Integer> path, Double length) {
+    public Double addDistance(Long originId, Long destinationId, List<Long> path, Double length) {
         Pair<Long, Long> key = new Pair<>(originId, destinationId);
-        Pair<List<Integer>, Double> value = new Pair<>(path, length);
+        Pair<List<Long>, Double> value = new Pair<>(path, length);
         this.distances.put(key, value);
         return length;
     }

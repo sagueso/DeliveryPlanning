@@ -13,19 +13,11 @@ public class DeliveryPlanningApplication {
 	public static void main(String[] args) {
 
 		ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
-		// Retrieve LanchApp bean from Spring context and call lanch()
-		//LanchApp lanchApp = context.getBean(LanchApp.class);
-		//lanchApp.lanch();
-		//Mvp mvp = context.getBean(Mvp.class);
+
+		Mvp mvp = context.getBean(Mvp.class);
 
 		try {
-			//mvp.launch();
-			while (true){
-				boolean clicked = true;
-				if (clicked){
-					break;
-				}
-			}
+			mvp.launch();
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

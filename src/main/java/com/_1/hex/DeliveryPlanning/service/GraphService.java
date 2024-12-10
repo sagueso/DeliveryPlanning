@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class GraphService {
 
     private final DefaultDirectedWeightedGraph<Integer, DefaultWeightedEdge> graph;
-
+    private Map<Integer, Intersection> intersections;
     public GraphService() {
         // Initialize the graph with weighted edges
         this.graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
@@ -32,17 +32,22 @@ public class GraphService {
             DefaultWeightedEdge edge = graph.addEdge(street.getOrigin().getInternalId(), street.getDestination().getInternalId());
             graph.setEdgeWeight(edge, street.getLength());
         }
+        this.intersections = maps.getIntersections();
 
     }
 
     // Add edge with weight
-        public Pair<List<Integer>, Double> computeTheShortestPath(Intersection source, Intersection target) {
+        public Pair<List<Long>, Double> computeTheShortestPath(Intersection source, Intersection target) {
         // Compute the shortest path from vertex 2 to vertex 5
         DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
         GraphPath<Integer, DefaultWeightedEdge> graphPath =  dijkstra.getPath(source.getInternalId(), target.getInternalId());
         //System.out.println(graphPath);
         Double distance = dijkstra.getPathWeight(source.getInternalId(), target.getInternalId());
-        return Pair.of(graphPath.getVertexList(),distance);
-
+        List<Long> verticesLongList = new ArrayList<>() ;
+        for (Integer i : graphPath.getVertexList()) {
+            verticesLongList.add(intersections.get(i).getId());
+        }
+        //return Pair.of(graphPath.getVertexList(),distance);
+        return Pair.of(verticesLongList,distance);
     }
 }

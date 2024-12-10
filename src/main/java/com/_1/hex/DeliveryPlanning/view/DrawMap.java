@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Collection;
+
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public class DrawMap extends JFrame {
     Double maxLatitudeValue = Double.MIN_VALUE;
     Double minLongitudeValue = Double.MAX_VALUE;
     Double maxLongitudeValue = Double.MIN_VALUE;
-    List<Integer> route;
+    List<Long> route;
 
     @Autowired
     public DrawMap(DelevaryService delevaryService, GraphService graphService) {
@@ -50,9 +52,8 @@ public class DrawMap extends JFrame {
         this.streetMap = streetMap;
     }
 
-    void defineRoute(List<Integer> route) {
-        this.route = route;
-    }
+
+    void defineRoute (List<Long> route) {this.route = route;}
 
     Double normalizeLatitude(Double latitude) {
         return (latitude - minLatitudeValue) * 1000 / (maxLatitudeValue - minLatitudeValue);
@@ -139,7 +140,12 @@ public class DrawMap extends JFrame {
                                         pointsGenerated = delevaryService.addInergection(intersection);
                                         if (pointsGenerated>=5){
                                             List<Long> l = delevaryService.computeGraph();
-                                            System.out.println(l);
+                                            List<Intersection> listRoute = new ArrayList<>();
+                                            listRoute.add(streetMap.getIntersectionById(l.get(0)));
+                                            for(int i =1;i<l.size();i++){
+                                                Intersection inter = streetMap.getIntersectionById(l.get(i));
+                                                if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
+                                             }
                                         }
                                         break;
                                     } else if (clicksCounter.get(i) == 0) {
@@ -154,7 +160,13 @@ public class DrawMap extends JFrame {
                                         pointsGenerated = delevaryService.addInergection(intersection);
                                         if (pointsGenerated>=5){
                                             List<Long> l = delevaryService.computeGraph();
-                                            System.out.println(l);
+                                            List<Intersection> listRoute = new ArrayList<>();
+                                            listRoute.add(streetMap.getIntersectionById(l.get(0)));
+                                            for(int i =1;i<l.size();i++){
+                                                Intersection inter = streetMap.getIntersectionById(l.get(i));
+                                                if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
+                                             }
+                                            
                                         }
                                         break;
                                     }
@@ -172,9 +184,11 @@ public class DrawMap extends JFrame {
         g2d.setColor(Color.GREEN);
         g2d.setStroke(new BasicStroke(2f));
         Double x1, y1, x2, y2;
-        for (int i = 0; i < route.size() - 1; i++) {
-            Integer id1 = route.get(i);
-            Integer id2 = route.get(i + 1);
+
+        for (int i=0; i<route.size()-1; i++){
+            Long id1 = route.get(i);
+            Long id2 = route.get(i+1);
+          
             Intersection source = streetMap.getIntersectionById(id1);
             Intersection destination = streetMap.getIntersectionById(id2);
             x1 = normalizeLatitude(source.getLatitude());
@@ -185,6 +199,38 @@ public class DrawMap extends JFrame {
         }
     }
 
+/*
+    void listenToClicksOnIntersections (Graphics g) {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Collection<Intersection> intersectionList = streetMap.getIntersections().values();
+                for (Intersection intersection : intersectionList) {
+                    Double latTrasf = normalizeLatitude(intersection.getLatitude());
+                    Double lonTrasf = normalizeLongitude(intersection.getLongitude());
+                    Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10);
+                    if (circle.contains(e.getPoint())) {
+                    int index = delevaryService.addInergection(intersection);
+                    System.out.println("intersection id = " + intersection.getId());
+                    System.out.println("Intersection clicked: Latitude: " + intersection.getLatitude() + ", Longitude: " + intersection.getLongitude());
+                    if (index>=5){
+                        List<Long> l = delevaryService.computeGraph();
+                        List<Intersection> listRoute = new ArrayList<>();
+                        listRoute.add(streetMap.getIntersectionById(l.get(0)));
+                        for(int i =1;i<l.size();i++){
+                            Intersection inter = streetMap.getIntersectionById(l.get(i));
+                            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
+                        }
+                        System.out.println(l);
+                    }
+                    break;
+                    }
+                }
+            }
+        });
+    }
+*/
+  
     public void paint(Graphics g) {
         super.paint(g);
 
