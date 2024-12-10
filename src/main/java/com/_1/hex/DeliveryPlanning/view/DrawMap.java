@@ -2,6 +2,7 @@ package com._1.hex.DeliveryPlanning.view;
 
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -12,7 +13,8 @@ import java.util.Map;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
-import javax.swing.JFrame;
+
+import javax.swing.*;
 
 /**
  * This program demonstrates how to draw lines using Graphics2D object.
@@ -31,9 +33,19 @@ public class DrawMap extends JFrame {
 
     public DrawMap() {
         super("Map");
-        setSize(1000, 1000);
+        setSize(1800, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        JPanel infoPanel = new JPanel();
+        JPanel dump = new JPanel(); //there is nothing here, just to separate the 2 sides of the window
+        infoPanel.setLayout(new BorderLayout());
+        infoPanel.setPreferredSize(new Dimension(800, 1000));
+        JButton button1 = new JButton("Generer");
+
+        infoPanel.add(button1, BorderLayout.SOUTH);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dump, infoPanel);
+        splitPane.setDividerLocation(1000);
+        add(splitPane, BorderLayout.CENTER);
     }
 
     void defineStreetMap (StreetMap streetMap) {
