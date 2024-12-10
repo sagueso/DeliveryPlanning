@@ -44,7 +44,7 @@ public class DelevaryService {
             }
         }
         this.selectedIntersections.add(intersection);
-        System.out.println("intersection added to delevary service from services package!" + intersection);
+        System.out.println("intersection added to delevary service from services package!" + intersection.getId());
         return index;
     }
     public List<Long> computeGraph(){

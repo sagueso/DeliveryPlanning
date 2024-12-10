@@ -120,6 +120,7 @@ public class DrawMap extends JFrame {
                                 graph.setColor(Color.DARK_GRAY);
                                 graph.fill(rectangle);
                                 clicksCounter.set(0, -1);
+                                clicksCounter.add(0);
                                 pointsGenerated = delevaryService.addInergection(intersection);
                             }
 
