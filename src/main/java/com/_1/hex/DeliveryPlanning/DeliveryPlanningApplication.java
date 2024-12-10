@@ -15,7 +15,7 @@ public class DeliveryPlanningApplication {
 		ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
 		// Retrieve LanchApp bean from Spring context and call lanch()
 		//LanchApp lanchApp = context.getBean(LanchApp.class);
-		//lanchApp.lanch();
+		lanchApp.lanch();
 		Mvp mvp = context.getBean(Mvp.class);
 
 		try {
