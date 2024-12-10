@@ -159,29 +159,6 @@ public class DrawMap extends JFrame {
         }
     }
 
-    /*
-     * void listenToClicksOnIntersections (Graphics g) {
-     * 
-     * addMouseListener(new MouseAdapter() {
-     * 
-     * @Override
-     * public void mouseClicked(MouseEvent e) {
-     * for (Intersection intersection : streetMap.getIntersections().values()) {
-     * Double latTrasf = normalizeLatitude(intersection.getLatitude());
-     * Double lonTrasf = normalizeLongitude(intersection.getLongitude());
-     * Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf -
-     * 5.0, 10, 10);
-     * if (circle.contains(e.getPoint())) {
-     * System.out.println("Intersection clicked: Latitude: " +
-     * intersection.getLatitude() + ", Longitude: " + intersection.getLongitude());
-     * clickedIntersectionId[0] = intersection.getId();
-     * break;
-     * }
-     * }
-     * }
-     * });
-     * }
-     */
 
     public void paint(Graphics g) {
         super.paint(g);
@@ -194,10 +171,6 @@ public class DrawMap extends JFrame {
         }
 
         drawPointsWhenIntersectionsIsClicked();
-
-        // listenToClicksOnIntersections();
-
-        // drawPoints(g, streetMap.getIntersectionById(route.get(2)));
     }
 
 }
