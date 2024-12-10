@@ -31,6 +31,7 @@ public class TspService {
             Integer node = tsp.getSolution(i);
             if(node == null){ return null; } // No solution found
             nodes_int.add(node);
+            System.out.println(node);
         }
 
         for (Integer integer : nodes_int) {
