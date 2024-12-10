@@ -19,7 +19,7 @@ public class Request {
     }
 
     public int getNbOfIntersections() {
-        return 2*this.trip.size();
+        return 2*this.trip.size() + 1;
     }
 
     public Double getDistance(Long originId, Long destinationId) {
@@ -57,12 +57,16 @@ public class Request {
         this.trip.add(delivery);
     }
 
+    /**
+     * @param i: Warehouse is 0
+     *         For each delivery, the start point is 2i+1 and the destination point is 2i+2
+     * @return
+     */
    public int getPredecessor(int i) {
-        if(i < 0 || i >= 2*this.trip.size()) {
+        if(i <= 0 || i >= 2*this.trip.size()+1) {
             return -1; // Error here bad call
         }
-
-        if( i % 2 == 0) {
+        if(i % 2 == 1) {
             return -1; // No predecessor for start point
         }
         else {
