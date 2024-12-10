@@ -46,7 +46,7 @@ public class MainDrawMap {
                             map.getIntersectionById(208769039L);
                     Intersection destination = map.getIntersectionById(25173820L);
                 
-                    Pair<List<Integer>, Double> path = graphService.computeTheShortestPath(source,destination);
+                    Pair<List<Long>, Double> path = graphService.computeTheShortestPath(source,destination);
                     drawMap.defineRoute(path.getFirst());
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);

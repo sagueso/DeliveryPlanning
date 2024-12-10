@@ -87,11 +87,11 @@ public class Mvp {
                         if (delivery.getStartPoint().getId().equals(enlevementId2)) {
                             for (Courrier courrier : courriers) {
                                 if (courrier.getName().equals(livName)) {
-                                    List<Integer> trip1 = graphService.computeTheShortestPath(courrier.getWarehouse(), delivery.getStartPoint()).getFirst();
+                                    List<Long> trip1 = graphService.computeTheShortestPath(courrier.getWarehouse(), delivery.getStartPoint()).getFirst();
                                     Double distance1 = graphService.computeTheShortestPath(courrier.getWarehouse(), delivery.getStartPoint()).getSecond();
-                                    List<Integer> trip2 = graphService.computeTheShortestPath(delivery.getStartPoint(), delivery.getDestinationPoint()).getFirst();
+                                    List<Long> trip2 = graphService.computeTheShortestPath(delivery.getStartPoint(), delivery.getDestinationPoint()).getFirst();
                                     Double distance2 = graphService.computeTheShortestPath(delivery.getStartPoint(), delivery.getDestinationPoint()).getSecond();
-                                    List<Integer> trip3 = graphService.computeTheShortestPath(delivery.getDestinationPoint(), courrier.getWarehouse()).getFirst();
+                                    List<Long> trip3 = graphService.computeTheShortestPath(delivery.getDestinationPoint(), courrier.getWarehouse()).getFirst();
                                     Double distance3 = graphService.computeTheShortestPath(delivery.getDestinationPoint(), courrier.getWarehouse()).getSecond();
                                     Double totalTime = 60 * (distance1 + distance2 + distance3) / 15000;
                                     for(int i =0;i<trip1.size();i++){
