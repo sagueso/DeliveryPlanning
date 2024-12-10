@@ -97,7 +97,7 @@ public class DrawMap extends JFrame {
                 Integer iterator = 1;
                 Integer pointsGenerated = 0;
 
-                while (pointsGenerated < 5) {
+                
 
                     for (Intersection intersection : streetMap.getIntersections().values()) {
                         Ellipse2D.Double circle = new Ellipse2D.Double(
@@ -127,6 +127,10 @@ public class DrawMap extends JFrame {
                                         clicksCounter.add(0);
                                         iterator++;
                                         pointsGenerated = delevaryService.addInergection(intersection);
+                                        if (pointsGenerated>=5){
+                                            List<Long> l = delevaryService.computeGraph();
+                                            System.out.println(l);
+                                        }
                                         break;
                                     } else if (clicksCounter.get(i) == 0) {
                                         Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y,
@@ -138,13 +142,17 @@ public class DrawMap extends JFrame {
                                         graph.fill(rectangle);
                                         clicksCounter.set(i, 1);
                                         pointsGenerated = delevaryService.addInergection(intersection);
+                                        if (pointsGenerated>=5){
+                                            List<Long> l = delevaryService.computeGraph();
+                                            System.out.println(l);
+                                        }
                                         break;
                                     }
                                 }
                             }
                         }
                     }
-                }
+                
             }
         });
     }
