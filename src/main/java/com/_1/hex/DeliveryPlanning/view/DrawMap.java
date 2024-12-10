@@ -12,6 +12,11 @@ import java.util.Map;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
+import com._1.hex.DeliveryPlanning.service.DelevaryService;
+import com._1.hex.DeliveryPlanning.service.GraphService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.swing.JFrame;
 
 /**
@@ -20,9 +25,10 @@ import javax.swing.JFrame;
  * @author www.codejava.net
  *
  */
-
+@Component
 public class DrawMap extends JFrame {
-
+    private final DelevaryService delevaryService;
+    private final GraphService graphService;
     StreetMap streetMap;
     Double minLatitudeValue = Double.MAX_VALUE;
     Double maxLatitudeValue = Double.MIN_VALUE;
@@ -30,8 +36,11 @@ public class DrawMap extends JFrame {
     Double maxLongitudeValue = Double.MIN_VALUE;
     List<Integer> route;
 
-    public DrawMap() {
+    @Autowired
+    public DrawMap(DelevaryService delevaryService, GraphService graphService) {
         super("Map");
+        this.delevaryService = delevaryService;
+        this.graphService = graphService;
         setSize(1000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
