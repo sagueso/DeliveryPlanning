@@ -1,6 +1,5 @@
 package com._1.hex.DeliveryPlanning;
 
-import com._1.hex.DeliveryPlanning.application.Mvp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -15,9 +14,16 @@ public class DeliveryPlanningApplication {
 		// Retrieve LanchApp bean from Spring context and call lanch()
 		//LanchApp lanchApp = context.getBean(LanchApp.class);
 		//lanchApp.lanch();
-		Mvp mvp = context.getBean(Mvp.class);
+		//Mvp mvp = context.getBean(Mvp.class);
+
 		try {
-			mvp.launch();
+			//mvp.launch();
+			while (true){
+				boolean clicked = true;
+				if (clicked){
+					break;
+				}
+			}
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

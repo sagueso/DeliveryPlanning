@@ -22,7 +22,7 @@ public abstract class TemplateTSP implements TSP {
 		bestSolCost = Integer.MAX_VALUE;
 		Map<Integer,Double> costBetweenTakeUpAndReturn = new HashMap<>();
 		costBetweenTakeUpAndReturn.put(0,0.0);
-		Integer max_cost = 20;
+		Integer max_cost = 99999999;
 		if (branchAndBound(0, unvisited, visited, 0,costBetweenTakeUpAndReturn,max_cost)){
 			System.out.println("Solution found");
 		}
