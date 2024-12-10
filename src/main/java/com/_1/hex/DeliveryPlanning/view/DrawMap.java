@@ -95,43 +95,51 @@ public class DrawMap extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Integer iterator = 1;
+                Integer pointsGenerated = 0;
 
-                for (Intersection intersection : streetMap.getIntersections().values()) {
-                    Ellipse2D.Double circle = new Ellipse2D.Double(normalizeLatitude(intersection.getLatitude()) - 5,
-                            normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
+                while (pointsGenerated < 5) {
 
-                    if (circle.contains(e.getPoint())) {
-                        if (clicksCounter.get(0) == 0) {
-                            Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
-                                    circle.height);
-                            Graphics g = getGraphics();
-                            Graphics2D graph = (Graphics2D) g;
-                            graph.setColor(Color.DARK_GRAY);
-                            graph.fill(rectangle);
-                            clicksCounter.set(0, -1);
-                            clicksCounter.add(0);
-                        }
+                    for (Intersection intersection : streetMap.getIntersections().values()) {
+                        Ellipse2D.Double circle = new Ellipse2D.Double(
+                                normalizeLatitude(intersection.getLatitude()) - 5,
+                                normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
 
-                        else {
-                            for (int i = iterator; i < clicksCounter.size(); i++) {
-                                if (clicksCounter.get(i) == 1) {
-                                    Graphics g = getGraphics();
-                                    Graphics2D graph = (Graphics2D) g;
-                                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                                    graph.fill(circle);
-                                    clicksCounter.set(i, 2);
-                                    clicksCounter.add(0);
-                                    iterator++;
-                                    break;
-                                } else if (clicksCounter.get(i) == 0) {
-                                    Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
-                                            circle.height);
-                                    Graphics g = getGraphics();
-                                    Graphics2D graph = (Graphics2D) g;
-                                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                                    graph.fill(rectangle);
-                                    clicksCounter.set(i, 1);
-                                    break;
+                        if (circle.contains(e.getPoint())) {
+                            if (clicksCounter.get(0) == 0) {
+                                Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
+                                        circle.height);
+                                Graphics g = getGraphics();
+                                Graphics2D graph = (Graphics2D) g;
+                                graph.setColor(Color.DARK_GRAY);
+                                graph.fill(rectangle);
+                                clicksCounter.set(0, -1);
+                                pointsGenerated = delevaryService.addInergection(intersection);
+                            }
+
+                            else {
+                                for (int i = iterator; i < clicksCounter.size(); i++) {
+                                    if (clicksCounter.get(i) == 1) {
+                                        Graphics g = getGraphics();
+                                        Graphics2D graph = (Graphics2D) g;
+                                        graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
+                                        graph.fill(circle);
+                                        clicksCounter.set(i, 2);
+                                        clicksCounter.add(0);
+                                        iterator++;
+                                        pointsGenerated = delevaryService.addInergection(intersection);
+                                        break;
+                                    } else if (clicksCounter.get(i) == 0) {
+                                        Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y,
+                                                circle.width,
+                                                circle.height);
+                                        Graphics g = getGraphics();
+                                        Graphics2D graph = (Graphics2D) g;
+                                        graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
+                                        graph.fill(rectangle);
+                                        clicksCounter.set(i, 1);
+                                        pointsGenerated = delevaryService.addInergection(intersection);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -158,7 +166,6 @@ public class DrawMap extends JFrame {
             g2d.draw(new Line2D.Double(x1, y1, x2, y2));
         }
     }
-
 
     public void paint(Graphics g) {
         super.paint(g);
