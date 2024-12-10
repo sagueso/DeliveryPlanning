@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -139,12 +140,14 @@ public class DrawMap extends JFrame {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                for (Intersection intersection : streetMap.getIntersections().values()) {
+                Collection<Intersection> intersectionList = streetMap.getIntersections().values();
+                for (Intersection intersection : intersectionList) {
                     Double latTrasf = normalizeLatitude(intersection.getLatitude());
                     Double lonTrasf = normalizeLongitude(intersection.getLongitude());
                     Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10);
                     if (circle.contains(e.getPoint())) {
                     int index = delevaryService.addInergection(intersection);
+                    System.out.println("intersection id = " + intersection.getId());
                     System.out.println("Intersection clicked: Latitude: " + intersection.getLatitude() + ", Longitude: " + intersection.getLongitude());
                     if (index>=5){
                         List<Long> l = delevaryService.computeGraph();

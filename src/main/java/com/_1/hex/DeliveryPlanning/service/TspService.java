@@ -34,7 +34,7 @@ public class TspService {
             if (integer == 0) {
                 nodes.add(request.getWarehouse().getId());
             } else {
-                if (integer % 2 == 1) {
+                if (integer %2 == 1) {
                     nodes.add(request.getTrip().get(integer / 2).getStartPoint().getId());
                 } else {
                     nodes.add(request.getTrip().get(integer / 2).getDestinationPoint().getId());
