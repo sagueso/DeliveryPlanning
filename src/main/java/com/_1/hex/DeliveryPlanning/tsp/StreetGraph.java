@@ -55,7 +55,7 @@ public class StreetGraph implements Graph{
             if (distance != null) {
                 return distance;
             } else {
-                Pair<List<Integer>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
+                Pair<List<Long>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
                 //TODO List of Long ids
                 request.addDistance(id1, id2, shortestPath.getFirst(), shortestPath.getSecond());
                 return shortestPath.getSecond();

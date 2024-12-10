@@ -32,28 +32,34 @@ public class DelevaryService {
         if (index == 1 ){
             this.warehouse = new Warehouse(intersection,"Lyon");
             this.request = new Request(this.warehouse);
+
         }
         else {
 
             if (index%2==0){
                 this.startPoint = intersection;
+
+
             }
             else {
                 this.endPoint = intersection;
                 this.request.addDelivery(new Delivery(startPoint,endPoint));
             }
         }
+        /*
+        if (this.startPoint != null && this.endPoint == null) {
+            this.endPoint = warehouse;
+            this.request.addDelivery(new Delivery(startPoint,endPoint));
+        }*/
+
+
         this.selectedIntersections.add(intersection);
-        System.out.println("intersection added to delevary service from services package!" + intersection);
+        System.out.println("intersection added to delevary service from services package!" + intersection.getId());
         return index;
     }
     public List<Long> computeGraph(){
-
         solution = tspService.searchSolution(100000,this.request,graphService);
         return solution;
     }
-
-
-
 
 }

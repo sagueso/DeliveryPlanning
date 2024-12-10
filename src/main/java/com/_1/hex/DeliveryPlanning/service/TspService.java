@@ -37,6 +37,7 @@ public class TspService {
             if (integer == 0) {
                 nodes.add(request.getWarehouse().getId());
             } else {
+
                 if (integer % 2 == 1) {
                     nodes.add(request.getTrip().get((integer-1) / 2).getStartPoint().getId());
                 } else {
@@ -44,6 +45,12 @@ public class TspService {
                 }
             }
         }
-        return nodes;
+        List<Long> listeNodesId = new ArrayList<>();
+        int n = nodes.size();
+        for (int i=0; i<n-1; i++) {
+            listeNodesId.addAll(request.getDistancesRoute(nodes.get(i), nodes.get(i+1)));
+        }
+
+        return listeNodesId;
     }
 }

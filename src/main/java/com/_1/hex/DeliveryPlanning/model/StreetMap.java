@@ -18,6 +18,10 @@ public class StreetMap {
         intersectionsIds = new HashMap<Long, Integer>();
     }
 
+    public Map<Long, Integer> getIntersectionsId(){
+        return intersectionsIds;
+    }
+
     public String getName() {
         return name;
     }
