@@ -25,7 +25,7 @@ public class StreetGraph implements Graph{
     @Override
     //getCost return double
     public double getCost(int i, int j) {
-        if(i < 0 || j < 0 || i >= 2*request.getTrip().size() || j >= 2*request.getTrip().size() || i == j) {
+        if(i < 0 || j < 0 || i > 2*request.getTrip().size() || j > 2*request.getTrip().size()) {
             return -1; // Error here bad call
         }
 
