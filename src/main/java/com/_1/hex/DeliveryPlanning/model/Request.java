@@ -29,7 +29,13 @@ public class Request {
     }
 
     public List<Long> getDistancesRoute(long originId, long destinationId) {
-        return distances.get(new Pair<>(originId,destinationId)).getFirst();
+        Pair<Long, Long> key = new Pair<>(originId, destinationId);
+        var value = this.distances.containsKey(key)? this.distances.get(key).getFirst() : null;
+        if(value == null) {
+            key = new Pair<>(destinationId, originId);
+            value = this.distances.containsKey(key)? this.distances.get(key).getFirst() : null;
+        }
+        return value;
     }
 
     public List<Delivery> getTrip() {

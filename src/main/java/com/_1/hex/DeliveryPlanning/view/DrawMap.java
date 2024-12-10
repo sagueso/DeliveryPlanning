@@ -142,10 +142,11 @@ public class DrawMap extends JFrame {
                                             List<Long> l = delevaryService.computeGraph();
                                             List<Intersection> listRoute = new ArrayList<>();
                                             listRoute.add(streetMap.getIntersectionById(l.get(0)));
-                                            for(int i =1;i<l.size();i++){
-                                                Intersection inter = streetMap.getIntersectionById(l.get(i));
+                                            for(int j =1;j<l.size();j++){
+                                                Intersection inter = streetMap.getIntersectionById(l.get(j));
                                                 if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-                                             }
+                                            }
+                                            System.out.println("route: "+listRoute);
                                         }
                                         break;
                                     } else if (clicksCounter.get(i) == 0) {
@@ -162,11 +163,11 @@ public class DrawMap extends JFrame {
                                             List<Long> l = delevaryService.computeGraph();
                                             List<Intersection> listRoute = new ArrayList<>();
                                             listRoute.add(streetMap.getIntersectionById(l.get(0)));
-                                            for(int i =1;i<l.size();i++){
-                                                Intersection inter = streetMap.getIntersectionById(l.get(i));
+                                            for(int j =1;j<l.size();j++){
+                                                Intersection inter = streetMap.getIntersectionById(l.get(j));
                                                 if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-                                             }
-                                            
+                                            }
+                                            System.out.println("route: "+listRoute);
                                         }
                                         break;
                                     }
