@@ -35,13 +35,13 @@ public class StreetGraph implements Graph{
             int1 = request.getWarehouse();// Warehouse
         }
         else {
-            int1 = i % 2 == 1 ? request.getTrip().get(i / 2).getStartPoint() : request.getTrip().get(i / 2).getDestinationPoint();
+            int1 = i % 2 == 1 ? request.getTrip().get((i-1) / 2).getStartPoint() : request.getTrip().get((i-1) / 2).getDestinationPoint();
         }
         if(j == 0) {
             int2 = request.getWarehouse();// Warehouse
         }
         else {
-            int2 = j % 2 == 1 ? request.getTrip().get(j / 2).getStartPoint() : request.getTrip().get(j / 2).getDestinationPoint();
+            int2 = j % 2 == 1 ? request.getTrip().get((j-1) / 2).getStartPoint() : request.getTrip().get((j-1) / 2).getDestinationPoint();
         }
         Long id1 = int1.getId();
         Long id2 = int2.getId();

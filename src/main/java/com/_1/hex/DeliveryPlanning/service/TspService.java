@@ -28,16 +28,19 @@ public class TspService {
         List<Integer> nodes_int = new ArrayList<>();
         List<Long> nodes = new ArrayList<>();
         for (int i=0; i<graph.getNbVertices(); i++) {
-            nodes_int.add(tsp.getSolution(i));
+            Integer node = tsp.getSolution(i);
+            if(node == null){ return null; } // No solution found
+            nodes_int.add(node);
         }
+
         for (Integer integer : nodes_int) {
             if (integer == 0) {
                 nodes.add(request.getWarehouse().getId());
             } else {
                 if (integer % 2 == 1) {
-                    nodes.add(request.getTrip().get(integer / 2).getStartPoint().getId());
+                    nodes.add(request.getTrip().get((integer-1) / 2).getStartPoint().getId());
                 } else {
-                    nodes.add(request.getTrip().get(integer / 2).getDestinationPoint().getId());
+                    nodes.add(request.getTrip().get((integer-1) / 2).getDestinationPoint().getId());
                 }
             }
         }
