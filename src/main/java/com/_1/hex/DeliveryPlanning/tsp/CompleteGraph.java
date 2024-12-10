@@ -53,9 +53,9 @@ public class CompleteGraph implements Graph {
 	}
 
 	@Override
-	public double getCost(int i, int j) {
+	public Double getCost(int i, int j) {
 		if (i<0 || i>=nbVertices || j<0 || j>=nbVertices)
-			return -1;
+			return null;
 		return cost[i][j];
 	}
 

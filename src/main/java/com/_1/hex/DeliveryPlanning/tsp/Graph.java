@@ -13,7 +13,7 @@ public interface Graph {
 	 * @param j 
 	 * @return the cost of arc (i,j) if (i,j) is an arc; -1 otherwise
 	 */
-	public abstract double getCost(int i, int j);
+	public abstract Double getCost(int i, int j);
 
 	/**
 	 * @param i 
