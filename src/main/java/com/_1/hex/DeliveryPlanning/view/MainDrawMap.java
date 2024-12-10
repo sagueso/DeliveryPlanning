@@ -48,6 +48,8 @@ public class MainDrawMap {
                 
                     Pair<List<Long>, Double> path = graphService.computeTheShortestPath(source,destination);
                     drawMap.defineRoute(path.getFirst());
+
+                    
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (XMLStreamException e) {
@@ -57,6 +59,7 @@ public class MainDrawMap {
                 drawMap.defineStreetMap(map);
 
                 drawMap.setVisible(true);
+
             }
         });
     }

@@ -13,6 +13,7 @@ public class DeliveryPlanningApplication {
 	public static void main(String[] args) {
 
 		ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
+
 		Mvp mvp = context.getBean(Mvp.class);
 
 		try {
