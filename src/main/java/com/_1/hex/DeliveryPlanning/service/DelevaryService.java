@@ -57,6 +57,10 @@ public class DelevaryService {
         System.out.println("intersection added to delevary service from services package!" + intersection.getId());
         return index;
     }
+
+    public List<Intersection> getSelectedIntersections() {
+        return selectedIntersections;
+    }
     public List<Long> computeGraph(){
         solution = tspService.searchSolution(100000,this.request,graphService);
         return solution;
