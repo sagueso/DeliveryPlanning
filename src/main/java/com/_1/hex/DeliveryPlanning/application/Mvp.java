@@ -10,11 +10,10 @@ import com._1.hex.DeliveryPlanning.model.*;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.Services;
 import com._1.hex.DeliveryPlanning.service.XmlParser;
-import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLStreamException;
 
-@Component
+
 public class Mvp {
 
     private final GraphService graphService;

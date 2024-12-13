@@ -264,9 +264,9 @@ public class DrawMap extends JFrame {
                 "Click on an intersection to set a pick-up point",
                 "Click on an intersection to set a delivery point"
         };
-
-        controlText.setText(states[currentState+1]);
         currentState = (currentState + 1) % 2;
+        controlText.setText(states[currentState+1]);
+
     }
 }
 
