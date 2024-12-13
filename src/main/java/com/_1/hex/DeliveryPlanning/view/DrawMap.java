@@ -177,15 +177,7 @@ public class DrawMap extends JFrame {
                                     iterator++;
                                     pointsGenerated = delevaryService.addInergection(intersection);
                                     if (pointsGenerated>=5){
-                                        List<Long> l = delevaryService.computeGraph();
-                                        List<Intersection> listRoute = new ArrayList<>();
-                                        listRoute.add(streetMap.getIntersectionById(l.get(0)));
-                                        for(int j =1;j<l.size();j++){
-                                            Intersection inter = streetMap.getIntersectionById(l.get(j));
-                                            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-                                        }
-                                        System.out.println("route: "+listRoute);
-
+                                        List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
                                         route = listRoute;
                                         repaint();
 
@@ -202,15 +194,7 @@ public class DrawMap extends JFrame {
                                     clicksCounter.set(i, 1);
                                     pointsGenerated = delevaryService.addInergection(intersection);
                                     if (pointsGenerated>=5){
-                                        List<Long> l = delevaryService.computeGraph();
-                                        List<Intersection> listRoute = new ArrayList<>();
-                                        listRoute.add(streetMap.getIntersectionById(l.get(0)));
-                                        for(int j =1;j<l.size();j++){
-                                            Intersection inter = streetMap.getIntersectionById(l.get(j));
-                                            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-                                        }
-                                        System.out.println("route: "+listRoute);
-
+                                        List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
                                         route = listRoute;
                                         repaint();
                                     }

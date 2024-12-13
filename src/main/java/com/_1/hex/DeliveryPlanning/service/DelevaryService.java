@@ -1,9 +1,6 @@
 package com._1.hex.DeliveryPlanning.service;
 
-import com._1.hex.DeliveryPlanning.model.Delivery;
-import com._1.hex.DeliveryPlanning.model.Intersection;
-import com._1.hex.DeliveryPlanning.model.Request;
-import com._1.hex.DeliveryPlanning.model.Warehouse;
+import com._1.hex.DeliveryPlanning.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,21 +26,19 @@ public class DelevaryService {
 
     public int addInergection(Intersection intersection) {
         index++;
-        if (index == 1 ){
-            this.warehouse = new Warehouse(intersection,"Lyon");
+        if (index == 1) {
+            this.warehouse = new Warehouse(intersection, "Lyon");
             this.request = new Request(this.warehouse);
 
-        }
-        else {
+        } else {
 
-            if (index%2==0){
+            if (index % 2 == 0) {
                 this.startPoint = intersection;
 
 
-            }
-            else {
+            } else {
                 this.endPoint = intersection;
-                this.request.addDelivery(new Delivery(startPoint,endPoint));
+                this.request.addDelivery(new Delivery(startPoint, endPoint));
             }
         }
         /*
@@ -57,9 +52,17 @@ public class DelevaryService {
         System.out.println("intersection added to delevary service from services package!" + intersection.getId());
         return index;
     }
-    public List<Long> computeGraph(){
-        solution = tspService.searchSolution(100000,this.request,graphService);
-        return solution;
+    public List<Intersection> computeGraph(StreetMap streetMap){
+        List<Long> l = tspService.searchSolution(100000,this.request,graphService);
+        List<Intersection> listRoute = new ArrayList<>();
+        listRoute.add(streetMap.getIntersectionById(l.get(0)));
+        for(int j =1;j<l.size();j++){
+            Intersection inter = streetMap.getIntersectionById(l.get(j));
+            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
+        }
+        System.out.println("route: "+listRoute);
+
+        return listRoute;
     }
 
 }
