@@ -41,15 +41,15 @@ public class MainDrawMap {
                 try {
                     map = xmlParser.parse(xmlPath);
                     graphService.addMap(map);
-                    
-                    Intersection source =
+
+                    /*Intersection source =
                             map.getIntersectionById(208769039L);
                     Intersection destination = map.getIntersectionById(25173820L);
-                
-                    Pair<List<Long>, Double> path = graphService.computeTheShortestPath(source,destination);
-                    drawMap.defineRoute(path.getFirst());
 
-                    
+                    Pair<List<Long>, Double> path = graphService.computeTheShortestPath(source,destination);
+                    drawMap.defineRoute(path.getFirst());*/
+
+
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (XMLStreamException e) {
