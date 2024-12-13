@@ -1,9 +1,11 @@
 package com._1.hex.DeliveryPlanning.service;
 
 import com._1.hex.DeliveryPlanning.model.*;
+import com._1.hex.DeliveryPlanning.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 @Service
@@ -52,7 +54,7 @@ public class DelevaryService {
         System.out.println("intersection added to delevary service from services package!" + intersection.getId());
         return index;
     }
-    public List<Intersection> computeGraph(StreetMap streetMap){
+    public List<Intersection> computeGraph(StreetMap streetMap) {
         List<Long> l = tspService.searchSolution(100000,this.request,graphService);
         List<Intersection> listRoute = new ArrayList<>();
         listRoute.add(streetMap.getIntersectionById(l.get(0)));
@@ -61,6 +63,10 @@ public class DelevaryService {
             if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
         }
         System.out.println("route: "+listRoute);
+        Route route = new Route(listRoute);
+        try {
+            FileUtils.saveRouteToFile(route,"route.json");
+        } catch (IOException e) {System.out.println(e);}
 
         return listRoute;
     }
