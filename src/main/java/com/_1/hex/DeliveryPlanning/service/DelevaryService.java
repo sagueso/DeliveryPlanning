@@ -71,4 +71,13 @@ public class DelevaryService {
         return listRoute;
     }
 
+    public List<Intersection> getDefaultGraph() {
+        List<Intersection> listRoute = new ArrayList<>();
+        try {
+             listRoute = FileUtils.readRouteFromFile("route.json").getIntersections();
+        }catch (Exception e){System.out.println("there is no default route!");}
+        return listRoute;
+    }
+
+
 }
