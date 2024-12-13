@@ -51,15 +51,10 @@ public class StreetGraph implements Graph{
             return distance;
         }
         else {
-            distance = request.getDistance(id2, id1);
-            if (distance != null) {
-                return distance;
-            } else {
-                Pair<List<Long>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
-                //TODO List of Long ids
-                request.addDistance(id1, id2, shortestPath.getFirst(), shortestPath.getSecond());
-                return shortestPath.getSecond();
-            }
+            Pair<List<Long>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
+            //TODO List of Long ids
+            request.addDistance(id1, id2, shortestPath.getFirst(), shortestPath.getSecond());
+            return shortestPath.getSecond();
         }
     }
 

@@ -1,6 +1,8 @@
 package com._1.hex.DeliveryPlanning.view;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -41,6 +43,9 @@ public class DrawMap extends JFrame {
     Double minLongitudeValue = Double.MAX_VALUE;
     Double maxLongitudeValue = Double.MIN_VALUE;
     List<Intersection> route;
+    List<Integer> clicksCounter = new ArrayList<>();
+    Integer iterator = 1;
+    Integer pointsGenerated = 0;
 
     @Autowired
     public DrawMap(DelevaryService delevaryService, GraphService graphService) {
@@ -81,6 +86,16 @@ public class DrawMap extends JFrame {
         add(mapPanel, BorderLayout.CENTER);
         add(controlPanel, BorderLayout.EAST);
 
+        drawPointsWhenIntersectionsIsClicked();
+
+
+        generatePathButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                generateRoute();
+                repaint();
+            }
+        });
 
     }
 
@@ -134,17 +149,54 @@ public class DrawMap extends JFrame {
         }
     }
 
-    void drawPointsWhenIntersectionsIsClicked() {
-        List<Integer> clicksCounter = new ArrayList<>();
-        clicksCounter.add(0);
+    void drawPoint(Ellipse2D.Double circle) {
 
+        updateControlText();
+        if (clicksCounter.get(0) == 0) {
+            Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
+                    circle.height);
+            Graphics g = getGraphics();
+            Graphics2D graph = (Graphics2D) g;
+            graph.setColor(Color.DARK_GRAY);
+            graph.fill(rectangle);
+            clicksCounter.set(0, -1);
+            clicksCounter.add(0);
+        }
+        else {
+            for (int i = iterator; i < clicksCounter.size(); i++) {
+                if (clicksCounter.get(i) == 1) {
+                    Graphics g = getGraphics();
+                    Graphics2D graph = (Graphics2D) g;
+                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
+                    graph.fill(circle);
+                    clicksCounter.set(i, 2);
+                    clicksCounter.add(0);
+                    iterator++;
+                    break;
+                } else if (clicksCounter.get(i) == 0) {
+                    Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y,
+                            circle.width,
+                            circle.height);
+                    Graphics g = getGraphics();
+                    Graphics2D graph = (Graphics2D) g;
+                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
+                    graph.fill(rectangle);
+                    clicksCounter.set(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    void generateRoute(){
+        List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
+        route = listRoute;
+    }
+
+    void drawPointsWhenIntersectionsIsClicked() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Integer iterator = 1;
-                Integer pointsGenerated = 0;
-
-
 
                 for (Intersection intersection : streetMap.getIntersections().values()) {
                     Ellipse2D.Double circle = new Ellipse2D.Double(
@@ -152,59 +204,10 @@ public class DrawMap extends JFrame {
                             normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
 
                     if (circle.contains(e.getPoint())) {
-                        updateControlText();
-                        if (clicksCounter.get(0) == 0) {
-                            Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
-                                    circle.height);
-                            Graphics g = getGraphics();
-                            Graphics2D graph = (Graphics2D) g;
-                            graph.setColor(Color.DARK_GRAY);
-                            graph.fill(rectangle);
-                            clicksCounter.set(0, -1);
-                            clicksCounter.add(0);
-                            pointsGenerated = delevaryService.addInergection(intersection);
-                        }
-
-                        else {
-                            for (int i = iterator; i < clicksCounter.size(); i++) {
-                                if (clicksCounter.get(i) == 1) {
-                                            Graphics g = getGraphics();
-                                    Graphics2D graph = (Graphics2D) g;
-                                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                                    graph.fill(circle);
-                                    clicksCounter.set(i, 2);
-                                    clicksCounter.add(0);
-                                    iterator++;
-                                    pointsGenerated = delevaryService.addInergection(intersection);
-                                    if (pointsGenerated>=5){
-                                        List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
-                                        route = listRoute;
-                                        repaint();
-
-                                    }
-                                    break;
-                                } else if (clicksCounter.get(i) == 0) {
-                                    Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y,
-                                            circle.width,
-                                            circle.height);
-                                    Graphics g = getGraphics();
-                                    Graphics2D graph = (Graphics2D) g;
-                                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                                    graph.fill(rectangle);
-                                    clicksCounter.set(i, 1);
-                                    pointsGenerated = delevaryService.addInergection(intersection);
-                                    if (pointsGenerated>=5){
-                                        List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
-                                        route = listRoute;
-                                        repaint();
-                                    }
-                                    break;
-                                }
-                            }
-                        }
+                        drawPoint(circle);
+                        pointsGenerated = delevaryService.addInergection(intersection);
                     }
                 }
-
             }
         });
     }
@@ -231,14 +234,24 @@ public class DrawMap extends JFrame {
     public void paint(Graphics g) {
         super.paint(g);
 
-
-
         drawStreetsOnJFrame_FromStreetMap(g);
         if (route != null) {
             drawRoutes_FromTheOriginAndDestination(g);
         }
 
-        drawPointsWhenIntersectionsIsClicked();
+        this.clicksCounter = new ArrayList<>();
+        this.clicksCounter.add(0);
+        this.iterator = 1;
+        this.pointsGenerated = 0;
+        if(delevaryService.getSelectedIntersections() != null) {
+            List<Intersection> selectedIntersections = delevaryService.getSelectedIntersections();
+            for (Intersection intersection : selectedIntersections) {
+                Ellipse2D.Double circle = new Ellipse2D.Double(
+                        normalizeLatitude(intersection.getLatitude()) - 5,
+                        normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
+                drawPoint(circle);
+            }
+        }
     }
 
 
