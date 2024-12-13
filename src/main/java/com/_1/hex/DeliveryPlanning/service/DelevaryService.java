@@ -1,7 +1,7 @@
 package com._1.hex.DeliveryPlanning.service;
 
 import com._1.hex.DeliveryPlanning.model.*;
-import com._1.hex.DeliveryPlanning.utils.FileUtils;
+import com._1.hex.DeliveryPlanning.utils.PersistenceFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +65,7 @@ public class DelevaryService {
         System.out.println("route: "+listRoute);
         Route route = new Route(listRoute);
         try {
-            FileUtils.saveRouteToFile(route,"route.json");
+            PersistenceFileUtils.saveRouteToFile(route,"route.json");
         } catch (IOException e) {System.out.println(e);}
 
         return listRoute;
@@ -74,7 +74,7 @@ public class DelevaryService {
     public List<Intersection> getDefaultGraph() {
         List<Intersection> listRoute = new ArrayList<>();
         try {
-             listRoute = FileUtils.readRouteFromFile("route.json").getIntersections();
+             listRoute = PersistenceFileUtils.readRouteFromFile("route.json").getIntersections();
         }catch (Exception e){System.out.println("there is no default route!");}
         return listRoute;
     }

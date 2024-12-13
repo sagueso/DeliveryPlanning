@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 
-public class FileUtils {
+public class PersistenceFileUtils {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
