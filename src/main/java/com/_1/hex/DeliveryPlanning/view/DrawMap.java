@@ -19,16 +19,20 @@ import com._1.hex.DeliveryPlanning.service.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  * This program demonstrates how to draw lines using Graphics2D object.
- * 
+ *
  * @author www.codejava.net
  *
  */
 @Component
 public class DrawMap extends JFrame {
+    private static JPanel controlPanel;
+    private static int currentState;
+    private static JPanel mapPanel;
+    private static JLabel controlText;
     private final DelevaryService delevaryService;
     private final GraphService graphService;
     StreetMap streetMap;
@@ -36,24 +40,57 @@ public class DrawMap extends JFrame {
     Double maxLatitudeValue = Double.MIN_VALUE;
     Double minLongitudeValue = Double.MAX_VALUE;
     Double maxLongitudeValue = Double.MIN_VALUE;
-    List<Long> route;
+    List<Intersection> route;
 
     @Autowired
     public DrawMap(DelevaryService delevaryService, GraphService graphService) {
         super("Map");
         this.delevaryService = delevaryService;
         this.graphService = graphService;
-        setSize(1000, 1000);
+        currentState = -1;
+        setSize(1600, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        JPanel mapPanel = new JPanel();
+        mapPanel.setBackground(Color.WHITE);
+        mapPanel.setPreferredSize(new Dimension(1000, 1000));
+
+        // Control Panel
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+        controlPanel.setPreferredSize(new Dimension(600, 1000));
+        controlPanel.setBackground(Color.LIGHT_GRAY);
+
+        JLabel nameLabel = new JLabel("Nom du livreur", SwingConstants.CENTER);
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        controlPanel.add(nameLabel);
+
+        controlText = new JLabel("Click on an intersection to set it as a start point", SwingConstants.CENTER);
+        controlText.setFont(new Font("Arial", Font.PLAIN, 14));
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        controlPanel.add(controlText);
+
+        JButton generatePathButton = new JButton("Generate Path");
+
+        controlPanel.add(Box.createVerticalGlue());
+        controlPanel.add(generatePathButton);
+
+        add(mapPanel, BorderLayout.CENTER);
+        add(controlPanel, BorderLayout.EAST);
+
+
     }
 
     void defineStreetMap(StreetMap streetMap) {
         this.streetMap = streetMap;
+        intialise_MinAndMaxValues_For_LatitudeAndLongitude(streetMap.getIntersections());
     }
 
 
-    void defineRoute (List<Long> route) {this.route = route;}
+    void defineRoute (List<Intersection> route) {this.route = route;}
 
     Double normalizeLatitude(Double latitude) {
         return (latitude - minLatitudeValue) * 1000 / (maxLatitudeValue - minLatitudeValue);
@@ -107,75 +144,83 @@ public class DrawMap extends JFrame {
                 Integer iterator = 1;
                 Integer pointsGenerated = 0;
 
-                
 
-                    for (Intersection intersection : streetMap.getIntersections().values()) {
-                        Ellipse2D.Double circle = new Ellipse2D.Double(
-                                normalizeLatitude(intersection.getLatitude()) - 5,
-                                normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
 
-                        if (circle.contains(e.getPoint())) {
-                            if (clicksCounter.get(0) == 0) {
-                                Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
-                                        circle.height);
-                                Graphics g = getGraphics();
-                                Graphics2D graph = (Graphics2D) g;
-                                graph.setColor(Color.DARK_GRAY);
-                                graph.fill(rectangle);
-                                clicksCounter.set(0, -1);
-                                clicksCounter.add(0);
-                                pointsGenerated = delevaryService.addInergection(intersection);
-                            }
+                for (Intersection intersection : streetMap.getIntersections().values()) {
+                    Ellipse2D.Double circle = new Ellipse2D.Double(
+                            normalizeLatitude(intersection.getLatitude()) - 5,
+                            normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
 
-                            else {
-                                for (int i = iterator; i < clicksCounter.size(); i++) {
-                                    if (clicksCounter.get(i) == 1) {
-                                        Graphics g = getGraphics();
-                                        Graphics2D graph = (Graphics2D) g;
-                                        graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                                        graph.fill(circle);
-                                        clicksCounter.set(i, 2);
-                                        clicksCounter.add(0);
-                                        iterator++;
-                                        pointsGenerated = delevaryService.addInergection(intersection);
-                                        if (pointsGenerated>=5){
-                                            List<Long> l = delevaryService.computeGraph();
-                                            List<Intersection> listRoute = new ArrayList<>();
-                                            listRoute.add(streetMap.getIntersectionById(l.get(0)));
-                                            for(int j =1;j<l.size();j++){
-                                                Intersection inter = streetMap.getIntersectionById(l.get(j));
-                                                if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-                                            }
-                                            System.out.println("route: "+listRoute);
+                    if (circle.contains(e.getPoint())) {
+                        updateControlText();
+                        if (clicksCounter.get(0) == 0) {
+                            Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
+                                    circle.height);
+                            Graphics g = getGraphics();
+                            Graphics2D graph = (Graphics2D) g;
+                            graph.setColor(Color.DARK_GRAY);
+                            graph.fill(rectangle);
+                            clicksCounter.set(0, -1);
+                            clicksCounter.add(0);
+                            pointsGenerated = delevaryService.addInergection(intersection);
+                        }
+
+                        else {
+                            for (int i = iterator; i < clicksCounter.size(); i++) {
+                                if (clicksCounter.get(i) == 1) {
+                                            Graphics g = getGraphics();
+                                    Graphics2D graph = (Graphics2D) g;
+                                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
+                                    graph.fill(circle);
+                                    clicksCounter.set(i, 2);
+                                    clicksCounter.add(0);
+                                    iterator++;
+                                    pointsGenerated = delevaryService.addInergection(intersection);
+                                    if (pointsGenerated>=5){
+                                        List<Long> l = delevaryService.computeGraph();
+                                        List<Intersection> listRoute = new ArrayList<>();
+                                        listRoute.add(streetMap.getIntersectionById(l.get(0)));
+                                        for(int j =1;j<l.size();j++){
+                                            Intersection inter = streetMap.getIntersectionById(l.get(j));
+                                            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
                                         }
-                                        break;
-                                    } else if (clicksCounter.get(i) == 0) {
-                                        Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y,
-                                                circle.width,
-                                                circle.height);
-                                        Graphics g = getGraphics();
-                                        Graphics2D graph = (Graphics2D) g;
-                                        graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                                        graph.fill(rectangle);
-                                        clicksCounter.set(i, 1);
-                                        pointsGenerated = delevaryService.addInergection(intersection);
-                                        if (pointsGenerated>=5){
-                                            List<Long> l = delevaryService.computeGraph();
-                                            List<Intersection> listRoute = new ArrayList<>();
-                                            listRoute.add(streetMap.getIntersectionById(l.get(0)));
-                                            for(int j =1;j<l.size();j++){
-                                                Intersection inter = streetMap.getIntersectionById(l.get(j));
-                                                if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-                                            }
-                                            System.out.println("route: "+listRoute);
-                                        }
-                                        break;
+                                        System.out.println("route: "+listRoute);
+
+                                        route = listRoute;
+                                        repaint();
+
                                     }
+                                    break;
+                                } else if (clicksCounter.get(i) == 0) {
+                                    Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y,
+                                            circle.width,
+                                            circle.height);
+                                    Graphics g = getGraphics();
+                                    Graphics2D graph = (Graphics2D) g;
+                                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
+                                    graph.fill(rectangle);
+                                    clicksCounter.set(i, 1);
+                                    pointsGenerated = delevaryService.addInergection(intersection);
+                                    if (pointsGenerated>=5){
+                                        List<Long> l = delevaryService.computeGraph();
+                                        List<Intersection> listRoute = new ArrayList<>();
+                                        listRoute.add(streetMap.getIntersectionById(l.get(0)));
+                                        for(int j =1;j<l.size();j++){
+                                            Intersection inter = streetMap.getIntersectionById(l.get(j));
+                                            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
+                                        }
+                                        System.out.println("route: "+listRoute);
+
+                                        route = listRoute;
+                                        repaint();
+                                    }
+                                    break;
                                 }
                             }
                         }
                     }
-                
+                }
+
             }
         });
     }
@@ -187,11 +232,10 @@ public class DrawMap extends JFrame {
         Double x1, y1, x2, y2;
 
         for (int i=0; i<route.size()-1; i++){
-            Long id1 = route.get(i);
-            Long id2 = route.get(i+1);
-          
-            Intersection source = streetMap.getIntersectionById(id1);
-            Intersection destination = streetMap.getIntersectionById(id2);
+            Intersection source = route.get(i);
+            Intersection destination = route.get(i+1);
+
+
             x1 = normalizeLatitude(source.getLatitude());
             y1 = normalizeLongitude(source.getLongitude());
             x2 = normalizeLatitude(destination.getLatitude());
@@ -200,42 +244,10 @@ public class DrawMap extends JFrame {
         }
     }
 
-/*
-    void listenToClicksOnIntersections (Graphics g) {
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Collection<Intersection> intersectionList = streetMap.getIntersections().values();
-                for (Intersection intersection : intersectionList) {
-                    Double latTrasf = normalizeLatitude(intersection.getLatitude());
-                    Double lonTrasf = normalizeLongitude(intersection.getLongitude());
-                    Ellipse2D.Double circle = new Ellipse2D.Double(latTrasf - 5.0, lonTrasf - 5.0, 10, 10);
-                    if (circle.contains(e.getPoint())) {
-                    int index = delevaryService.addInergection(intersection);
-                    System.out.println("intersection id = " + intersection.getId());
-                    System.out.println("Intersection clicked: Latitude: " + intersection.getLatitude() + ", Longitude: " + intersection.getLongitude());
-                    if (index>=5){
-                        List<Long> l = delevaryService.computeGraph();
-                        List<Intersection> listRoute = new ArrayList<>();
-                        listRoute.add(streetMap.getIntersectionById(l.get(0)));
-                        for(int i =1;i<l.size();i++){
-                            Intersection inter = streetMap.getIntersectionById(l.get(i));
-                            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-                        }
-                        System.out.println(l);
-                    }
-                    break;
-                    }
-                }
-            }
-        });
-    }
-*/
-  
     public void paint(Graphics g) {
         super.paint(g);
 
-        intialise_MinAndMaxValues_For_LatitudeAndLongitude(streetMap.getIntersections());
+
 
         drawStreetsOnJFrame_FromStreetMap(g);
         if (route != null) {
@@ -245,4 +257,16 @@ public class DrawMap extends JFrame {
         drawPointsWhenIntersectionsIsClicked();
     }
 
+
+    private static void updateControlText() {
+        String[] states = {
+                "Click on an intersection to set it as a start point",
+                "Click on an intersection to set a pick-up point",
+                "Click on an intersection to set a delivery point"
+        };
+        currentState = (currentState + 1) % 2;
+        controlText.setText(states[currentState+1]);
+
+    }
 }
+
