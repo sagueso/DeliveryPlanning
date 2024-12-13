@@ -189,18 +189,7 @@ public class DrawMap extends JFrame {
     }
 
     void generateRoute(){
-        List<Long> l = delevaryService.computeGraph();
-        List<Intersection> listRoute = new ArrayList<>();
-        listRoute.add(streetMap.getIntersectionById(l.get(0)));
-        for(int j =1;j<l.size();j++){
-            Intersection inter = streetMap.getIntersectionById(l.get(j));
-            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-        }
-        System.out.println("Route generated");
-        for(Intersection inter : listRoute){
-            System.out.println(inter.getId());
-        }
-
+        List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
         route = listRoute;
     }
 
