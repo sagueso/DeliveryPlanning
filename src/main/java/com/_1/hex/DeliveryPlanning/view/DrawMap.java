@@ -38,7 +38,7 @@ public class DrawMap extends JFrame {
     private final DelevaryService delevaryService;
     private final GraphService graphService;
     private final DeliveryMap mapPanel;
-    List<Intersection> route;
+    //List<Intersection> route;
 
     //TODO no need for graphService
     @Autowired
@@ -53,7 +53,6 @@ public class DrawMap extends JFrame {
         setLayout(new BorderLayout());
 
         this.mapPanel = new DeliveryMap();
-        this.mapPanel.setStreetMap(delevaryService.getStreetMap());
         this.mapPanel.setBackground(Color.WHITE);
         this.mapPanel.setPreferredSize(new Dimension(1000, 1000));
 
@@ -93,21 +92,25 @@ public class DrawMap extends JFrame {
 
     }
 
+    void setStreetMap() {
+        this.mapPanel.setStreetMap(delevaryService.getStreetMap());
+    }
 
     void drawPointsWhenIntersectionsIsClicked() {
-        addMouseListener(new MouseAdapter() {
+        this.mapPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Intersection intersection = mapPanel.drawIntersection(e.getPoint());
                 if(intersection != null){
                     delevaryService.addInergection(intersection);
+                    mapPanel.setSelectedIntersections(delevaryService.getSelectedIntersections());
                     updateControlText();
                 }
             }
         });
     }
 
-    void defineRoute (List<Intersection> route) {this.route = route;}
+    //void defineRoute (List<Intersection> route) {this.route = route;}
 
     void generateRoute(){
         List<Long> l = delevaryService.computeGraph();
@@ -121,8 +124,8 @@ public class DrawMap extends JFrame {
         for(Intersection inter : listRoute){
             System.out.println(inter.getId());
         }
-
-        route = listRoute;
+        mapPanel.setRoute(listRoute);
+        mapPanel.repaint();
     }
 
     public void paint(Graphics g) {

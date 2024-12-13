@@ -35,6 +35,7 @@ public class DeliveryMap extends JPanel {
         this.minLongitudeValue = Double.MAX_VALUE;
         this.maxLongitudeValue = Double.MIN_VALUE;
         this.clicksCounter = new ArrayList<>();
+        this.clicksCounter.add(0);
         this.iterator = 1;
         this.pointsGenerated = 0;
         this.route = null;
@@ -45,6 +46,10 @@ public class DeliveryMap extends JPanel {
     void setStreetMap(StreetMap streetMap) {
         this.streetMap = streetMap;
         intialise_MinAndMaxValues_For_LatitudeAndLongitude(this.streetMap.getIntersections());
+    }
+
+    void setRoute(List<Intersection> route) {
+        this.route = route;
     }
 
     void setSelectedIntersections(List<Intersection> selectedIntersections) {
@@ -112,14 +117,14 @@ public class DeliveryMap extends JPanel {
     }
 
     void drawPoint(Ellipse2D.Double circle) {
-        if (clicksCounter.get(0) == 0) {
+        if (this.clicksCounter.get(0) == 0) {
             Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
                     circle.height);
             Graphics g = getGraphics();
             Graphics2D graph = (Graphics2D) g;
             graph.setColor(Color.DARK_GRAY);
             graph.fill(rectangle);
-            clicksCounter.set(0, -1);
+            this.clicksCounter.set(0, -1);
             clicksCounter.add(0);
         }
         else {
