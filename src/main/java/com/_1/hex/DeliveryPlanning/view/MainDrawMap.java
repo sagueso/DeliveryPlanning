@@ -31,7 +31,7 @@ public class MainDrawMap {
                 //DrawMap drawMap = new DrawMap();
 
                 ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
-                DrawMap drawMap = context.getBean(DrawMap.class);
+
                 GraphService graphService =  context.getBean(GraphService.class);
                 XmlParser xmlParser = new XmlParser();
 
@@ -40,8 +40,10 @@ public class MainDrawMap {
                 String xmlPath = "src/main/java/com/_1/hex/DeliveryPlanning/utils/petitPlan.xml";
                 try {
                     map = xmlParser.parse(xmlPath);
-                    graphService.addMap(map);
-
+                    DelevaryService delevaryService = context.getBean(DelevaryService.class);
+                    delevaryService.addStreetMap(map);
+                    DrawMap drawMap = context.getBean(DrawMap.class);
+                    drawMap.setVisible(true);
                     /*Intersection source =
                             map.getIntersectionById(208769039L);
                     Intersection destination = map.getIntersectionById(25173820L);
@@ -55,10 +57,6 @@ public class MainDrawMap {
                 } catch (XMLStreamException e) {
                     throw new RuntimeException(e);
                 }
-
-                drawMap.defineStreetMap(map);
-
-                drawMap.setVisible(true);
 
             }
         });

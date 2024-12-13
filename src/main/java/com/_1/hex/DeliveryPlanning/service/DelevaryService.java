@@ -1,9 +1,6 @@
 package com._1.hex.DeliveryPlanning.service;
 
-import com._1.hex.DeliveryPlanning.model.Delivery;
-import com._1.hex.DeliveryPlanning.model.Intersection;
-import com._1.hex.DeliveryPlanning.model.Request;
-import com._1.hex.DeliveryPlanning.model.Warehouse;
+import com._1.hex.DeliveryPlanning.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class DelevaryService {
+    StreetMap streetMap;
     List<Intersection> selectedIntersections;
     Warehouse warehouse;
     Intersection startPoint;
@@ -25,6 +23,15 @@ public class DelevaryService {
         this.selectedIntersections = new ArrayList<Intersection>();
         this.graphService = graphService;
         this.tspService = tspService;
+    }
+
+    public void addStreetMap(StreetMap streetMap) {
+        this.streetMap = streetMap;
+        graphService.addMap(streetMap);
+    }
+
+    public StreetMap getStreetMap() {
+        return this.streetMap;
     }
 
     public int addInergection(Intersection intersection) {

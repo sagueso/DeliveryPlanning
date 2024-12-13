@@ -33,20 +33,14 @@ import javax.swing.*;
 public class DrawMap extends JFrame {
     private static JPanel controlPanel;
     private static int currentState;
-    private static JPanel mapPanel;
+
     private static JLabel controlText;
     private final DelevaryService delevaryService;
     private final GraphService graphService;
-    StreetMap streetMap;
-    Double minLatitudeValue = Double.MAX_VALUE;
-    Double maxLatitudeValue = Double.MIN_VALUE;
-    Double minLongitudeValue = Double.MAX_VALUE;
-    Double maxLongitudeValue = Double.MIN_VALUE;
+    private final DeliveryMap mapPanel;
     List<Intersection> route;
-    List<Integer> clicksCounter = new ArrayList<>();
-    Integer iterator = 1;
-    Integer pointsGenerated = 0;
 
+    //TODO no need for graphService
     @Autowired
     public DrawMap(DelevaryService delevaryService, GraphService graphService) {
         super("Map");
@@ -58,9 +52,10 @@ public class DrawMap extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        JPanel mapPanel = new JPanel();
-        mapPanel.setBackground(Color.WHITE);
-        mapPanel.setPreferredSize(new Dimension(1000, 1000));
+        this.mapPanel = new DeliveryMap();
+        this.mapPanel.setStreetMap(delevaryService.getStreetMap());
+        this.mapPanel.setBackground(Color.WHITE);
+        this.mapPanel.setPreferredSize(new Dimension(1000, 1000));
 
         // Control Panel
         JPanel controlPanel = new JPanel();
@@ -83,117 +78,43 @@ public class DrawMap extends JFrame {
         controlPanel.add(Box.createVerticalGlue());
         controlPanel.add(generatePathButton);
 
-        add(mapPanel, BorderLayout.CENTER);
+        add(this.mapPanel, BorderLayout.CENTER);
         add(controlPanel, BorderLayout.EAST);
-
-        drawPointsWhenIntersectionsIsClicked();
-
 
         generatePathButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 generateRoute();
-                repaint();
+                repaint(); //TODO
             }
         });
 
-    }
+        drawPointsWhenIntersectionsIsClicked();
 
-    void defineStreetMap(StreetMap streetMap) {
-        this.streetMap = streetMap;
-        intialise_MinAndMaxValues_For_LatitudeAndLongitude(streetMap.getIntersections());
     }
 
 
-    void defineRoute (List<Intersection> route) {this.route = route;}
-
-    Double normalizeLatitude(Double latitude) {
-        return (latitude - minLatitudeValue) * 1000 / (maxLatitudeValue - minLatitudeValue);
-    }
-
-    Double normalizeLongitude(Double longitude) {
-        return (longitude - minLongitudeValue) * 1000 / (maxLongitudeValue - minLongitudeValue);
-    }
-
-    void intialise_MinAndMaxValues_For_LatitudeAndLongitude(Map<Integer, Intersection> intersections) {
-        for (Integer key : intersections.keySet()) {
-            Intersection intersection = intersections.get(key);
-            if (intersection.getLatitude() < minLatitudeValue) {
-                minLatitudeValue = intersection.getLatitude();
-            }
-            if (intersection.getLongitude() < minLongitudeValue) {
-                minLongitudeValue = intersection.getLongitude();
-            }
-            if (intersection.getLatitude() > maxLatitudeValue) {
-                maxLatitudeValue = intersection.getLatitude();
-            }
-            if (intersection.getLongitude() > maxLongitudeValue) {
-                maxLongitudeValue = intersection.getLongitude();
-            }
-        }
-    }
-
-    void drawStreetsOnJFrame_FromStreetMap(Graphics g) {
-        Graphics2D g3d = (Graphics2D) g;
-        g3d.setColor(Color.black);
-
-        List<Street> l = streetMap.getStreets();
-        Double latitudeOrigin, longitudeOrigin, latitudeDestination, longitudeDestination;
-
-        for (Street line : l) {
-            latitudeOrigin = normalizeLatitude(line.getOrigin().getLatitude());
-            longitudeOrigin = normalizeLongitude(line.getOrigin().getLongitude());
-            latitudeDestination = normalizeLatitude(line.getDestination().getLatitude());
-            longitudeDestination = normalizeLongitude(line.getDestination().getLongitude());
-            g3d.draw(new Line2D.Double(latitudeOrigin, longitudeOrigin, latitudeDestination, longitudeDestination));
-        }
-    }
-
-    void drawPoint(Ellipse2D.Double circle) {
-
-        updateControlText();
-        if (clicksCounter.get(0) == 0) {
-            Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
-                    circle.height);
-            Graphics g = getGraphics();
-            Graphics2D graph = (Graphics2D) g;
-            graph.setColor(Color.DARK_GRAY);
-            graph.fill(rectangle);
-            clicksCounter.set(0, -1);
-            clicksCounter.add(0);
-        }
-        else {
-            for (int i = iterator; i < clicksCounter.size(); i++) {
-                if (clicksCounter.get(i) == 1) {
-                    Graphics g = getGraphics();
-                    Graphics2D graph = (Graphics2D) g;
-                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                    graph.fill(circle);
-                    clicksCounter.set(i, 2);
-                    clicksCounter.add(0);
-                    iterator++;
-                    break;
-                } else if (clicksCounter.get(i) == 0) {
-                    Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y,
-                            circle.width,
-                            circle.height);
-                    Graphics g = getGraphics();
-                    Graphics2D graph = (Graphics2D) g;
-                    graph.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                    graph.fill(rectangle);
-                    clicksCounter.set(i, 1);
-                    break;
+    void drawPointsWhenIntersectionsIsClicked() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Intersection intersection = mapPanel.drawIntersection(e.getPoint());
+                if(intersection != null){
+                    delevaryService.addInergection(intersection);
+                    updateControlText();
                 }
             }
-        }
+        });
     }
+
+    void defineRoute (List<Intersection> route) {this.route = route;}
 
     void generateRoute(){
         List<Long> l = delevaryService.computeGraph();
         List<Intersection> listRoute = new ArrayList<>();
-        listRoute.add(streetMap.getIntersectionById(l.get(0)));
+        listRoute.add(delevaryService.getStreetMap().getIntersectionById(l.get(0)));
         for(int j =1;j<l.size();j++){
-            Intersection inter = streetMap.getIntersectionById(l.get(j));
+            Intersection inter = delevaryService.getStreetMap().getIntersectionById(l.get(j));
             if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
         }
         System.out.println("Route generated");
@@ -204,65 +125,8 @@ public class DrawMap extends JFrame {
         route = listRoute;
     }
 
-    void drawPointsWhenIntersectionsIsClicked() {
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                for (Intersection intersection : streetMap.getIntersections().values()) {
-                    Ellipse2D.Double circle = new Ellipse2D.Double(
-                            normalizeLatitude(intersection.getLatitude()) - 5,
-                            normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
-
-                    if (circle.contains(e.getPoint())) {
-                        drawPoint(circle);
-                        pointsGenerated = delevaryService.addInergection(intersection);
-                    }
-                }
-            }
-        });
-    }
-
-    void drawRoutes_FromTheOriginAndDestination(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.GREEN);
-        g2d.setStroke(new BasicStroke(2f));
-        Double x1, y1, x2, y2;
-
-        for (int i=0; i<route.size()-1; i++){
-            Intersection source = route.get(i);
-            Intersection destination = route.get(i+1);
-
-
-            x1 = normalizeLatitude(source.getLatitude());
-            y1 = normalizeLongitude(source.getLongitude());
-            x2 = normalizeLatitude(destination.getLatitude());
-            y2 = normalizeLongitude(destination.getLongitude());
-            g2d.draw(new Line2D.Double(x1, y1, x2, y2));
-        }
-    }
-
     public void paint(Graphics g) {
         super.paint(g);
-
-        drawStreetsOnJFrame_FromStreetMap(g);
-        if (route != null) {
-            drawRoutes_FromTheOriginAndDestination(g);
-        }
-
-        this.clicksCounter = new ArrayList<>();
-        this.clicksCounter.add(0);
-        this.iterator = 1;
-        this.pointsGenerated = 0;
-        if(delevaryService.getSelectedIntersections() != null) {
-            List<Intersection> selectedIntersections = delevaryService.getSelectedIntersections();
-            for (Intersection intersection : selectedIntersections) {
-                Ellipse2D.Double circle = new Ellipse2D.Double(
-                        normalizeLatitude(intersection.getLatitude()) - 5,
-                        normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
-                drawPoint(circle);
-            }
-        }
     }
 
 
