@@ -13,6 +13,10 @@ import java.util.List;
 public class DelevaryService {
     List<Intersection> selectedIntersections;
     Warehouse warehouse;
+
+
+    int nbPanel = 0; //0 - select deliverer, 1 - controlPanel, 2-....
+    String person;
     Intersection startPoint;
     Intersection endPoint;
     Request request;
@@ -25,6 +29,22 @@ public class DelevaryService {
         this.selectedIntersections = new ArrayList<Intersection>();
         this.graphService = graphService;
         this.tspService = tspService;
+    }
+
+    public String getPerson() {
+        return person;
+    }
+
+    public void setPerson(String person) {
+        this.person = person;
+    }
+
+    public int getNbPanel() {
+        return nbPanel;
+    }
+
+    public void setNbPanel(int nbPanel) {
+        this.nbPanel = nbPanel;
     }
 
     public int addInergection(Intersection intersection) {

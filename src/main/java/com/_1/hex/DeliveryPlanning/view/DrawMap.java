@@ -31,10 +31,12 @@ import javax.swing.*;
  */
 @Component
 public class DrawMap extends JFrame {
+    private static DeliverersListPanel deliverersListPanel;
     private static JPanel controlPanel;
     private static int currentState;
     private static JPanel mapPanel;
     private static JLabel controlText;
+    private static JLabel nameLabel;
     private final DelevaryService delevaryService;
     private final GraphService graphService;
     StreetMap streetMap;
@@ -51,6 +53,7 @@ public class DrawMap extends JFrame {
     public DrawMap(DelevaryService delevaryService, GraphService graphService) {
         super("Map");
         this.delevaryService = delevaryService;
+        delevaryService.setNbPanel(0);
         this.graphService = graphService;
         currentState = -1;
         setSize(1600, 1000);
@@ -58,17 +61,20 @@ public class DrawMap extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        JPanel mapPanel = new JPanel();
+        mapPanel = new JPanel();
         mapPanel.setBackground(Color.WHITE);
         mapPanel.setPreferredSize(new Dimension(1000, 1000));
 
+        //Deliverers List Panel
+        deliverersListPanel = new DeliverersListPanel(delevaryService, this);
+
         // Control Panel
-        JPanel controlPanel = new JPanel();
+        controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
         controlPanel.setPreferredSize(new Dimension(600, 1000));
         controlPanel.setBackground(Color.LIGHT_GRAY);
 
-        JLabel nameLabel = new JLabel("Nom du livreur", SwingConstants.CENTER);
+        nameLabel = new JLabel("Nom du livreur", SwingConstants.CENTER);
         nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(nameLabel);
@@ -84,7 +90,7 @@ public class DrawMap extends JFrame {
         controlPanel.add(generatePathButton);
 
         add(mapPanel, BorderLayout.CENTER);
-        add(controlPanel, BorderLayout.EAST);
+        //add(deliverersListPanel, BorderLayout.EAST);
 
         drawPointsWhenIntersectionsIsClicked();
 
@@ -250,6 +256,16 @@ public class DrawMap extends JFrame {
             drawRoutes_FromTheOriginAndDestination(g);
         }
 
+        if (delevaryService.getNbPanel()==0){
+            add(deliverersListPanel, BorderLayout.EAST);
+        }
+        else if (delevaryService.getNbPanel()==1){
+            remove(deliverersListPanel);
+            nameLabel.setText(delevaryService.getPerson());
+            add(controlPanel, BorderLayout.EAST);
+            validate();
+        }
+
         this.clicksCounter = new ArrayList<>();
         this.clicksCounter.add(0);
         this.iterator = 1;
@@ -263,6 +279,7 @@ public class DrawMap extends JFrame {
                 drawPoint(circle);
             }
         }
+
     }
 
 
