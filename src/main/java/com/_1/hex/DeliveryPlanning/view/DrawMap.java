@@ -79,9 +79,13 @@ public class DrawMap extends JFrame {
         controlPanel.add(controlText);
 
         JButton generatePathButton = new JButton("Generate Path");
+        JButton saveRoutePathButton = new JButton("SaveRoute");
+        JButton loadRoutePathButton = new JButton("LoadRoute");
 
         controlPanel.add(Box.createVerticalGlue());
         controlPanel.add(generatePathButton);
+        controlPanel.add(saveRoutePathButton);
+        controlPanel.add(loadRoutePathButton);
 
         add(mapPanel, BorderLayout.CENTER);
         add(controlPanel, BorderLayout.EAST);
@@ -93,6 +97,19 @@ public class DrawMap extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 generateRoute();
+                repaint();
+            }
+        });
+        saveRoutePathButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                delevaryService.saveRouteToFile();
+            }
+        });
+        loadRoutePathButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadRouteFromFile();
                 repaint();
             }
         });
@@ -190,6 +207,11 @@ public class DrawMap extends JFrame {
 
     void generateRoute(){
         List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
+        route = listRoute;
+    }
+
+    void loadRouteFromFile(){
+        List<Intersection> listRoute = delevaryService.loadRouteFromFile();
         route = listRoute;
     }
 
