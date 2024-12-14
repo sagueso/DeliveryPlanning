@@ -8,6 +8,7 @@ public class Route {
 
     private List<Intersection> intersections;  // The list of intersections representing the route
 
+    public Route() {}
     // Constructor
     public Route(List<Intersection> intersections) {
         this.intersections = intersections;

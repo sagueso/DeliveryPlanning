@@ -1,6 +1,7 @@
 package com._1.hex.DeliveryPlanning.service;
 
 import com._1.hex.DeliveryPlanning.model.*;
+import com._1.hex.DeliveryPlanning.utils.PersistenceFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @Service
 public class DelevaryService {
     List<Intersection> selectedIntersections;
+    List<Intersection> listRoute;
     Warehouse warehouse;
     Intersection startPoint;
     Intersection endPoint;
@@ -70,7 +72,23 @@ public class DelevaryService {
             }
         }
         System.out.println("route: " + listRoute);
-
+        this.listRoute = listRoute;
         return listRoute;
     }
+    public void saveRouteToFile(){
+        try {
+            PersistenceFileUtils.saveRouteToFile(new Route(this.listRoute),"ROUTE-JSON-FILE");
+        }catch (Exception e){System.out.println(e);}
+
+    }
+
+    public List<Intersection> loadRouteFromFile(){
+        List<Intersection> intersectionList = new ArrayList<>();
+        try {
+            Route route = PersistenceFileUtils.readRouteFromFile("ROUTE-JSON-FILE");
+            intersectionList = route.getIntersections();
+        }catch (Exception e){System.out.println(e);}
+        return intersectionList;
+    }
+
 }
