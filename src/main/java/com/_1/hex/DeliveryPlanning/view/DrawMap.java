@@ -5,17 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import java.util.List;
-import java.util.Map;
 
 import com._1.hex.DeliveryPlanning.model.Intersection;
-import com._1.hex.DeliveryPlanning.model.Street;
-import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.DelevaryService;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +94,7 @@ public class DrawMap extends JFrame {
         this.mapPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Intersection intersection = mapPanel.drawIntersection(e.getPoint());
+                Intersection intersection = mapPanel.findClickedIntersection(e.getPoint());
                 if(intersection != null){
                     delevaryService.addInergection(intersection);
                     mapPanel.setSelectedIntersections(delevaryService.getSelectedIntersections());
