@@ -18,9 +18,6 @@ public class DeliveryMap extends JPanel {
     Double maxLatitudeValue;
     Double minLongitudeValue;
     Double maxLongitudeValue;
-    List<Integer> clicksCounter;
-    Integer iterator;
-    Integer pointsGenerated;
     List<Intersection> route;
     List<Intersection> selectedIntersections;
     StreetMap streetMap;
@@ -31,10 +28,6 @@ public class DeliveryMap extends JPanel {
         this.maxLatitudeValue = Double.MIN_VALUE;
         this.minLongitudeValue = Double.MAX_VALUE;
         this.maxLongitudeValue = Double.MIN_VALUE;
-        this.clicksCounter = new ArrayList<>();
-        this.clicksCounter.add(0);
-        this.iterator = 1;
-        this.pointsGenerated = 0;
         this.route = null;
         this.selectedIntersections = new ArrayList<>();
 
@@ -116,49 +109,36 @@ public class DeliveryMap extends JPanel {
         }
     }
 
-    void drawPoint(Graphics2D g2d, Ellipse2D.Double circle) {
-        if (this.clicksCounter.get(0) == 0) {
-            Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y, circle.width,
-                    circle.height);
-            g2d.setColor(Color.DARK_GRAY);
-            g2d.fill(rectangle);
-            this.clicksCounter.set(0, -1);
-            clicksCounter.add(0);
-        }
-        else {
-            for (int i = iterator; i < clicksCounter.size(); i++) {
-                if (clicksCounter.get(i) == 1) {
-                    g2d.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                    g2d.fill(circle);
-                    clicksCounter.set(i, 2);
-                    clicksCounter.add(0);
-                    iterator++;
-                    break;
-                } else if (clicksCounter.get(i) == 0) {
-                    Rectangle.Double rectangle = new Rectangle.Double(circle.x, circle.y,
-                            circle.width,
-                            circle.height);
-                    g2d.setColor(new Color((i * 50) % 256, (i * 80) % 256, (i * 110) % 256));
-                    g2d.fill(rectangle);
-                    clicksCounter.set(i, 1);
-                    break;
-                }
-            }
-        }
-    }
-
     public void drawSelectedIntersections(Graphics2D g2d) {
-        this.clicksCounter = new ArrayList<>();
-        this.clicksCounter.add(0);
-        this.iterator = 1;
-        this.pointsGenerated = 0;
         if(this.selectedIntersections != null) {
             List<Intersection> selectedIntersections = this.selectedIntersections;
-            for (Intersection intersection : selectedIntersections) {
-                Ellipse2D.Double circle = new Ellipse2D.Double(
-                        normalizeLatitude(intersection.getLatitude()) - 5,
-                        normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
-                drawPoint(g2d, circle);
+            for (int i=0; i< selectedIntersections.size(); i++) {
+                Intersection intersection = selectedIntersections.get(i);
+                if(i == 0) {
+                    Rectangle.Double rectangle = new Rectangle.Double(
+                            normalizeLatitude(intersection.getLatitude()) - 5,
+                            normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
+                    g2d.setColor(Color.DARK_GRAY);
+                    g2d.fill(rectangle);
+                }
+                else if(i%2 == 1){
+                    int pair = i/2 + 1;
+                    Color dynamicColor = new Color((pair * 50) % 256, (pair * 80) % 256, (pair * 110) % 256);
+                    Rectangle.Double rectangle = new Rectangle.Double(
+                            normalizeLatitude(intersection.getLatitude()) - 5,
+                            normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
+                    g2d.setColor(dynamicColor);
+                    g2d.fill(rectangle);
+                }
+                else{
+                    int pair = i/2;
+                    Color dynamicColor = new Color((pair * 50) % 256, (pair * 80) % 256, (pair * 110) % 256);
+                    Ellipse2D.Double circle = new Ellipse2D.Double(
+                            normalizeLatitude(intersection.getLatitude()) - 5,
+                            normalizeLongitude(intersection.getLongitude()) - 5, 10, 10);
+                    g2d.setColor(dynamicColor);
+                    g2d.fill(circle);
+                }
             }
         }
     }
@@ -184,8 +164,6 @@ public class DeliveryMap extends JPanel {
         if (this.route != null) {
             drawRoutes(g2d);
         }
-
-
     }
 
 }
