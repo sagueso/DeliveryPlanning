@@ -67,9 +67,13 @@ public class DrawMap extends JFrame {
         controlPanel.add(controlText);
 
         JButton generatePathButton = new JButton("Generate Path");
+        JButton saveRoutePathButton = new JButton("SaveRoute");
+        JButton loadRoutePathButton = new JButton("LoadRoute");
 
         controlPanel.add(Box.createVerticalGlue());
         controlPanel.add(generatePathButton);
+        controlPanel.add(saveRoutePathButton);
+        controlPanel.add(loadRoutePathButton);
 
         add(this.mapPanel, BorderLayout.CENTER);
         add(controlPanel, BorderLayout.EAST);
@@ -79,6 +83,19 @@ public class DrawMap extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 generateRoute();
                 repaint(); //TODO
+            }
+        });
+        saveRoutePathButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                delevaryService.saveRouteToFile();
+            }
+        });
+        loadRoutePathButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadRouteFromFile();
+                repaint();
             }
         });
 
@@ -106,18 +123,14 @@ public class DrawMap extends JFrame {
 
     //void defineRoute (List<Intersection> route) {this.route = route;}
 
-    void generateRoute(){
-        List<Long> l = delevaryService.computeGraph();
-        List<Intersection> listRoute = new ArrayList<>();
-        listRoute.add(delevaryService.getStreetMap().getIntersectionById(l.get(0)));
-        for(int j =1;j<l.size();j++){
-            Intersection inter = delevaryService.getStreetMap().getIntersectionById(l.get(j));
-            if( listRoute.get(listRoute.size()-1) != inter){listRoute.add(inter);}
-        }
-        System.out.println("Route generated");
-        for(Intersection inter : listRoute){
-            System.out.println(inter.getId());
-        }
+    void loadRouteFromFile(){
+        List<Intersection> listRoute = delevaryService.loadRouteFromFile();
+        route = listRoute;
+    }
+
+     void generateRoute(){
+        List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
+        route = listRoute;
         mapPanel.setRoute(listRoute);
         mapPanel.repaint();
     }
