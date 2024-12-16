@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com._1.hex.DeliveryPlanning.model.Intersection;
+import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.DelevaryService;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ import javax.swing.*;
 public class DrawMap extends JFrame {
     private static JPanel controlPanel;
     private static int currentState;
-
+    private static StreetMap streetMap;
     private static JLabel controlText;
     private final DelevaryService delevaryService;
     private final GraphService graphService;
@@ -121,16 +122,13 @@ public class DrawMap extends JFrame {
         });
     }
 
-    //void defineRoute (List<Intersection> route) {this.route = route;}
 
     void loadRouteFromFile(){
-        List<Intersection> listRoute = delevaryService.loadRouteFromFile();
-        route = listRoute;
+        mapPanel.setRoute(delevaryService.loadRouteFromFile());
     }
 
      void generateRoute(){
-        List<Intersection> listRoute = delevaryService.computeGraph(streetMap);
-        route = listRoute;
+        List<Intersection> listRoute = delevaryService.computeGraph(delevaryService.getStreetMap());
         mapPanel.setRoute(listRoute);
         mapPanel.repaint();
     }
