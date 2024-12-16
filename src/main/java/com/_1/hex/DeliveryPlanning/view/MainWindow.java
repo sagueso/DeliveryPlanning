@@ -88,6 +88,7 @@ public class MainWindow extends JFrame {
         this.controlPanel.getSaveRoutePathButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //controlPanel.populateScrollContentPanel();
                 delevaryService.saveRouteToFile();
             }
         });

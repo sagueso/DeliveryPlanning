@@ -1,12 +1,18 @@
 package com._1.hex.DeliveryPlanning.view;
 
+import com._1.hex.DeliveryPlanning.model.Intersection;
+
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class ControlPanel extends JPanel {
 
+    private final JScrollPane scrollPane;
+    private final JPanel scrollContentPanel;
     private final JLabel controlText;
     private final JButton generatePathButton;
     private final JButton saveRoutePathButton;
@@ -33,7 +39,20 @@ public class ControlPanel extends JPanel {
         this.controlText = new JLabel("Click on an intersection to set it as a start point", SwingConstants.CENTER);
         this.controlText.setFont(new Font("Arial", Font.PLAIN, 14));
         this.add(Box.createRigidArea(new Dimension(0, 20)));
-        this.add(controlText);
+
+        // Content panel for scroll pane
+        this.scrollContentPanel = new JPanel();
+        this.scrollContentPanel.setLayout(new BoxLayout(scrollContentPanel, BoxLayout.Y_AXIS));
+        this.scrollContentPanel.setBackground(Color.LIGHT_GRAY);
+        this.scrollContentPanel.add(this.controlText);
+
+        // Scroll pane setup
+        this.scrollPane = new JScrollPane(scrollContentPanel);
+        this.scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove border
+        this.scrollPane.getViewport().setBackground(Color.LIGHT_GRAY); // Match background
+        this.scrollPane.setPreferredSize(new Dimension(580, 400));
+        this.add(Box.createRigidArea(new Dimension(0, 20)));
+        this.add(scrollPane);
 
         this.generatePathButton = new JButton("Generate Path");
         this.saveRoutePathButton = new JButton("SaveRoute");
@@ -43,10 +62,6 @@ public class ControlPanel extends JPanel {
         this.add(generatePathButton);
         this.add(saveRoutePathButton);
         this.add(loadRoutePathButton);
-    }
-
-    public void setControlText(String text) {
-        this.controlText.setText(text);
     }
 
     public JButton getGeneratePathButton() {
@@ -66,5 +81,29 @@ public class ControlPanel extends JPanel {
         this.controlText.setText(this.states[currentState+1]);
 
         return currentState;
+    }
+
+    public void populateScrollContentPanel(List<Intersection> intersections, List<Double> hour) {
+        for (Intersection intersection : intersections) {
+            JPanel linePanel = new JPanel();
+            linePanel.setLayout(new BoxLayout(linePanel, BoxLayout.X_AXIS));
+            linePanel.setBackground(Color.LIGHT_GRAY);
+
+            // Add the shape (circle or square)
+            //ShapeIcon shapeIcon = new ShapeIcon(item.getShape(), item.getColor(), 20, 20);
+            JLabel shapeLabel = new JLabel(/*shapeIcon*/);
+            linePanel.add(shapeLabel);
+            linePanel.add(Box.createRigidArea(new Dimension(10, 0))); // Spacer
+
+            // Add the text
+            JLabel textLabel = new JLabel(/*hour*/);
+            textLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            linePanel.add(textLabel);
+
+            // Add the line to the scroll content panel
+            linePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            scrollContentPanel.add(linePanel);
+            scrollContentPanel.add(Box.createRigidArea(new Dimension(0, 5))); // Spacer between lines
+        }
     }
 }
