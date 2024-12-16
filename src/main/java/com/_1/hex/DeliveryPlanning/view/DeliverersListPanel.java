@@ -25,12 +25,9 @@ public class DeliverersListPanel extends javax.swing.JPanel {
             JDialog dialog = new JDialog();
             dialog.setTitle("Add Deliverer");
             dialog.setLayout(new FlowLayout());
-            String getMessage = JOptionPane.showInputDialog(this, "Enter the name of the deliverer");
+            String getMessage = JOptionPane.showInputDialog(this, "Cliquez pour rajouter un entrepot");
             addPerson(getMessage);
         });
-
-
-
 
     }
 
