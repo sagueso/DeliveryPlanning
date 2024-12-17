@@ -16,7 +16,8 @@ public class DelevaryService {
 
 
     int nbPanel = 0; //0 - select deliverer, 1 - controlPanel, 2-....
-    String person;
+    Courrier person;
+    List<Courrier> courriers;
     Intersection startPoint;
     Intersection endPoint;
     Request request;
@@ -27,15 +28,20 @@ public class DelevaryService {
     List<Long> solution = new ArrayList<>();
     public DelevaryService(GraphService graphService,TspService tspService) {
         this.selectedIntersections = new ArrayList<Intersection>();
+        this.courriers = new ArrayList<>();
         this.graphService = graphService;
         this.tspService = tspService;
     }
 
-    public String getPerson() {
+    public Courrier getPerson() {
         return person;
     }
 
-    public void setPerson(String person) {
+    public void addCourrier(Courrier courrier) { courriers.add(courrier); }
+
+    public List<Courrier> getCourriers() { return courriers; }
+
+    public void setPerson(Courrier person) {
         this.person = person;
     }
 
@@ -92,6 +98,7 @@ public class DelevaryService {
     }
 
     public List<Intersection> computeGraph(StreetMap streetMap) {
+        System.out.println("the actual courier"+this.person.getName());
         List<Long> l = tspService.searchSolution(100000, this.request, graphService);
         List<Intersection> listRoute = new ArrayList<>();
         listRoute.add(streetMap.getIntersectionById(l.get(0)));

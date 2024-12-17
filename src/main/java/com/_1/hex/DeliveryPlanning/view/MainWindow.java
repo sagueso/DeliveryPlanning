@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 
 import java.util.List;
 
+import com._1.hex.DeliveryPlanning.model.Courrier;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.service.DelevaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class MainWindow extends JFrame {
     private int currentState;
     private final DelevaryService delevaryService;
     private final DeliveryMap mapPanel;
+    private final DeliverersListPanel deliverersListPanel;
     //List<Intersection> route;
 
     //TODO no need for graphService
@@ -46,7 +48,45 @@ public class MainWindow extends JFrame {
 
         this.controlPanel = new ControlPanel();
 
+        this.deliverersListPanel = new DeliverersListPanel();
+
+
         add(this.mapPanel, BorderLayout.CENTER);
+
+        if(delevaryService.getNbPanel()==0){
+            add(this.deliverersListPanel, BorderLayout.SOUTH);
+            addCourrierButtonCallback();
+
+            for(Courrier c : delevaryService.getCourriers()){
+                JButton personButton = new JButton(c.getName());
+                this.deliverersListPanel.add(personButton);
+
+                personButton.addActionListener(f -> {
+
+                    delevaryService.setPerson(c);
+                    delevaryService.setNbPanel(1);
+                    this.controlPanel.setNameLabel(c.getName());
+                    changePanel01();
+                    validate();
+                    repaint();
+
+                });
+
+            }
+        }
+        else if(delevaryService.getNbPanel()==1){
+            add(this.controlPanel, BorderLayout.EAST);
+
+            addGenerateRouteButtonCallback();
+            addSaveRoutePathButtonCallback();
+            addLoadRoutePathButtonCallback();
+            drawPointsWhenIntersectionsIsClicked();
+        }
+
+    }
+
+    void changePanel01(){
+
         add(this.controlPanel, BorderLayout.EAST);
 
         addGenerateRouteButtonCallback();
@@ -54,7 +94,41 @@ public class MainWindow extends JFrame {
         addLoadRoutePathButtonCallback();
         drawPointsWhenIntersectionsIsClicked();
 
+        remove(this.deliverersListPanel);
     }
+
+    void addCourrierButtonCallback(){
+        this.deliverersListPanel.getAddPersonButton().addActionListener(e -> {
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Add Deliverer");
+            dialog.setLayout(new FlowLayout());
+            String getMessage = JOptionPane.showInputDialog(this.deliverersListPanel, "Cliquez pour rajouter un courrier");
+
+            if(getMessage!=null){
+                Courrier courrier = new Courrier(getMessage);
+                delevaryService.addCourrier(courrier);
+                JButton personButton = new JButton(getMessage);
+                this.deliverersListPanel.add(personButton);
+
+                personButton.addActionListener(f -> {
+
+                    delevaryService.setPerson(courrier);
+                    delevaryService.setNbPanel(1);
+                    this.controlPanel.setNameLabel(courrier.getName());
+                    changePanel01();
+                    validate();
+                    repaint();
+
+                });
+
+                validate();
+                repaint();
+            }
+
+
+        });
+    }
+
 
     void setStreetMap() {
         this.mapPanel.setStreetMap(delevaryService.getStreetMap());

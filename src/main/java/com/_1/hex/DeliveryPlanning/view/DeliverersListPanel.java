@@ -13,63 +13,42 @@ import java.util.List;
 
 @Service
 public class DeliverersListPanel extends javax.swing.JPanel {
-    List<String> listPerson = new ArrayList<>();
-    DelevaryService  delevaryService;
-    DrawMap drawMap;
+
+    //DelevaryService  delevaryService;
+    JButton addPersonButton;
+    //DrawMap drawMap;
 
     //Panel for picking up a person to do the delivery
-    public DeliverersListPanel(DelevaryService delevaryService, DrawMap drawmap) {
+    public DeliverersListPanel() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(600, 1000));
         setBackground(Color.LIGHT_GRAY);
-        JButton addPersonButton = new JButton("Add Person");
-        JLabel nameLabel = new JLabel("Nom du livreur", SwingConstants.CENTER);
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        add(Box.createRigidArea(new Dimension(0, 20)));
-        add(nameLabel);
+        JLabel welcomeLabel = new JLabel("Bienvenu dans Delivery Planning! Choisisez un courrier (ou ajouter un nouveau)");
+
+
+        JLabel listLabel = new JLabel("Liste des courriers:");
+
+        addPersonButton = new JButton("Add Person");
+
+
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        listLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        add(Box.createRigidArea(new Dimension(10, 20)));
+
+        add(Box.createRigidArea(new Dimension(10, 20)));
+        add(welcomeLabel);
+        add(Box.createRigidArea(new Dimension(10, 20)));
+        add(listLabel);
+
+
         add(addPersonButton, BorderLayout.SOUTH);
-        addPersonButton.addActionListener(e -> {
-            JDialog dialog = new JDialog();
-            dialog.setTitle("Add Deliverer");
-            dialog.setLayout(new FlowLayout());
-            String getMessage = JOptionPane.showInputDialog(this, "Cliquez pour rajouter un entrepot");
-            addPerson(getMessage);
-        });
-        this.delevaryService = delevaryService;
-        this.drawMap = drawmap;
-
-
 
     }
 
-    public void setListPerson(List<String> listPerson1) {
-
-        for (String person : listPerson1) {
-            addPerson(person);
-        }
-
-    }
-
-    public void addPerson(String person) {
-        listPerson.add(person);
-        JButton personButton = new JButton(person);
-        add(personButton);
-
-        personButton.addActionListener(e -> {
+    public JButton getAddPersonButton() { return this.addPersonButton; }
 
 
-            delevaryService.setPerson(person);
-            String personName = delevaryService.getPerson();
-            System.out.println(personName);
-            delevaryService.setNbPanel(1);
-            drawMap.repaint();
-
-        });
-
-        add(personButton);
-        validate();
-        repaint();
-    }
 
 }
