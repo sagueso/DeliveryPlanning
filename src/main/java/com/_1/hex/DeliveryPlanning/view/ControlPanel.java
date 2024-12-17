@@ -15,6 +15,7 @@ public class ControlPanel extends JPanel {
     private final JScrollPane scrollPane;
     private final JPanel scrollContentPanel;
     private final JLabel controlText;
+    private final JLabel nameLabel;
     private final JButton generatePathButton;
     private final JButton saveRoutePathButton;
     private final JButton loadRoutePathButton;
@@ -24,6 +25,7 @@ public class ControlPanel extends JPanel {
         super();
 
         this.states = new String[] {
+                "",
             "Click on an intersection to set it as a start point",
             "Click on an intersection to set it as an end point"
         };
@@ -32,7 +34,7 @@ public class ControlPanel extends JPanel {
         setPreferredSize(new Dimension(600, 1000));
         setBackground(Color.LIGHT_GRAY);
 
-        JLabel nameLabel = new JLabel("Nom du livreur", SwingConstants.CENTER);
+        nameLabel = new JLabel("Nom du livreur", SwingConstants.CENTER);
         nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
         this.add(Box.createRigidArea(new Dimension(0, 20)));
         this.add(nameLabel);
@@ -76,6 +78,8 @@ public class ControlPanel extends JPanel {
     public JButton getLoadRoutePathButton() {
         return loadRoutePathButton;
     }
+
+    public void setNameLabel(String text) { this.nameLabel.setText(text); }
 
     public int updateControlText(int currentState) {
         currentState = (currentState + 1) % 2;

@@ -5,6 +5,10 @@ public class Courrier {
     private Warehouse warehouse;
     private Delivery delivery;
 
+    public Courrier(String name) {
+        this.name = name;
+    }
+
     public Courrier(String name, Warehouse warehouse) {
         this.name = name;
         this.warehouse = warehouse;
