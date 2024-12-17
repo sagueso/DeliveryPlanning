@@ -110,6 +110,7 @@ public class MainWindow extends JFrame {
 
      void generateRoute(){
         List<Intersection> listRoute = delevaryService.computeGraph(delevaryService.getStreetMap());
+        controlPanel.populateScrollContentPanel(delevaryService.getRouteInt(), delevaryService.getDistances());
         mapPanel.setRoute(listRoute);
         mapPanel.repaint();
      }

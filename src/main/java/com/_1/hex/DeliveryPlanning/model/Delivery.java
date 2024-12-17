@@ -3,18 +3,20 @@ package com._1.hex.DeliveryPlanning.model;
 public class Delivery {
     Intersection startPoint;
     Intersection destinationPoint;
-    Integer pickupDuration;
+    Double pickupDuration;
 
-    public Delivery(Intersection startPoint, Intersection destinationPoint/*, Integer pickupDuration*/) {
+    public Delivery(Intersection startPoint, Intersection destinationPoint) {
         this.startPoint = startPoint;
         this.destinationPoint = destinationPoint;
-        //this.pickupDuration = pickupDuration;
     }
 
+    public void setPickupDuration(Double pickupDuration) {
+        this.pickupDuration = pickupDuration;
+    }
 
     public Intersection getStartPoint() {return startPoint; }
 
     public Intersection getDestinationPoint() {return destinationPoint; }
 
-    //public Integer getPickupDuration() {return pickupDuration; }
+    public Double getPickupDuration() {return pickupDuration; }
 }

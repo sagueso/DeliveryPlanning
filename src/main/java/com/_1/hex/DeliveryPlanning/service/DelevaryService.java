@@ -12,6 +12,7 @@ public class DelevaryService {
     StreetMap streetMap;
     List<Intersection> selectedIntersections;
     List<Intersection> listRoute;
+    List<Double> distances;
     Warehouse warehouse;
     Intersection startPoint;
     Intersection endPoint;
@@ -90,6 +91,14 @@ public class DelevaryService {
             PersistenceFileUtils.saveRouteToFile(new Route(this.listRoute),"ROUTE-JSON-FILE");
         }catch (Exception e){System.out.println(e);}
 
+    }
+
+    public List<Integer> getRouteInt(){
+        return tspService.getNodes();
+    }
+
+    public List<Double> getDistances(){
+        return tspService.getDistances();
     }
 
     public List<Intersection> loadRouteFromFile(){

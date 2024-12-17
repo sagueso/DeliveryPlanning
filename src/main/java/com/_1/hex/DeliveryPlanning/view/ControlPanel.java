@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Ellipse2D;
 import java.util.List;
 
 public class ControlPanel extends JPanel {
@@ -78,32 +79,94 @@ public class ControlPanel extends JPanel {
 
     public int updateControlText(int currentState) {
         currentState = (currentState + 1) % 2;
-        this.controlText.setText(this.states[currentState+1]);
+        this.controlText.setText(this.states[currentState]);
 
         return currentState;
     }
 
-    public void populateScrollContentPanel(List<Intersection> intersections, List<Double> hour) {
-        for (Intersection intersection : intersections) {
-            JPanel linePanel = new JPanel();
-            linePanel.setLayout(new BoxLayout(linePanel, BoxLayout.X_AXIS));
+    public void populateScrollContentPanel(List<Integer> orderOfIntersections, List<Double> hour) {
+        scrollContentPanel.removeAll();
+        scrollContentPanel.revalidate();
+        scrollContentPanel.repaint();
+        for (int i = 0; i < orderOfIntersections.size(); i++) {
+            JPanel linePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5)); // Left aligned with small spacing
+            //linePanel.setLayout(new BoxLayout(linePanel, BoxLayout.X_AXIS));
             linePanel.setBackground(Color.LIGHT_GRAY);
+            linePanel.setPreferredSize(new Dimension(500, 20));
 
-            // Add the shape (circle or square)
-            //ShapeIcon shapeIcon = new ShapeIcon(item.getShape(), item.getColor(), 20, 20);
-            JLabel shapeLabel = new JLabel(/*shapeIcon*/);
-            linePanel.add(shapeLabel);
-            linePanel.add(Box.createRigidArea(new Dimension(10, 0))); // Spacer
+            JPanel shapePanel = getJPanel(orderOfIntersections.get(i));
+            shapePanel.setBackground(Color.LIGHT_GRAY);
+            linePanel.add(shapePanel);
 
             // Add the text
-            JLabel textLabel = new JLabel(/*hour*/);
-            textLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            linePanel.add(textLabel);
 
+            String text = i == 0? getHourString(0.0, orderOfIntersections.get(i)) : getHourString(hour.get(i-1), orderOfIntersections.get(i));
+            JLabel textLabel = new JLabel(text, SwingConstants.CENTER);
+            textLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            textLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+            linePanel.add(textLabel);
             // Add the line to the scroll content panel
-            linePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            //linePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
             scrollContentPanel.add(linePanel);
             scrollContentPanel.add(Box.createRigidArea(new Dimension(0, 5))); // Spacer between lines
         }
+        // Refresh the scroll content panel
+        scrollContentPanel.revalidate();
+        scrollContentPanel.repaint();
+    }
+
+    private String getHourString(double hour, int order) {
+        if (order == 0) {
+            return "Départ à 00h00";
+        }
+        int time = (int) Math.floor(hour/4.167);
+        int h = time / 60;
+        int m = time % 60;
+        String s = "Arrivée à " + h + "h" + m;
+        if(order % 2 == 1) {
+            s += " (Pickup)";
+        }
+        else {
+            s += " (Delivery)";
+        }
+        return s;
+    }
+
+    private JPanel getJPanel(int i) {
+        // Draw the shape
+        // Set preferred size for each line
+        return new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+
+                // Draw the shape
+                if(i == 0) {
+                    Rectangle.Double rectangle = new Rectangle.Double(5,5,10,10);
+                    g2d.setColor(Color.DARK_GRAY);
+                    g2d.fill(rectangle);
+                }
+                else if(i %2 == 1){
+                    int pair = i /2 + 1;
+                    Color dynamicColor = new Color((pair * 50) % 256, (pair * 80) % 256, (pair * 110) % 256);
+                    Rectangle.Double rectangle = new Rectangle.Double(5,5,10,10);
+                    g2d.setColor(dynamicColor);
+                    g2d.fill(rectangle);
+                }
+                else{
+                    int pair = i /2;
+                    Color dynamicColor = new Color((pair * 50) % 256, (pair * 80) % 256, (pair * 110) % 256);
+                    Ellipse2D.Double circle = new Ellipse2D.Double(5,5,10,10);
+                    g2d.setColor(dynamicColor);
+                    g2d.fill(circle);
+                }
+            }
+
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(15, 15); // Set preferred size for each line
+            }
+        };
     }
 }
