@@ -1,5 +1,7 @@
 package com._1.hex.DeliveryPlanning.tsp;
 
+import org.jgrapht.alg.util.Pair;
+
 import java.util.*;
 
 public abstract class TemplateTSP implements TSP {
@@ -8,6 +10,7 @@ public abstract class TemplateTSP implements TSP {
 	private double bestSolCost;
 	private int timeLimit;
 	private long startTime;
+	private HashMap<Pair,Double> timeBetweenTakeDownAndReturn;
 	
 	public void searchSolution(int timeLimit, Graph g){
 		if (timeLimit <= 0) return;
@@ -21,9 +24,11 @@ public abstract class TemplateTSP implements TSP {
 		visited.add(0); // The first visited vertex is 0
 		bestSolCost = Integer.MAX_VALUE;
 		Map<Integer,Double> costBetweenTakeUpAndReturn = new HashMap<>();
+		this.timeBetweenTakeDownAndReturn = new HashMap<>();
+
 		costBetweenTakeUpAndReturn.put(0,0.0);
-		Integer max_cost = 99999999;
-		if (branchAndBound(0, unvisited, visited, 0,costBetweenTakeUpAndReturn,max_cost)){
+		Integer max_Time = 300; // 300 seconds is 5 min
+		if (branchAndBound(0, unvisited, visited, 0,costBetweenTakeUpAndReturn,max_Time)){
 			System.out.println("Solution found");
 		}
 		else {
@@ -71,7 +76,7 @@ public abstract class TemplateTSP implements TSP {
 	 * @param currentCost the cost of the path corresponding to <code>visited</code>
 	 */	
 	private boolean branchAndBound(int currentVertex, Collection<Integer> unvisited,
-								   Collection<Integer> visited, double currentCost, Map<Integer,Double> costBetweenTakeUpAndReturn,Integer maximum_cost){
+								   Collection<Integer> visited, double currentCost, Map<Integer,Double> costBetweenTakeUpAndReturn,Integer maximum_time){
 
 		costBetweenTakeUpAndReturn.put(currentVertex,currentCost);
 
@@ -84,7 +89,7 @@ public abstract class TemplateTSP implements TSP {
 		if (costBetweenTakeUpAndReturn.containsKey(predecessor)){
 			Double predecessorCost = costBetweenTakeUpAndReturn.get(predecessor);
 			Double differanceCost = currentCost-predecessorCost;
-			if(differanceCost>maximum_cost)return false;
+			if(differanceCost/4.167 > maximum_time)return false;
 		}
 
 
@@ -97,6 +102,12 @@ public abstract class TemplateTSP implements TSP {
 	    		}
 	    	}
 	    } else if (currentCost+bound(currentVertex,unvisited) < bestSolCost){
+			if (costBetweenTakeUpAndReturn.containsKey(predecessor)) {
+				Double predecessorCost = costBetweenTakeUpAndReturn.get(predecessor);
+				Double differanceCost = currentCost - predecessorCost;
+				Pair<Integer,Integer> pair = Pair.of(predecessor,currentVertex);
+				this.timeBetweenTakeDownAndReturn.put(pair,differanceCost/4.167);
+			}
 	        Iterator<Integer> it = iterator(currentVertex, unvisited, g);
 	        boolean test = false;
 			while (it.hasNext()){
@@ -104,7 +115,7 @@ public abstract class TemplateTSP implements TSP {
 					visited.add(nextVertex);
 					unvisited.remove(nextVertex);
 					boolean currentTest =  branchAndBound(nextVertex, unvisited, visited,
-							currentCost + g.getCost(currentVertex, nextVertex),costBetweenTakeUpAndReturn,maximum_cost);
+							currentCost + g.getCost(currentVertex, nextVertex),costBetweenTakeUpAndReturn,maximum_time);
 					test = test || currentTest;
 					visited.remove(nextVertex);
 					unvisited.add(nextVertex);

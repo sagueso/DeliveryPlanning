@@ -78,7 +78,7 @@ public class ControlPanel extends JPanel {
 
     public int updateControlText(int currentState) {
         currentState = (currentState + 1) % 2;
-        this.controlText.setText(this.states[currentState+1]);
+        this.controlText.setText(this.states[currentState]);
 
         return currentState;
     }
