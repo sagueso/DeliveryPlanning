@@ -1,9 +1,7 @@
 package com._1.hex.DeliveryPlanning.service;
 
-import com._1.hex.DeliveryPlanning.model.Delivery;
-import com._1.hex.DeliveryPlanning.model.Intersection;
-import com._1.hex.DeliveryPlanning.model.Request;
-import com._1.hex.DeliveryPlanning.model.Warehouse;
+import com._1.hex.DeliveryPlanning.model.*;
+import com._1.hex.DeliveryPlanning.utils.PersistenceFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class DelevaryService {
+    StreetMap streetMap;
     List<Intersection> selectedIntersections;
+    List<Intersection> listRoute;
     Warehouse warehouse;
 
 
@@ -45,6 +45,15 @@ public class DelevaryService {
 
     public void setNbPanel(int nbPanel) {
         this.nbPanel = nbPanel;
+    }
+
+    public void addStreetMap(StreetMap streetMap) {
+        this.streetMap = streetMap;
+        graphService.addMap(streetMap);
+    }
+
+    public StreetMap getStreetMap() {
+        return this.streetMap;
     }
 
     public int addInergection(Intersection intersection) {
@@ -81,9 +90,35 @@ public class DelevaryService {
     public List<Intersection> getSelectedIntersections() {
         return selectedIntersections;
     }
-    public List<Long> computeGraph(){
-        solution = tspService.searchSolution(100000,this.request,graphService);
-        return solution;
+
+    public List<Intersection> computeGraph(StreetMap streetMap) {
+        List<Long> l = tspService.searchSolution(100000, this.request, graphService);
+        List<Intersection> listRoute = new ArrayList<>();
+        listRoute.add(streetMap.getIntersectionById(l.get(0)));
+        for (int j = 1; j < l.size(); j++) {
+            Intersection inter = streetMap.getIntersectionById(l.get(j));
+            if (listRoute.get(listRoute.size() - 1) != inter) {
+                listRoute.add(inter);
+            }
+        }
+        System.out.println("route: " + listRoute);
+        this.listRoute = listRoute;
+        return listRoute;
+    }
+    public void saveRouteToFile(){
+        try {
+            PersistenceFileUtils.saveRouteToFile(new Route(this.listRoute),"ROUTE-JSON-FILE");
+        }catch (Exception e){System.out.println(e);}
+
+    }
+
+    public List<Intersection> loadRouteFromFile(){
+        List<Intersection> intersectionList = new ArrayList<>();
+        try {
+            Route route = PersistenceFileUtils.readRouteFromFile("ROUTE-JSON-FILE");
+            intersectionList = route.getIntersections();
+        }catch (Exception e){System.out.println(e);}
+        return intersectionList;
     }
 
 }

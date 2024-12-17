@@ -6,6 +6,8 @@ public class Intersection {
     protected Double latitude;
     protected Double longitude;
 
+    public Intersection() {}
+
     public Intersection(Integer internalId, Long id, Double latitude, Double longitude) {
         this.id = id;
         this.internalId = internalId;

@@ -4,6 +4,8 @@ import com._1.hex.DeliveryPlanning.service.DelevaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com._1.hex.DeliveryPlanning.service.DelevaryService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class DeliverersListPanel extends javax.swing.JPanel {
             JDialog dialog = new JDialog();
             dialog.setTitle("Add Deliverer");
             dialog.setLayout(new FlowLayout());
-            String getMessage = JOptionPane.showInputDialog(this, "Enter the name of the deliverer");
+            String getMessage = JOptionPane.showInputDialog(this, "Cliquez pour rajouter un entrepot");
             addPerson(getMessage);
         });
         this.delevaryService = delevaryService;
