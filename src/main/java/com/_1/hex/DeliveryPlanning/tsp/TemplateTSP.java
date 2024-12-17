@@ -30,7 +30,6 @@ public abstract class TemplateTSP implements TSP {
 		Integer max_Time = 300; // 300 seconds is 5 min
 		if (branchAndBound(0, unvisited, visited, 0,costBetweenTakeUpAndReturn,max_Time)){
 			System.out.println("Solution found");
-			System.out.println("time between each 2 nodes: " + this.timeBetweenTakeDownAndReturn);
 		}
 		else {
 			System.out.println("cost exceeded");
