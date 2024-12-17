@@ -50,8 +50,8 @@ public class TspService {
 
                     Delivery currentDelivery = request.getTrip().get((integer-1) / 2);
                     currentIntersection = currentDelivery.getStartPoint().getId();
-                    currentDelivery.setPickupDuration(request.getDistance(lastIntersection, currentIntersection));
-                    t += currentDelivery.getPickupDuration();
+                    t += request.getDistance(lastIntersection, currentIntersection);
+                    currentDelivery.setPickupDuration(t);
                     distances.add(t);
 
                     nodes.add(currentIntersection);
@@ -59,8 +59,9 @@ public class TspService {
                 } else {
                     Delivery currentDelivery = request.getTrip().get((integer-1) / 2);
                     currentIntersection = currentDelivery.getDestinationPoint().getId();
+                    Double pickUpArrival = currentDelivery.getPickupDuration();
                     t += request.getDistance(lastIntersection, currentIntersection);
-                    currentDelivery.setPickupDuration(request.getDistance(lastIntersection, currentIntersection)-currentDelivery.getPickupDuration());
+                    currentDelivery.setPickupDuration(t-pickUpArrival);
                     distances.add(t);
                     nodes.add(currentIntersection);
                     lastIntersection = currentIntersection;

@@ -22,6 +22,7 @@ public class DelevaryService {
     @Autowired
     TspService tspService ;
     List<Long> solution = new ArrayList<>();
+
     public DelevaryService(GraphService graphService,TspService tspService) {
         this.selectedIntersections = new ArrayList<Intersection>();
         this.graphService = graphService;
@@ -99,6 +100,27 @@ public class DelevaryService {
 
     public List<Double> getDistances(){
         return tspService.getDistances();
+    }
+
+    private Double getDeliveryDuration(Intersection endPoint){
+        for(Delivery delivery: request.getTrip()){
+            if(delivery.getDestinationPoint().equals(endPoint)){
+                return delivery.getPickupDuration();
+            }
+            if(delivery.getStartPoint().equals(endPoint)){
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public List<Double> getPickUpTimes()
+    {
+        List<Double> pickUpTimes = new ArrayList<>();
+        for(Intersection intersection: this.selectedIntersections){
+            pickUpTimes.add(getDeliveryDuration(intersection));
+        }
+        return pickUpTimes;
     }
 
     public List<Intersection> loadRouteFromFile(){

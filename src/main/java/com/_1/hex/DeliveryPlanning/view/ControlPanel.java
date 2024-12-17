@@ -84,7 +84,7 @@ public class ControlPanel extends JPanel {
         return currentState;
     }
 
-    public void populateScrollContentPanel(List<Integer> orderOfIntersections, List<Double> hour) {
+    public void populateScrollContentPanel(List<Integer> orderOfIntersections, List<Double> hour, List<Double> pickUpTimes) {
         scrollContentPanel.removeAll();
         scrollContentPanel.revalidate();
         scrollContentPanel.repaint();
@@ -100,7 +100,9 @@ public class ControlPanel extends JPanel {
 
             // Add the text
 
-            String text = i == 0? getHourString(0.0, orderOfIntersections.get(i)) : getHourString(hour.get(i-1), orderOfIntersections.get(i));
+            int order = orderOfIntersections.get(i);
+            String text = i == 0? getHourString(0.0, order, pickUpTimes.get(order)) :
+                    getHourString(hour.get(i-1), orderOfIntersections.get(order), pickUpTimes.get(order));
             JLabel textLabel = new JLabel(text, SwingConstants.CENTER);
             textLabel.setFont(new Font("Arial", Font.PLAIN, 14));
             textLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -115,21 +117,33 @@ public class ControlPanel extends JPanel {
         scrollContentPanel.repaint();
     }
 
-    private String getHourString(double hour, int order) {
+    private String formatIntTwoDigits(int hour) {
+        return hour < 10 ? "0" + hour : String.valueOf(hour);
+    }
+
+    private String getHourString(double hour, int order, Double pickUpTime) {
         if (order == 0) {
             return "Départ à 00h00";
         }
         int time = (int) Math.floor(hour/4.167);
-        int h = time / 60;
-        int m = time % 60;
-        String s = "Arrivée à " + h + "h" + m;
-        if(order % 2 == 1) {
-            s += " (Pickup)";
+        int h = time / 3600;
+        int m = (time % 3600) / 60;
+        int s = time % 60;
+        int pckUpTime;
+        int minutesPickUpTime;
+        int secondsPickUpTime;
+        String result = "Arrivée à " + formatIntTwoDigits(h) + "h" + formatIntTwoDigits(m) + ":" + formatIntTwoDigits(s);
+        if(pickUpTime == null) {
+            result += " (Pickup)";
         }
         else {
-            s += " (Delivery)";
+            pckUpTime = (int) Math.floor(pickUpTime/4.167);
+            minutesPickUpTime = (pckUpTime % 3600) / 60;
+            secondsPickUpTime = pckUpTime % 60;
+            result += " (Delivery) Durée de la livraison: " + formatIntTwoDigits(minutesPickUpTime) +
+                    "m" + formatIntTwoDigits(secondsPickUpTime) + "s";
         }
-        return s;
+        return result;
     }
 
     private JPanel getJPanel(int i) {
