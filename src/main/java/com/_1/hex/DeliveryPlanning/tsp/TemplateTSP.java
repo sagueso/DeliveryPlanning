@@ -11,6 +11,7 @@ public abstract class TemplateTSP implements TSP {
 	private int timeLimit;
 	private long startTime;
 	private HashMap<Pair,Double> timeBetweenTakeDownAndReturn;
+	private boolean thereIsNoRoute;
 	
 	public void searchSolution(int timeLimit, Graph g){
 		if (timeLimit <= 0) return;
@@ -25,6 +26,7 @@ public abstract class TemplateTSP implements TSP {
 		bestSolCost = Integer.MAX_VALUE;
 		Map<Integer,Double> costBetweenTakeUpAndReturn = new HashMap<>();
 		this.timeBetweenTakeDownAndReturn = new HashMap<>();
+		this.thereIsNoRoute = false;
 
 		costBetweenTakeUpAndReturn.put(0,0.0);
 		Integer max_Time = 300; // 300 seconds is 5 min
@@ -32,7 +34,12 @@ public abstract class TemplateTSP implements TSP {
 			System.out.println("Solution found");
 		}
 		else {
-			System.out.println("cost exceeded");
+			if(this.thereIsNoRoute){
+				System.out.println("there is no route");
+			}
+			else {
+				System.out.println("cost exceeded");
+			}
 		}
 
 	}
@@ -84,7 +91,10 @@ public abstract class TemplateTSP implements TSP {
 		if (System.currentTimeMillis() - startTime > timeLimit) return false;
 		Integer predecessor = g.getPredecessor(currentVertex);
 		if (predecessor!=-1 && !visited.contains(predecessor)) return false;
-
+		if(!g.isArc(currentVertex,predecessor)){
+			this.thereIsNoRoute = true;
+			return false;
+		}
 
 		if (costBetweenTakeUpAndReturn.containsKey(predecessor)){
 			Double predecessorCost = costBetweenTakeUpAndReturn.get(predecessor);

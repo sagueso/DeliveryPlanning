@@ -51,16 +51,23 @@ public class StreetGraph implements Graph{
             return distance;
         }
         else {
-            Pair<List<Long>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
-            //TODO List of Long ids
-            request.addDistance(id1, id2, shortestPath.getFirst(), shortestPath.getSecond());
-            return shortestPath.getSecond();
+            if (isArc(int1.getInternalId(),int2.getInternalId())){
+                Pair<List<Long>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
+                //TODO List of Long ids
+
+                request.addDistance(id1, id2, shortestPath.getFirst(), shortestPath.getSecond());
+                return shortestPath.getSecond();
+            }
+            else {
+                System.out.println("there is no way!");
+                return null;
+            }
         }
     }
 
     @Override
     public boolean isArc(int i, int j) {
-        return i >= 0 && i < getNbVertices() && j >= 0 && j < getNbVertices();
+        return (i >= 0 && i < getNbVertices() && j >= 0 && j < getNbVertices())&&(graphService.doesPathExists(i,j));
     }
 
     @Override

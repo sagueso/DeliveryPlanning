@@ -103,11 +103,13 @@ public class DelevaryService {
         System.out.println("the actual courier"+this.person.getName());
         List<Long> l = tspService.searchSolution(100000, this.request, graphService);
         List<Intersection> listRoute = new ArrayList<>();
-        listRoute.add(streetMap.getIntersectionById(l.get(0)));
-        for (int j = 1; j < l.size(); j++) {
-            Intersection inter = streetMap.getIntersectionById(l.get(j));
-            if (listRoute.get(listRoute.size() - 1) != inter) {
-                listRoute.add(inter);
+        if (l!=null && l.size()>0){
+            listRoute.add(streetMap.getIntersectionById(l.get(0)));
+            for (int j = 1; j < l.size(); j++) {
+                Intersection inter = streetMap.getIntersectionById(l.get(j));
+                if (listRoute.get(listRoute.size() - 1) != inter) {
+                    listRoute.add(inter);
+                }
             }
         }
         System.out.println("route: " + listRoute);
