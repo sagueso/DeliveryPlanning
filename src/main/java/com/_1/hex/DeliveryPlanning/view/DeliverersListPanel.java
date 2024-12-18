@@ -24,7 +24,8 @@ public class DeliverersListPanel extends javax.swing.JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(600, 1000));
         setBackground(Color.LIGHT_GRAY);
-        JLabel welcomeLabel = new JLabel("Bienvenu dans Delivery Planning! Choisisez un courrier (ou ajouter un nouveau)");
+        JLabel welcomeLabel = new JLabel("Bienvenu dans Delivery Planning!");
+        JLabel pickCourrierLabel = new JLabel("Choisissez un livreur pour effectuer la livraison");
 
 
         JLabel listLabel = new JLabel("Liste des courriers:");
@@ -33,12 +34,15 @@ public class DeliverersListPanel extends javax.swing.JPanel {
 
 
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        pickCourrierLabel.setFont(new Font("Arial", Font.BOLD, 18));
         listLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
         add(Box.createRigidArea(new Dimension(10, 20)));
 
         add(Box.createRigidArea(new Dimension(10, 20)));
         add(welcomeLabel);
+        add(Box.createRigidArea(new Dimension(10, 10)));
+        add(pickCourrierLabel);
         add(Box.createRigidArea(new Dimension(10, 20)));
         add(listLabel);
 

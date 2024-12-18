@@ -26,6 +26,7 @@ import javax.swing.*;
 public class MainWindow extends JFrame {
     private final ControlPanel controlPanel;
     private int currentState;
+    private JSplitPane splitPane;
     private final DelevaryService delevaryService;
     private final DeliveryMap mapPanel;
     private final DeliverersListPanel deliverersListPanel;
@@ -40,22 +41,31 @@ public class MainWindow extends JFrame {
         setSize(1600, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setDividerLocation(1000);
+        splitPane.setResizeWeight(0.7);
 
         this.mapPanel = new DeliveryMap();
         this.mapPanel.setBackground(Color.WHITE);
         this.mapPanel.setPreferredSize(new Dimension(1000, 1000));
 
+
         this.controlPanel = new ControlPanel();
+        addGenerateRouteButtonCallback();
+        addSaveRoutePathButtonCallback();
+        addLoadRoutePathButtonCallback();
+        drawPointsWhenIntersectionsIsClicked();
 
         this.deliverersListPanel = new DeliverersListPanel();
+        this.deliverersListPanel.setPreferredSize(new Dimension(600, 1000));
+        addCourrierButtonCallback();
 
-
-        add(this.mapPanel, BorderLayout.CENTER);
+        splitPane.setLeftComponent(this.mapPanel);
+        add(splitPane, BorderLayout.CENTER);
 
         if(delevaryService.getNbPanel()==0){
-            add(this.deliverersListPanel, BorderLayout.SOUTH);
-            addCourrierButtonCallback();
+            splitPane.setRightComponent(this.deliverersListPanel);
 
             for(Courrier c : delevaryService.getCourriers()){
                 JButton personButton = new JButton(c.getName());
@@ -75,26 +85,13 @@ public class MainWindow extends JFrame {
             }
         }
         else if(delevaryService.getNbPanel()==1){
-            add(this.controlPanel, BorderLayout.EAST);
-
-            addGenerateRouteButtonCallback();
-            addSaveRoutePathButtonCallback();
-            addLoadRoutePathButtonCallback();
-            drawPointsWhenIntersectionsIsClicked();
+            splitPane.setRightComponent(this.controlPanel);
         }
 
     }
 
     void changePanel01(){
-
-        add(this.controlPanel, BorderLayout.EAST);
-
-        addGenerateRouteButtonCallback();
-        addSaveRoutePathButtonCallback();
-        addLoadRoutePathButtonCallback();
-        drawPointsWhenIntersectionsIsClicked();
-
-        remove(this.deliverersListPanel);
+        splitPane.setRightComponent(this.controlPanel);
     }
 
     void addCourrierButtonCallback(){
@@ -140,6 +137,7 @@ public class MainWindow extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 Intersection intersection = mapPanel.findClickedIntersection(e.getPoint());
                 if(intersection != null){
+                    System.out.println("Intersection clicked: " + intersection.getId());
                     delevaryService.addInergection(intersection);
                     mapPanel.setSelectedIntersections(delevaryService.getSelectedIntersections());
                     currentState = controlPanel.updateControlText(currentState);
@@ -184,6 +182,9 @@ public class MainWindow extends JFrame {
 
      void generateRoute(){
         List<Intersection> listRoute = delevaryService.computeGraph(delevaryService.getStreetMap());
+
+        List<Double> pickUpTimes = delevaryService.getPickUpTimes();
+        controlPanel.populateScrollContentPanel(delevaryService.getRouteInt(), delevaryService.getDistances(), pickUpTimes);
         mapPanel.setRoute(listRoute);
         mapPanel.repaint();
      }

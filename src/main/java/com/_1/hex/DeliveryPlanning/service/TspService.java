@@ -1,5 +1,6 @@
 package com._1.hex.DeliveryPlanning.service;
 
+import com._1.hex.DeliveryPlanning.model.Delivery;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Request;
 import com._1.hex.DeliveryPlanning.tsp.Graph;
@@ -15,6 +16,8 @@ import java.util.List;
 @Service
 public class TspService {
     TSP tsp ;
+    List<Integer> nodes = new ArrayList<>();
+    List<Double> distances = new ArrayList<>();
 
     @Autowired
     public TspService(TSP1 tsp) {
@@ -23,6 +26,10 @@ public class TspService {
 
     public List<Long> searchSolution(int time, Request request, GraphService GraphService){
 
+        distances = new ArrayList<>();
+        double t = 0.0;
+        Long lastIntersection = request.getWarehouse().getId();
+        Long currentIntersection = request.getWarehouse().getId();
         Graph graph = new StreetGraph(request, GraphService);
         tsp.searchSolution(time, graph);
         List<Integer> nodes_int = new ArrayList<>();
@@ -33,16 +40,31 @@ public class TspService {
             nodes_int.add(node);
             System.out.println(node);
         }
+        this.nodes = nodes_int;
 
         for (Integer integer : nodes_int) {
             if (integer == 0) {
                 nodes.add(request.getWarehouse().getId());
             } else {
-
                 if (integer % 2 == 1) {
-                    nodes.add(request.getTrip().get((integer-1) / 2).getStartPoint().getId());
+
+                    Delivery currentDelivery = request.getTrip().get((integer-1) / 2);
+                    currentIntersection = currentDelivery.getStartPoint().getId();
+                    t += request.getDistance(lastIntersection, currentIntersection);
+                    currentDelivery.setPickupDuration(t);
+                    distances.add(t);
+
+                    nodes.add(currentIntersection);
+                    lastIntersection = currentIntersection;
                 } else {
-                    nodes.add(request.getTrip().get((integer-1) / 2).getDestinationPoint().getId());
+                    Delivery currentDelivery = request.getTrip().get((integer-1) / 2);
+                    currentIntersection = currentDelivery.getDestinationPoint().getId();
+                    Double pickUpArrival = currentDelivery.getPickupDuration();
+                    t += request.getDistance(lastIntersection, currentIntersection);
+                    currentDelivery.setPickupDuration(t-pickUpArrival);
+                    distances.add(t);
+                    nodes.add(currentIntersection);
+                    lastIntersection = currentIntersection;
                 }
             }
         }
@@ -53,5 +75,13 @@ public class TspService {
         }
 
         return listeNodesId;
+    }
+
+    public List<Integer> getNodes() {
+        return nodes;
+    }
+
+    public List<Double> getDistances() {
+        return distances;
     }
 }

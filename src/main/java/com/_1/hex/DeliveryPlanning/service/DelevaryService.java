@@ -12,6 +12,7 @@ public class DelevaryService {
     StreetMap streetMap;
     List<Intersection> selectedIntersections;
     List<Intersection> listRoute;
+    List<Double> distances;
     Warehouse warehouse;
 
 
@@ -26,6 +27,7 @@ public class DelevaryService {
     @Autowired
     TspService tspService ;
     List<Long> solution = new ArrayList<>();
+
     public DelevaryService(GraphService graphService,TspService tspService) {
         this.selectedIntersections = new ArrayList<Intersection>();
         this.courriers = new ArrayList<>();
@@ -117,6 +119,35 @@ public class DelevaryService {
             PersistenceFileUtils.saveRouteToFile(new Route(this.listRoute),"ROUTE-JSON-FILE");
         }catch (Exception e){System.out.println(e);}
 
+    }
+
+    public List<Integer> getRouteInt(){
+        return tspService.getNodes();
+    }
+
+    public List<Double> getDistances(){
+        return tspService.getDistances();
+    }
+
+    private Double getDeliveryDuration(Intersection endPoint){
+        for(Delivery delivery: request.getTrip()){
+            if(delivery.getDestinationPoint().equals(endPoint)){
+                return delivery.getPickupDuration();
+            }
+            if(delivery.getStartPoint().equals(endPoint)){
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public List<Double> getPickUpTimes()
+    {
+        List<Double> pickUpTimes = new ArrayList<>();
+        for(Intersection intersection: this.selectedIntersections){
+            pickUpTimes.add(getDeliveryDuration(intersection));
+        }
+        return pickUpTimes;
     }
 
     public List<Intersection> loadRouteFromFile(){
