@@ -15,8 +15,6 @@ public class DelevaryService {
     List<Intersection> listRoute;
     List<Double> distances;
     Warehouse warehouse;
-
-
     int nbPanel = 0; //0 - select deliverer, 1 - controlPanel, 2-....
     Courrier person;
     List<Courrier> courriers;

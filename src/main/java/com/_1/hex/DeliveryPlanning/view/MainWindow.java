@@ -200,7 +200,11 @@ public class MainWindow extends JFrame {
         delevaryService.loadRouteFromFile();
         mapPanel.setRoute(delevaryService.getListRoute());
         List<Intersection>  l = delevaryService.getSelectedIntersections();
-        // could you print the shapes from here !
+        delevaryService.reinitializeListIntersection();
+        for (Intersection intersection : l) {
+            delevaryService.addInergection(intersection);
+        }
+        mapPanel.setSelectedIntersections(l);
     }
 
      void generateRoute(){
