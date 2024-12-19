@@ -12,6 +12,8 @@ public class Courrier {
         this.name = name;
     }
 
+    public Courrier() {}
+
     public Courrier(String name, Warehouse warehouse) {
         this.id = ++counter;
         this.name = name;
