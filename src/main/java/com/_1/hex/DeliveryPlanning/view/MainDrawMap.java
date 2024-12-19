@@ -3,9 +3,9 @@ package com._1.hex.DeliveryPlanning.view;
 
 import com._1.hex.DeliveryPlanning.DeliveryPlanningApplication;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
-import com._1.hex.DeliveryPlanning.service.DelevaryService;
+import com._1.hex.DeliveryPlanning.controller.Controller;
 import com._1.hex.DeliveryPlanning.service.GraphService;
-import com._1.hex.DeliveryPlanning.service.XmlParser;
+import com._1.hex.DeliveryPlanning.utils.XmlParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class MainDrawMap {
             public void run() {
 
                 ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
-                DelevaryService delevaryService = context.getBean(DelevaryService.class);
+                Controller controller = context.getBean(Controller.class);
                 GraphService graphService =  context.getBean(GraphService.class);
                 MainWindow mainWindow = context.getBean(MainWindow.class);
                 XmlParser xmlParser = new XmlParser();
@@ -36,7 +36,7 @@ public class MainDrawMap {
                 try {
                     map = xmlParser.parse(xmlPath);
 
-                    delevaryService.addStreetMap(map);
+                    controller.addStreetMap(map);
                     mainWindow.setStreetMap();
                     mainWindow.setVisible(true);
                     /*Intersection source =

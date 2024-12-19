@@ -11,7 +11,7 @@ import java.util.List;
 
 import com._1.hex.DeliveryPlanning.model.Courrier;
 import com._1.hex.DeliveryPlanning.model.Intersection;
-import com._1.hex.DeliveryPlanning.service.DelevaryService;
+import com._1.hex.DeliveryPlanning.controller.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,16 +28,16 @@ public class MainWindow extends JFrame {
     private final ControlPanel controlPanel;
     private int currentState;
     private JSplitPane splitPane;
-    private final DelevaryService delevaryService;
+    private final Controller controller;
     private final DeliveryMap mapPanel;
     private final DeliverersListPanel deliverersListPanel;
     //List<Intersection> route;
 
     //TODO no need for graphService
     @Autowired
-    public MainWindow(DelevaryService delevaryService) {
+    public MainWindow(Controller controller) {
         super("Map");
-        this.delevaryService = delevaryService;
+        this.controller = controller;
         this.currentState = -1;
         setSize(1600, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,17 +66,17 @@ public class MainWindow extends JFrame {
         splitPane.setLeftComponent(this.mapPanel);
         add(splitPane, BorderLayout.CENTER);
 
-        if(delevaryService.getNbPanel()==0){
+        if(controller.getNbPanel()==0){
             splitPane.setRightComponent(this.deliverersListPanel);
 
-            for(Courrier c : delevaryService.getCourriers()){
+            for(Courrier c : controller.getCouriers()){
                 JButton personButton = new JButton(c.getName());
                 this.deliverersListPanel.add(personButton);
 
                 personButton.addActionListener(f -> {
 
-                    delevaryService.setPerson(c);
-                    delevaryService.setNbPanel(1);
+                    controller.setPerson(c);
+                    controller.setNbPanel(1);
                     this.controlPanel.setNameLabel(c.getName());
                     changePanel01();
                     validate();
@@ -86,7 +86,7 @@ public class MainWindow extends JFrame {
 
             }
         }
-        else if(delevaryService.getNbPanel()==1){
+        else if(controller.getNbPanel()==1){
             splitPane.setRightComponent(this.controlPanel);
         }
 
@@ -102,7 +102,7 @@ public class MainWindow extends JFrame {
         List <Intersection> inter = new ArrayList<>();
         this.mapPanel.setSelectedIntersections(inter);
         this.currentState = -1;
-        delevaryService.reinitializeListIntersection();
+        controller.reinitializeListIntersection();
         this.controlPanel.reinitializeControlPanel();
     }
 
@@ -123,14 +123,14 @@ public class MainWindow extends JFrame {
 
             if(getMessage!=null){
                 Courrier courrier = new Courrier(getMessage);
-                delevaryService.addCourrier(courrier);
+                controller.addCourier(courrier);
                 JButton personButton = new JButton(getMessage);
                 this.deliverersListPanel.add(personButton);
 
                 personButton.addActionListener(f -> {
 
-                    delevaryService.setPerson(courrier);
-                    delevaryService.setNbPanel(1);
+                    controller.setPerson(courrier);
+                    controller.setNbPanel(1);
                     this.controlPanel.setNameLabel(courrier.getName());
                     changePanel01();
                     validate();
@@ -148,7 +148,7 @@ public class MainWindow extends JFrame {
 
 
     void setStreetMap() {
-        this.mapPanel.setStreetMap(delevaryService.getStreetMap());
+        this.mapPanel.setStreetMap(controller.getStreetMap());
     }
 
     void drawPointsWhenIntersectionsIsClicked() {
@@ -158,8 +158,8 @@ public class MainWindow extends JFrame {
                 Intersection intersection = mapPanel.findClickedIntersection(e.getPoint());
                 if(intersection != null){
                     System.out.println("Intersection clicked: " + intersection.getId());
-                    delevaryService.addInergection(intersection);
-                    mapPanel.setSelectedIntersections(delevaryService.getSelectedIntersections());
+                    controller.addIntersection(intersection);
+                    mapPanel.setSelectedIntersections(controller.getSelectedIntersections());
                     currentState = controlPanel.updateControlText(currentState);
                 }
             }
@@ -181,7 +181,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //controlPanel.populateScrollContentPanel();
-                delevaryService.saveRouteToFile();
+                controller.saveRouteToFile();
             }
         });
     }
@@ -197,18 +197,18 @@ public class MainWindow extends JFrame {
     }
 
     void loadRouteFromFile(){
-        delevaryService.loadRouteFromFile();
-        mapPanel.setRoute(delevaryService.getListRoute());
-        List<Intersection>  l = delevaryService.getSelectedIntersections();
-        delevaryService.reinitializeListIntersection();
+        controller.loadRouteFromFile();
+        mapPanel.setRoute(controller.getListRoute());
+        List<Intersection>  l = controller.getSelectedIntersections();
+        controller.reinitializeListIntersection();
         for (Intersection intersection : l) {
-            delevaryService.addInergection(intersection);
+            controller.addIntersection(intersection);
         }
         mapPanel.setSelectedIntersections(l);
     }
 
      void generateRoute(){
-        List<Intersection> listRoute = delevaryService.computeGraph(delevaryService.getStreetMap());
+        List<Intersection> listRoute = controller.computeGraph(controller.getStreetMap());
 
 
         if (listRoute.isEmpty()){
@@ -225,7 +225,7 @@ public class MainWindow extends JFrame {
                     List <Intersection> inter = new ArrayList<>();
                     mapPanel.setSelectedIntersections(inter);
                     currentState = -1;
-                    delevaryService.reinitializeListIntersection();
+                    controller.reinitializeListIntersection();
                     controlPanel.reinitializeControlPanel();
                 }
             });
@@ -240,8 +240,8 @@ public class MainWindow extends JFrame {
 
         }
         else{
-            List<Double> pickUpTimes = delevaryService.getPickUpTimes();
-            controlPanel.populateScrollContentPanel(delevaryService.getRouteInt(), delevaryService.getDistances(), pickUpTimes);
+            List<Double> pickUpTimes = controller.getPickUpTimes();
+            controlPanel.populateScrollContentPanel(controller.getRouteInt(), controller.getDistances(), pickUpTimes);
         }
         mapPanel.setRoute(listRoute);
         mapPanel.repaint();

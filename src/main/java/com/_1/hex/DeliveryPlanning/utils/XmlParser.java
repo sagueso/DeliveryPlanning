@@ -1,9 +1,9 @@
-package com._1.hex.DeliveryPlanning.service;
+package com._1.hex.DeliveryPlanning.utils;
 
 
 import com._1.hex.DeliveryPlanning.model.Intersection;
-import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
+import com._1.hex.DeliveryPlanning.service.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,6 @@ import javax.xml.stream.events.XMLEvent;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 @Service
