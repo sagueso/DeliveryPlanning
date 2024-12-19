@@ -75,7 +75,7 @@ public class Controller {
     }
 
     public void reinitializeListIntersection() {
-        this.selectedIntersections = new ArrayList<Intersection>();
+        this.selectedIntersections = new ArrayList<>();
         index = 0;
     }
 
@@ -161,7 +161,6 @@ public class Controller {
     }
 
     public void loadRouteFromFile(){
-        List<Intersection> intersectionList = new ArrayList<>();
         try {
             Route route = PersistenceFileUtils.readRouteFromFile("ROUTE-JSON-FILE",this.person.getId());
             assert route != null;

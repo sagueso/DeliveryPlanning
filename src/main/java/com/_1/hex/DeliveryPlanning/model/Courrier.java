@@ -15,13 +15,6 @@ public class Courrier {
 
     public Courrier() {}
 
-    public Courrier(String name, Warehouse warehouse) {
-        Random random = new Random();
-        this.id = random.nextInt();
-        this.name = name;
-        this.warehouse = warehouse;
-    }
-
     public String getName() {
         return name;
     }
