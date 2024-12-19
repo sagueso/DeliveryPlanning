@@ -1,21 +1,23 @@
 package com._1.hex.DeliveryPlanning.model;
+import java.util.Random;
 
 public class Courrier {
-    private static int counter = 0; // Static counter shared across all instances
-    private int id; // Instance variable for unique ID
+    private int id;
     private String name;
     private Warehouse warehouse;
     private Delivery delivery;
 
     public Courrier(String name) {
-        this.id = ++counter;
+        Random random = new Random();
+        this.id = random.nextInt();
         this.name = name;
     }
 
     public Courrier() {}
 
     public Courrier(String name, Warehouse warehouse) {
-        this.id = ++counter;
+        Random random = new Random();
+        this.id = random.nextInt();
         this.name = name;
         this.warehouse = warehouse;
     }
