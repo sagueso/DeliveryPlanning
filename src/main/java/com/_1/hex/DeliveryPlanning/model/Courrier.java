@@ -5,7 +5,7 @@ public class Courrier {
     private int id;
     private String name;
     private Warehouse warehouse;
-    private Delivery delivery;
+
 
     public Courrier(String name) {
         Random random = new Random();
@@ -31,9 +31,5 @@ public class Courrier {
     }
 
     public int getId() {return id;}
-
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
-    }
 
 }

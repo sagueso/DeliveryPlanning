@@ -1,7 +1,6 @@
 package com._1.hex.DeliveryPlanning.service;
 
 import com._1.hex.DeliveryPlanning.model.Delivery;
-import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Request;
 import com._1.hex.DeliveryPlanning.tsp.Graph;
 import com._1.hex.DeliveryPlanning.tsp.StreetGraph;
@@ -71,13 +70,13 @@ public class TspService {
                 }
             }
         }
-        List<Long> listeNodesId = new ArrayList<>();
+        List<Long> listNodesId = new ArrayList<>();
         int n = nodes.size();
         for (int i=0; i<n-1; i++) {
-            listeNodesId.addAll(request.getDistancesRoute(nodes.get(i), nodes.get(i+1)));
+            listNodesId.addAll(request.getDistancesRoute(nodes.get(i), nodes.get(i+1)));
         }
 
-        return listeNodesId;
+        return listNodesId;
     }
 
     public List<Integer> getNodes() {
