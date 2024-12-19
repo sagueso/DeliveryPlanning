@@ -28,7 +28,7 @@ public class PersistenceFileUtilsTest {
     public void testSaveRouteToFile() throws IOException {
         // Arrange
         Route route = new Route();
-        route.setId("1");
+        route.setId(1);
         Intersection intersection_1 = new Intersection(1,100L,100.1,100.2);
         Intersection intersection_2 = new Intersection(2,120L,200.1,200.2);
         List<Intersection> intersections = new ArrayList<Intersection>();

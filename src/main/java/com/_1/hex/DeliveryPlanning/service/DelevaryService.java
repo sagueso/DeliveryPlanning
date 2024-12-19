@@ -39,9 +39,13 @@ public class DelevaryService {
         return person;
     }
 
-    public void addCourrier(Courrier courrier) { courriers.add(courrier); }
+    public void addCourrier(Courrier courrier) {
+        courriers.add(courrier);
+    }
 
-    public List<Courrier> getCourriers() { return courriers; }
+    public List<Courrier> getCourriers() {
+        return courriers;
+    }
 
     public void setPerson(Courrier person) {
         this.person = person;
@@ -123,7 +127,9 @@ public class DelevaryService {
     }
     public void saveRouteToFile(){
         try {
-            PersistenceFileUtils.saveRouteToFile(new Route(this.listRoute),"ROUTE-JSON-FILE");
+            //int id = this.person.getName();
+            int id = this.person.getId();
+            PersistenceFileUtils.saveRouteToFile(new Route(id,this.listRoute),"ROUTE-JSON-FILE");
         }catch (Exception e){System.out.println(e);}
 
     }
