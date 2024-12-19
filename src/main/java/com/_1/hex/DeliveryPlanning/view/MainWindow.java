@@ -203,8 +203,39 @@ public class MainWindow extends JFrame {
      void generateRoute(){
         List<Intersection> listRoute = delevaryService.computeGraph(delevaryService.getStreetMap());
 
-        List<Double> pickUpTimes = delevaryService.getPickUpTimes();
-        controlPanel.populateScrollContentPanel(delevaryService.getRouteInt(), delevaryService.getDistances(), pickUpTimes);
+
+        if (listRoute.isEmpty()){
+            System.out.println("route is empty");
+            JDialog dialog2 = new JDialog();
+            dialog2.setTitle("Route pas trouve");
+            //dialog2.setLayout(new FlowLayout());
+            JLabel messageLabel = new JLabel("Impossible de trouver une route. Veuillez choisir autres points.", SwingConstants.CENTER);
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dialog2.dispose(); // Close the dialog
+                    List <Intersection> inter = new ArrayList<>();
+                    mapPanel.setSelectedIntersections(inter);
+                    currentState = -1;
+                    delevaryService.reinitializeListIntersection();
+                    controlPanel.reinitializeControlPanel();
+                }
+            });
+            JPanel panelPopUp = new JPanel();
+            panelPopUp.add(messageLabel);
+            panelPopUp.add(Box.createVerticalStrut(10));
+            panelPopUp.add(okButton);
+            dialog2.add(panelPopUp);
+            dialog2.setSize(500,100);
+            dialog2.setLocationRelativeTo(mapPanel);
+            dialog2.setVisible(true);
+
+        }
+        else{
+            List<Double> pickUpTimes = delevaryService.getPickUpTimes();
+            controlPanel.populateScrollContentPanel(delevaryService.getRouteInt(), delevaryService.getDistances(), pickUpTimes);
+        }
         mapPanel.setRoute(listRoute);
         mapPanel.repaint();
      }
