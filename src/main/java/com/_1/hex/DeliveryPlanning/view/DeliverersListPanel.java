@@ -8,9 +8,7 @@ import java.awt.*;
 @Service
 public class DeliverersListPanel extends javax.swing.JPanel {
 
-    //DelevaryService  delevaryService;
     JButton addPersonButton;
-    //DrawMap drawMap;
 
     //Panel for picking up a person to do the delivery
     public DeliverersListPanel() {

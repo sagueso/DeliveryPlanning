@@ -1,18 +1,11 @@
 package com._1.hex.DeliveryPlanning.view;
-
-import com._1.hex.DeliveryPlanning.model.Intersection;
-
 import javax.swing.*;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
 
 public class ControlPanel extends JPanel {
 
-    private final JScrollPane scrollPane;
     private final JPanel scrollContentPanel;
     private final JLabel controlText;
     private final JLabel nameLabel;
@@ -52,10 +45,10 @@ public class ControlPanel extends JPanel {
         this.scrollContentPanel.add(this.controlText);
 
         // Scroll pane setup
-        this.scrollPane = new JScrollPane(scrollContentPanel);
-        this.scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove border
-        this.scrollPane.getViewport().setBackground(Color.LIGHT_GRAY); // Match background
-        this.scrollPane.setPreferredSize(new Dimension(580, 400));
+        JScrollPane scrollPane = new JScrollPane(scrollContentPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove border
+        scrollPane.getViewport().setBackground(Color.LIGHT_GRAY); // Match background
+        scrollPane.setPreferredSize(new Dimension(580, 400));
         this.add(Box.createRigidArea(new Dimension(0, 20)));
         this.add(scrollPane);
 

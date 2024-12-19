@@ -1,8 +1,6 @@
 package com._1.hex.DeliveryPlanning.view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -27,13 +25,11 @@ import javax.swing.*;
 public class MainWindow extends JFrame {
     private final ControlPanel controlPanel;
     private int currentState;
-    private JSplitPane splitPane;
+    private final JSplitPane splitPane;
     private final Controller controller;
     private final DeliveryMap mapPanel;
     private final DeliverersListPanel deliverersListPanel;
-    //List<Intersection> route;
 
-    //TODO no need for graphService
     @Autowired
     public MainWindow(Controller controller) {
         super("Map");
@@ -167,32 +163,20 @@ public class MainWindow extends JFrame {
     }
 
     void addGenerateRouteButtonCallback(){
-        this.controlPanel.getGeneratePathButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                generateRoute();
-                repaint();
-            }
+        this.controlPanel.getGeneratePathButton().addActionListener(e -> {
+            generateRoute();
+            repaint();
         });
     }
 
     void addSaveRoutePathButtonCallback(){
-        this.controlPanel.getSaveRoutePathButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //controlPanel.populateScrollContentPanel();
-                controller.saveRouteToFile();
-            }
-        });
+        this.controlPanel.getSaveRoutePathButton().addActionListener(e -> controller.saveRouteToFile());
     }
 
     void addLoadRoutePathButtonCallback(){
-        this.controlPanel.getLoadRoutePathButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadRouteFromFile();
-                repaint();
-            }
+        this.controlPanel.getLoadRoutePathButton().addActionListener(e -> {
+            loadRouteFromFile();
+            repaint();
         });
     }
 
@@ -218,16 +202,13 @@ public class MainWindow extends JFrame {
             //dialog2.setLayout(new FlowLayout());
             JLabel messageLabel = new JLabel("Impossible de trouver une route. Veuillez choisir autres points.", SwingConstants.CENTER);
             JButton okButton = new JButton("OK");
-            okButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dialog2.dispose(); // Close the dialog
-                    List <Intersection> inter = new ArrayList<>();
-                    mapPanel.setSelectedIntersections(inter);
-                    currentState = -1;
-                    controller.reinitializeListIntersection();
-                    controlPanel.reinitializeControlPanel();
-                }
+            okButton.addActionListener(e -> {
+                dialog2.dispose(); // Close the dialog
+                List <Intersection> inter = new ArrayList<>();
+                mapPanel.setSelectedIntersections(inter);
+                currentState = -1;
+                controller.reinitializeListIntersection();
+                controlPanel.reinitializeControlPanel();
             });
             JPanel panelPopUp = new JPanel();
             panelPopUp.add(messageLabel);
