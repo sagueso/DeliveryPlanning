@@ -14,13 +14,13 @@ import java.util.Map;
 
 public class DeliveryMap extends JPanel {
 
-    Double minLatitudeValue;
-    Double maxLatitudeValue;
-    Double minLongitudeValue;
-    Double maxLongitudeValue;
-    List<Intersection> route;
-    List<Intersection> selectedIntersections;
-    StreetMap streetMap;
+    private Double minLatitudeValue;
+    private Double maxLatitudeValue;
+    private Double minLongitudeValue;
+    private Double maxLongitudeValue;
+    private List<Intersection> route;
+    private List<Intersection> selectedIntersections;
+    private StreetMap streetMap;
 
     DeliveryMap() {
         super();
@@ -35,7 +35,7 @@ public class DeliveryMap extends JPanel {
 
     void setStreetMap(StreetMap streetMap) {
         this.streetMap = streetMap;
-        intializeMinAndMaxLatitudeAndLongitude(this.streetMap.getIntersections());
+        intialiseMinAndMaxLatitudeAndLongitude(this.streetMap.getIntersections());
     }
 
     void setRoute(List<Intersection> route) {
@@ -48,7 +48,11 @@ public class DeliveryMap extends JPanel {
         repaint();
     }
 
-    void intializeMinAndMaxLatitudeAndLongitude(Map<Integer, Intersection> intersections) {
+    /**
+     * This method is used to find the minimum and maximum latitude and longitude values of the intersections
+     * @param intersections List of the intersections of the map
+     */
+    void intialiseMinAndMaxLatitudeAndLongitude(Map<Integer, Intersection> intersections) {
         for (Integer key : intersections.keySet()) {
             Intersection intersection = intersections.get(key);
             if (intersection.getLatitude() < minLatitudeValue) {
@@ -109,6 +113,12 @@ public class DeliveryMap extends JPanel {
         }
     }
 
+    /**
+     * This method is used to draw the selected intersections on the map with different shapes and colors.
+     * The first intersection is drawn as a black rectangle, the following intersections are drawn paired by two circles
+     * and rectangles with the same color, but different colors for each pair.
+     * @param g2d the 2d graphics object
+     */
     public void drawSelectedIntersections(Graphics2D g2d) {
         if(this.selectedIntersections != null) {
             List<Intersection> selectedIntersections = this.selectedIntersections;
@@ -143,7 +153,12 @@ public class DeliveryMap extends JPanel {
         }
     }
 
-    Intersection findClickedIntersection(Point e) {
+    /**
+     * This method is used to find the intersection that is clicked by the user
+     * @param e the point where the user clicked
+     * @return the intersection that is clicked
+     */
+    public Intersection findClickedIntersection(Point e) {
         for (Intersection intersection : this.streetMap.getIntersections().values()) {
             Ellipse2D.Double circle = new Ellipse2D.Double(
                     normalizeLatitude(intersection.getLatitude()) - 5,
@@ -156,6 +171,10 @@ public class DeliveryMap extends JPanel {
         return null;
     }
 
+    /**
+     * Paint the streets and the selected intersections and route on the map
+     * @param g the graphics object
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
