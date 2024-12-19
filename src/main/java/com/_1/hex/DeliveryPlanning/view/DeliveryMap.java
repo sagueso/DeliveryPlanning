@@ -35,7 +35,7 @@ public class DeliveryMap extends JPanel {
 
     void setStreetMap(StreetMap streetMap) {
         this.streetMap = streetMap;
-        intialise_MinAndMaxValues_For_LatitudeAndLongitude(this.streetMap.getIntersections());
+        intializeMinAndMaxLatitudeAndLongitude(this.streetMap.getIntersections());
     }
 
     void setRoute(List<Intersection> route) {
@@ -48,7 +48,7 @@ public class DeliveryMap extends JPanel {
         repaint();
     }
 
-    void intialise_MinAndMaxValues_For_LatitudeAndLongitude(Map<Integer, Intersection> intersections) {
+    void intializeMinAndMaxLatitudeAndLongitude(Map<Integer, Intersection> intersections) {
         for (Integer key : intersections.keySet()) {
             Intersection intersection = intersections.get(key);
             if (intersection.getLatitude() < minLatitudeValue) {

@@ -67,6 +67,9 @@ public class MainWindow extends JFrame {
 
             for(Courrier c : controller.getCouriers()){
                 JButton personButton = new JButton(c.getName());
+                personButton.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+                personButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, personButton.getMinimumSize().height));
+
                 this.deliverersListPanel.add(personButton);
 
                 personButton.addActionListener(f -> {
@@ -113,14 +116,17 @@ public class MainWindow extends JFrame {
     void addCourrierButtonCallback(){
         this.deliverersListPanel.getAddPersonButton().addActionListener(e -> {
             JDialog dialog = new JDialog();
-            dialog.setTitle("Add Deliverer");
+            dialog.setTitle("Rajouter livreur");
             dialog.setLayout(new FlowLayout());
-            String getMessage = JOptionPane.showInputDialog(this.deliverersListPanel, "Cliquez pour rajouter un courrier");
+            String getMessage = JOptionPane.showInputDialog(this.deliverersListPanel, "Cliquez pour rajouter un livreur");
 
             if(getMessage!=null){
                 Courrier courrier = new Courrier(getMessage);
                 controller.addCourier(courrier);
                 JButton personButton = new JButton(getMessage);
+                personButton.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+                personButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, personButton.getMinimumSize().height));
+
                 this.deliverersListPanel.add(personButton);
 
                 personButton.addActionListener(f -> {
@@ -196,11 +202,13 @@ public class MainWindow extends JFrame {
 
 
         if (listRoute.isEmpty()){
-            System.out.println("route is empty");
+            //System.out.println("route is empty");
             JDialog dialog2 = new JDialog();
             dialog2.setTitle("Route pas trouve");
             //dialog2.setLayout(new FlowLayout());
-            JLabel messageLabel = new JLabel("Impossible de trouver une route. Veuillez choisir autres points.", SwingConstants.CENTER);
+            JLabel messageLabel = new JLabel("Impossible de trouver une route.", SwingConstants.CENTER);
+            JLabel messageLabel2 = new JLabel("La contrainte de temps n'a pas pu être validée, ou un de vos points est inaccessible.", SwingConstants.CENTER);
+            JLabel messageLabel3 = new JLabel("Veuillez choisir autres points.", SwingConstants.CENTER);
             JButton okButton = new JButton("OK");
             okButton.addActionListener(e -> {
                 dialog2.dispose(); // Close the dialog
@@ -212,10 +220,12 @@ public class MainWindow extends JFrame {
             });
             JPanel panelPopUp = new JPanel();
             panelPopUp.add(messageLabel);
+            panelPopUp.add(messageLabel2);
+            panelPopUp.add(messageLabel3);
             panelPopUp.add(Box.createVerticalStrut(10));
             panelPopUp.add(okButton);
             dialog2.add(panelPopUp);
-            dialog2.setSize(500,100);
+            dialog2.setSize(500,200);
             dialog2.setLocationRelativeTo(mapPanel);
             dialog2.setVisible(true);
 
