@@ -36,9 +36,28 @@ public class GraphService {
 
     }
 
+        public boolean doesPathExists(Intersection source, Intersection target){
+
+            DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
+            try {
+                GraphPath<Integer, DefaultWeightedEdge> graphPath =  dijkstra.getPath(source.getInternalId(), target.getInternalId());
+                if (graphPath == null) {return false;}
+                else {return true;}
+            }catch (Exception e){
+                return false;
+            }
+
+        }
+
     // Add edge with weight
         public Pair<List<Long>, Double> computeTheShortestPath(Intersection source, Intersection target) {
         // Compute the shortest path from vertex 2 to vertex 5
+        boolean doesPathExists = doesPathExists(source, target);
+        if (!doesPathExists) {
+            System.out.println("No path exists for " + source + " and " + target);
+            return null;
+        }
+
         DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
         GraphPath<Integer, DefaultWeightedEdge> graphPath =  dijkstra.getPath(source.getInternalId(), target.getInternalId());
         //System.out.println(graphPath);

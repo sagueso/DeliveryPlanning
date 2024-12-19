@@ -36,7 +36,10 @@ public class TspService {
         List<Long> nodes = new ArrayList<>();
         for (int i=0; i<graph.getNbVertices(); i++) {
             Integer node = tsp.getSolution(i);
-            if(node == null){ return null; } // No solution found
+            if(node == null){
+                this.nodes = new ArrayList<>();
+                return null;
+            } // No solution found
             nodes_int.add(node);
             System.out.println(node);
         }

@@ -25,7 +25,6 @@ public abstract class TemplateTSP implements TSP {
 		bestSolCost = Integer.MAX_VALUE;
 		Map<Integer,Double> costBetweenTakeUpAndReturn = new HashMap<>();
 		this.timeBetweenTakeDownAndReturn = new HashMap<>();
-
 		costBetweenTakeUpAndReturn.put(0,0.0);
 		Integer max_Time = 300; // 300 seconds is 5 min
 		if (branchAndBound(0, unvisited, visited, 0,costBetweenTakeUpAndReturn,max_Time)){
@@ -84,7 +83,6 @@ public abstract class TemplateTSP implements TSP {
 		if (System.currentTimeMillis() - startTime > timeLimit) return false;
 		Integer predecessor = g.getPredecessor(currentVertex);
 		if (predecessor!=-1 && !visited.contains(predecessor)) return false;
-
 
 		if (costBetweenTakeUpAndReturn.containsKey(predecessor)){
 			Double predecessorCost = costBetweenTakeUpAndReturn.get(predecessor);
