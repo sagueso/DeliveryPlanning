@@ -19,13 +19,15 @@ public class ControlPanel extends JPanel {
     private final JButton generatePathButton;
     private final JButton saveRoutePathButton;
     private final JButton loadRoutePathButton;
+
+    private final JButton returnMainButton;
     private final String[] states;
 
     public ControlPanel() {
         super();
 
         this.states = new String[] {
-                "",
+                "Click on an intersection to set it as a warehouse",
             "Click on an intersection to set it as a start point",
             "Click on an intersection to set it as an end point"
         };
@@ -39,7 +41,7 @@ public class ControlPanel extends JPanel {
         this.add(Box.createRigidArea(new Dimension(0, 20)));
         this.add(nameLabel);
 
-        this.controlText = new JLabel("Click on an intersection to set it as a start point", SwingConstants.CENTER);
+        this.controlText = new JLabel("Click on an intersection to set it as a warehouse", SwingConstants.CENTER);
         this.controlText.setFont(new Font("Arial", Font.PLAIN, 14));
         this.add(Box.createRigidArea(new Dimension(0, 20)));
 
@@ -60,11 +62,24 @@ public class ControlPanel extends JPanel {
         this.generatePathButton = new JButton("Generate Path");
         this.saveRoutePathButton = new JButton("SaveRoute");
         this.loadRoutePathButton = new JButton("LoadRoute");
+        this.returnMainButton = new JButton("Return to Main Menu");
 
         this.add(Box.createVerticalGlue());
         this.add(generatePathButton);
         this.add(saveRoutePathButton);
         this.add(loadRoutePathButton);
+        this.add(returnMainButton);
+    }
+
+    public void reinitializeControlPanel() {
+        scrollContentPanel.removeAll();
+        scrollContentPanel.revalidate();
+        scrollContentPanel.repaint();
+
+        controlText.setText(states[0]);
+        scrollContentPanel.add(this.controlText);
+        scrollContentPanel.revalidate();
+        scrollContentPanel.repaint();
     }
 
     public JButton getGeneratePathButton() {
@@ -79,11 +94,13 @@ public class ControlPanel extends JPanel {
         return loadRoutePathButton;
     }
 
+    public JButton getReturnMainButton() { return returnMainButton; }
+
     public void setNameLabel(String text) { this.nameLabel.setText(text); }
 
     public int updateControlText(int currentState) {
         currentState = (currentState + 1) % 2;
-        this.controlText.setText(this.states[currentState]);
+        this.controlText.setText(this.states[currentState+1]);
 
         return currentState;
     }

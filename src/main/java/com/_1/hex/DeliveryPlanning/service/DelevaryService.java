@@ -64,6 +64,11 @@ public class DelevaryService {
         return this.streetMap;
     }
 
+    public void reinitializeListIntersection() {
+        this.selectedIntersections = new ArrayList<Intersection>();
+        index = 0;
+    }
+
     public int addInergection(Intersection intersection) {
         index++;
         if (index == 1 ){

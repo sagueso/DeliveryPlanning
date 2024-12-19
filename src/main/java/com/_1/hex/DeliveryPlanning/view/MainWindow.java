@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com._1.hex.DeliveryPlanning.model.Courrier;
@@ -55,6 +56,7 @@ public class MainWindow extends JFrame {
         addGenerateRouteButtonCallback();
         addSaveRoutePathButtonCallback();
         addLoadRoutePathButtonCallback();
+        addReturnMainButtonCallback();
         drawPointsWhenIntersectionsIsClicked();
 
         this.deliverersListPanel = new DeliverersListPanel();
@@ -92,6 +94,24 @@ public class MainWindow extends JFrame {
 
     void changePanel01(){
         splitPane.setRightComponent(this.controlPanel);
+    }
+
+    void changePanel10() {
+        splitPane.setRightComponent(this.deliverersListPanel);
+        this.mapPanel.setRoute(null);
+        List <Intersection> inter = new ArrayList<>();
+        this.mapPanel.setSelectedIntersections(inter);
+        this.currentState = -1;
+        delevaryService.reinitializeListIntersection();
+        this.controlPanel.reinitializeControlPanel();
+    }
+
+    void addReturnMainButtonCallback(){
+        this.controlPanel.getReturnMainButton().addActionListener(e -> {
+            changePanel10();
+            validate();
+            repaint();
+        });
     }
 
     void addCourrierButtonCallback(){
