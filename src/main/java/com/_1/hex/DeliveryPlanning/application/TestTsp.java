@@ -3,7 +3,7 @@ package com._1.hex.DeliveryPlanning.application;
 import com._1.hex.DeliveryPlanning.model.*;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.TspService;
-import com._1.hex.DeliveryPlanning.service.XmlParser;
+import com._1.hex.DeliveryPlanning.utils.XmlParser;
 import com._1.hex.DeliveryPlanning.tsp.TSP1;
 import org.springframework.stereotype.Component;
 

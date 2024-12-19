@@ -41,8 +41,7 @@ public class GraphService {
             DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
             try {
                 GraphPath<Integer, DefaultWeightedEdge> graphPath =  dijkstra.getPath(source.getInternalId(), target.getInternalId());
-                if (graphPath == null) {return false;}
-                else {return true;}
+                return graphPath != null;
             }catch (Exception e){
                 return false;
             }

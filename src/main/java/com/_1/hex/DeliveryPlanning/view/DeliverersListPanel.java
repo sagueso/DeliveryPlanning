@@ -1,22 +1,14 @@
 package com._1.hex.DeliveryPlanning.view;
 
-import com._1.hex.DeliveryPlanning.service.DelevaryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com._1.hex.DeliveryPlanning.service.DelevaryService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DeliverersListPanel extends javax.swing.JPanel {
 
-    //DelevaryService  delevaryService;
     JButton addPersonButton;
-    //DrawMap drawMap;
 
     //Panel for picking up a person to do the delivery
     public DeliverersListPanel() {
