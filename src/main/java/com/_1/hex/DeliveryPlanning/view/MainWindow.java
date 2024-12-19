@@ -197,12 +197,14 @@ public class MainWindow extends JFrame {
     }
 
     void loadRouteFromFile(){
-        mapPanel.setRoute(delevaryService.loadRouteFromFile());
+        delevaryService.loadRouteFromFile();
+        mapPanel.setRoute(delevaryService.getListRoute());
+        List<Intersection>  l = delevaryService.getSelectedIntersections();
+        // could you print the shapes from here !
     }
 
      void generateRoute(){
         List<Intersection> listRoute = delevaryService.computeGraph(delevaryService.getStreetMap());
-
         List<Double> pickUpTimes = delevaryService.getPickUpTimes();
         controlPanel.populateScrollContentPanel(delevaryService.getRouteInt(), delevaryService.getDistances(), pickUpTimes);
         mapPanel.setRoute(listRoute);

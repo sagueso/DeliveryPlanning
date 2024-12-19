@@ -29,6 +29,11 @@ public class DelevaryService {
     TspService tspService ;
     List<Long> solution = new ArrayList<>();
 
+    public List<Intersection> getListRoute() {
+        return listRoute;
+    }
+
+
     public DelevaryService(GraphService graphService,TspService tspService) {
         this.selectedIntersections = new ArrayList<Intersection>();
         this.courriers = new ArrayList<>();
@@ -137,7 +142,7 @@ public class DelevaryService {
         try {
             //int id = this.person.getName();
             int CurrentCourierId = this.person.getId();
-            PersistenceFileUtils.saveRouteToFile(new Route(CurrentCourierId,this.listRoute),"ROUTE-JSON-FILE");
+            PersistenceFileUtils.saveRouteToFile(new Route(CurrentCourierId,this.listRoute ,this.selectedIntersections),"ROUTE-JSON-FILE");
             PersistenceFileUtils.saveCouriersToFile(this.courriers,"COURIER-JSON-FILE");
         }catch (Exception e){System.out.println(e);}
 
@@ -172,13 +177,14 @@ public class DelevaryService {
         return pickUpTimes;
     }
 
-    public List<Intersection> loadRouteFromFile(){
+    public void loadRouteFromFile(){
         List<Intersection> intersectionList = new ArrayList<>();
         try {
             Route route = PersistenceFileUtils.readRouteFromFile("ROUTE-JSON-FILE",this.person.getId());
-            intersectionList = route.getIntersections();
+            assert route != null;
+            this.listRoute =  route.getIntersections();
+            this.selectedIntersections = route.getSelectedIntersections();
         }catch (Exception e){System.out.println(e);}
-        return intersectionList;
     }
 
 }
