@@ -51,23 +51,33 @@ public class StreetGraph implements Graph{
             return distance;
         }
         else {
-            if (isArc(int1.getInternalId(),int2.getInternalId())){
-                Pair<List<Long>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
-                //TODO List of Long ids
+            Pair<List<Long>, Double> shortestPath = graphService.computeTheShortestPath(int1, int2);
 
-                request.addDistance(id1, id2, shortestPath.getFirst(), shortestPath.getSecond());
-                return shortestPath.getSecond();
-            }
-            else {
-                System.out.println("there is no way!");
-                return null;
-            }
+            request.addDistance(id1, id2, shortestPath.getFirst(), shortestPath.getSecond());
+            return shortestPath.getSecond();
         }
     }
 
     @Override
     public boolean isArc(int i, int j) {
-        return (i >= 0 && i < getNbVertices() && j >= 0 && j < getNbVertices())&&(graphService.doesPathExists(i,j));
+        Intersection int1;
+        Intersection int2;
+        if (i < 0 || j < 0 || i > 2*request.getTrip().size() || j > 2*request.getTrip().size()) {
+            return false;
+        }
+        if(i == 0) {
+            int1 = request.getWarehouse();// Warehouse
+        }
+        else {
+            int1 = i % 2 == 1 ? request.getTrip().get((i-1) / 2).getStartPoint() : request.getTrip().get((i-1) / 2).getDestinationPoint();
+        }
+        if(j == 0) {
+            int2 = request.getWarehouse();// Warehouse
+        }
+        else {
+            int2 = j % 2 == 1 ? request.getTrip().get((j-1) / 2).getStartPoint() : request.getTrip().get((j-1) / 2).getDestinationPoint();
+        }
+        return ((graphService.doesPathExists(int1,int2)));
     }
 
     @Override
