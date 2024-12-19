@@ -5,6 +5,7 @@ import com._1.hex.DeliveryPlanning.utils.PersistenceFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 @Service
@@ -14,8 +15,6 @@ public class DelevaryService {
     List<Intersection> listRoute;
     List<Double> distances;
     Warehouse warehouse;
-
-
     int nbPanel = 0; //0 - select deliverer, 1 - controlPanel, 2-....
     Courrier person;
     List<Courrier> courriers;
@@ -28,6 +27,11 @@ public class DelevaryService {
     TspService tspService ;
     List<Long> solution = new ArrayList<>();
 
+    public List<Intersection> getListRoute() {
+        return listRoute;
+    }
+
+
     public DelevaryService(GraphService graphService,TspService tspService) {
         this.selectedIntersections = new ArrayList<Intersection>();
         this.courriers = new ArrayList<>();
@@ -39,9 +43,20 @@ public class DelevaryService {
         return person;
     }
 
-    public void addCourrier(Courrier courrier) { courriers.add(courrier); }
+    public void addCourrier(Courrier courrier) {
+        courriers.add(courrier);
+    }
 
-    public List<Courrier> getCourriers() { return courriers; }
+    public List<Courrier> getCourriers()  {
+        if (courriers.isEmpty()) {
+            try{
+                courriers = PersistenceFileUtils.readCouriersFromFile("COURIER-JSON-FILE");
+            }catch (IOException e){
+                System.out.println(e.getMessage());
+            }
+        }
+        return courriers;
+    }
 
     public void setPerson(Courrier person) {
         this.person = person;
@@ -123,7 +138,10 @@ public class DelevaryService {
     }
     public void saveRouteToFile(){
         try {
-            PersistenceFileUtils.saveRouteToFile(new Route(this.listRoute),"ROUTE-JSON-FILE");
+            //int id = this.person.getName();
+            int CurrentCourierId = this.person.getId();
+            PersistenceFileUtils.saveRouteToFile(new Route(CurrentCourierId,this.listRoute ,this.selectedIntersections),"ROUTE-JSON-FILE");
+            PersistenceFileUtils.saveCouriersToFile(this.courriers,"COURIER-JSON-FILE");
         }catch (Exception e){System.out.println(e);}
 
     }
@@ -157,13 +175,14 @@ public class DelevaryService {
         return pickUpTimes;
     }
 
-    public List<Intersection> loadRouteFromFile(){
+    public void loadRouteFromFile(){
         List<Intersection> intersectionList = new ArrayList<>();
         try {
-            Route route = PersistenceFileUtils.readRouteFromFile("ROUTE-JSON-FILE");
-            intersectionList = route.getIntersections();
+            Route route = PersistenceFileUtils.readRouteFromFile("ROUTE-JSON-FILE",this.person.getId());
+            assert route != null;
+            this.listRoute =  route.getIntersections();
+            this.selectedIntersections = route.getSelectedIntersections();
         }catch (Exception e){System.out.println(e);}
-        return intersectionList;
     }
 
 }

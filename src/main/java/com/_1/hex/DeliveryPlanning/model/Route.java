@@ -3,28 +3,33 @@ package com._1.hex.DeliveryPlanning.model;
 import java.util.List;
 
 public class Route {
-
-    private String id;  // For MongoDB, it's typically a String (ObjectId), but for a file-based approach, it could be any identifier.
-
-    private List<Intersection> intersections;  // The list of intersections representing the route
+    private int courierId;
+    private List<Intersection> intersections;
+    private List<Intersection> selectedIntersections;
 
     public Route() {}
     // Constructor
-    public Route(List<Intersection> intersections) {
+    public Route(int id,List<Intersection> intersections,List<Intersection> selectedIntersections) {
+        this.courierId = id;
         this.intersections = intersections;
+        this.selectedIntersections = selectedIntersections;
     }
 
     // Getters and Setters
-    public String getId() {
-        return id;
+    public int getId() {
+        return courierId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(int id) {
+        this.courierId = id;
     }
 
     public List<Intersection> getIntersections() {
         return intersections;
+    }
+
+    public List<Intersection> getSelectedIntersections() {
+        return selectedIntersections;
     }
 
     public void setIntersections(List<Intersection> intersections) {

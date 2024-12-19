@@ -197,7 +197,14 @@ public class MainWindow extends JFrame {
     }
 
     void loadRouteFromFile(){
-        mapPanel.setRoute(delevaryService.loadRouteFromFile());
+        delevaryService.loadRouteFromFile();
+        mapPanel.setRoute(delevaryService.getListRoute());
+        List<Intersection>  l = delevaryService.getSelectedIntersections();
+        delevaryService.reinitializeListIntersection();
+        for (Intersection intersection : l) {
+            delevaryService.addInergection(intersection);
+        }
+        mapPanel.setSelectedIntersections(l);
     }
 
      void generateRoute(){
