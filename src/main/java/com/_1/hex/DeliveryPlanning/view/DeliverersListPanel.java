@@ -22,7 +22,7 @@ public class DeliverersListPanel extends javax.swing.JPanel {
 
         JLabel listLabel = new JLabel("Liste des courriers:");
 
-        addPersonButton = new JButton("Add Person");
+        addPersonButton = new JButton("Rajouter livreur");
         addPersonButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         addPersonButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.addPersonButton.getMinimumSize().height));
 
