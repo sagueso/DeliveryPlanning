@@ -45,7 +45,7 @@ public class PersistenceFileUtilsTest {
         assertTrue(file.length() > 0, "File should not be empty.");
 
 
-        Route routeFromFile = PersistenceFileUtils.readRouteFromFile(TEST_FILE_PATH);
+        Route routeFromFile = PersistenceFileUtils.readRouteFromFile(TEST_FILE_PATH,1);
         assertEquals(route.getId(), routeFromFile.getId());
         assertEquals(route.getIntersections().size(), routeFromFile.getIntersections().size());
         for (int i = 0; i < route.getIntersections().size(); i++) {
@@ -57,7 +57,7 @@ public class PersistenceFileUtilsTest {
     public void testReadRouteFromFile_FileNotFound() {
         // Act & Assert
         assertThrows(IOException.class, () -> {
-            PersistenceFileUtils.readRouteFromFile("nonexistent-file.json");
+            PersistenceFileUtils.readRouteFromFile("nonexistent-file.json",1);
         }, "Reading a non-existing file should throw IOException.");
     }
 }
