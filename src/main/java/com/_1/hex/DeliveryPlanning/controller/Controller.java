@@ -79,19 +79,15 @@ public class Controller {
         index = 0;
     }
 
-    public int addIntersection(Intersection intersection) {
+    public void addIntersection(Intersection intersection) {
         index++;
         if (index == 1 ){
             Warehouse warehouse = new Warehouse(intersection, "Lyon");
             this.request = new Request(warehouse);
-
         }
         else {
-
             if (index%2==0){
                 this.startPoint = intersection;
-
-
             }
             else {
                 this.endPoint = intersection;
@@ -100,7 +96,6 @@ public class Controller {
         }
         this.selectedIntersections.add(intersection);
         System.out.println("intersection added to delevary service from services package!" + intersection.getId());
-        return index;
     }
 
     public List<Intersection> getSelectedIntersections() {
