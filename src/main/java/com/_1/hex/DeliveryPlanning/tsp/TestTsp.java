@@ -1,10 +1,9 @@
-package com._1.hex.DeliveryPlanning.application;
+package com._1.hex.DeliveryPlanning.tsp;
 
 import com._1.hex.DeliveryPlanning.model.*;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.TspService;
 import com._1.hex.DeliveryPlanning.utils.XmlParser;
-import com._1.hex.DeliveryPlanning.tsp.TSP1;
 import org.springframework.stereotype.Component;
 
 import javax.xml.stream.XMLStreamException;

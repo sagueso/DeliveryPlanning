@@ -106,6 +106,11 @@ public class ControlPanel extends JPanel {
 
     public void setNameLabel(String text) { this.nameLabel.setText(text); }
 
+    /**
+     * Update the control text and return the new state by switching between states
+     * @param currentState The current state
+     * @return The new state
+     */
     public int updateControlText(int currentState) {
         currentState = (currentState + 1) % 2;
         this.controlText.setText(this.states[currentState+1]);
@@ -113,6 +118,12 @@ public class ControlPanel extends JPanel {
         return currentState;
     }
 
+    /**
+     * Populate the scroll content panel with the order of intersections and their icon, the hour and the pick up times
+     * @param orderOfIntersections List with order of intersections ordered by clicking order
+     * @param hour List of arrival distances for each intersection skipping the warehouse in the order of the route
+     * @param pickUpTimes The pickup times for each intersection in the order of the route with null if the intersection is a start point the warehouse
+     */
     public void populateScrollContentPanel(List<Integer> orderOfIntersections, List<Double> hour, List<Double> pickUpTimes) {
         scrollContentPanel.removeAll();
         scrollContentPanel.revalidate();

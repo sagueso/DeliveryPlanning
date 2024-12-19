@@ -23,6 +23,14 @@ public class TspService {
         this.tsp = tsp;
     }
 
+    /**
+     * Search the solution of the TSP problem by calling the tsp implementation and parses the result to get the list
+     * of the nodes ids, sets the pickup duration of the deliveries and the distances between the nodes
+     * @param time the time of the request
+     * @param request the request
+     * @param GraphService the graph service to get the shortest path
+     * @return the list of the nodes ids
+     */
     public List<Long> searchSolution(int time, Request request, GraphService GraphService){
 
         distances = new ArrayList<>();
