@@ -41,6 +41,8 @@ public class PersistenceFileUtilsTest {
         // Assert
         File file = new File(TEST_FILE_PATH);
         assertTrue(file.exists(), "File should exist after saving the route.");
+
+
         System.out.println(file.length());
         assertTrue(file.length() > 0, "File should not be empty.");
 
