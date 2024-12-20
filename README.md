@@ -17,6 +17,8 @@ livreur afin de la récupérer plus tard.
 
 # Navigation de l\'Interface
 
+NB: Privilégiez une vue sur tout l’écran avant qu’une fenêtre flottant afin de vous assurer de voir tous les composants
+
 Ci-dessous, vous pouvez voir l\'interface de la page d\'accueil. C\'est
 l\'interface que vous verrez dès que vous serez connecté.
 
