@@ -40,7 +40,7 @@ public class MainDrawMap {
                 try {
                     currentPath = Paths.get(MainDrawMap.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
                     //System.out.println("Working Directory: " + currentPath.toString());
-                    filePath = currentPath.resolve("grandPlan.xml");
+                    filePath = currentPath.resolve("plan.xml");
                 }
                 catch (URISyntaxException e) {
                     e.printStackTrace();

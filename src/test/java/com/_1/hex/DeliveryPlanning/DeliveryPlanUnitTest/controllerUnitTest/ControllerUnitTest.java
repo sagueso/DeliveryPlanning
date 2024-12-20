@@ -1,15 +1,14 @@
+
 package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.controllerUnitTest;
+
 
 import com._1.hex.DeliveryPlanning.model.*;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.TspService;
 import com._1.hex.DeliveryPlanning.utils.PersistenceFileUtils;
+
 import com._1.hex.DeliveryPlanning.controller.Controller;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,7 @@ public class ControllerUnitTest {
 
     @InjectMocks
     private Controller controller;
+
 
     @Mock
     private PersistenceFileUtils persistenceFileUtils;
@@ -48,10 +48,10 @@ public class ControllerUnitTest {
     }
 
 
-
     @Test
     public void testAddStreetMap() {
         StreetMap streetMap = new StreetMap(null); // Replace "someParameter" with actual parameter if needed
+
         controller.addStreetMap(streetMap);
         verify(graphService, times(1)).addMap(streetMap);
     }
@@ -64,11 +64,13 @@ public class ControllerUnitTest {
     }
 
     @Test
+
     public void testSetPerson() {
         Courrier courrier = new Courrier();
         
         controller.setPerson(courrier);
         
+
         assertEquals(courrier, controller.getPerson());
     }
 
@@ -86,7 +88,9 @@ public class ControllerUnitTest {
 
     @Test
     public void testGetStreetMap() {
+
         StreetMap streetMap = new StreetMap(null);
+
         controller.addStreetMap(streetMap);
         assertEquals(streetMap, controller.getStreetMap());
     }
