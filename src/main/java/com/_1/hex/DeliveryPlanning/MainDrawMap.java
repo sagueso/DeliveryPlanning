@@ -32,7 +32,7 @@ public class MainDrawMap {
 
 
                 StreetMap map;
-                String xmlPath = "src/main/java/com/_1/hex/DeliveryPlanning/utils/grandPlan.xml";
+                String xmlPath = args[0];
                 try {
                     map = xmlParser.parse(xmlPath);
 
