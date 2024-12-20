@@ -25,4 +25,8 @@ public class Courrier {
 
     public int getId() {return id;}
 
+    public void setId(int i) {
+        this.id = i;
+    }
+
 }
