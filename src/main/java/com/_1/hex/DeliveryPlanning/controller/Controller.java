@@ -61,6 +61,10 @@ public class Controller {
         this.person = person;
     }
 
+    public Courrier getPerson() {
+        return person;
+    }
+
     public int getNbPanel() {
         return nbPanel;
     }

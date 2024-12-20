@@ -18,6 +18,10 @@ public class StreetMap {
         intersectionsIds = new HashMap<Long, Integer>();
     }
 
+    public StreetMap() {
+        //TODO Auto-generated constructor stub
+    }
+
     public Map<Long, Integer> getIntersectionsId(){
         return intersectionsIds;
     }
