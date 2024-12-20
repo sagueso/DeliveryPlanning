@@ -24,7 +24,7 @@ public class PersistenceFileUtils {
         Path fileP;
         try {
             currentPath = Paths.get(MainDrawMap.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
-            System.out.println("Working Directory: " + currentPath.toString());
+            //System.out.println("Working Directory: " + currentPath.toString());
             fileP = currentPath.resolve(filePath);
         }
         catch (URISyntaxException e) {
