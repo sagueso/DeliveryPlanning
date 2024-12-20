@@ -1,11 +1,11 @@
-package com._1.hex.DeliveryPlanning.view;
+package com._1.hex.DeliveryPlanning;
 
 
-import com._1.hex.DeliveryPlanning.DeliveryPlanningApplication;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.controller.Controller;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.utils.XmlParser;
+import com._1.hex.DeliveryPlanning.view.MainWindow;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
