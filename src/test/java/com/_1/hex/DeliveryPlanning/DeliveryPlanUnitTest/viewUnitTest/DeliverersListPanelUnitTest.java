@@ -1,16 +1,10 @@
 package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.viewUnitTest;
 
-import com._1.hex.DeliveryPlanning.service.DelevaryService;
 import com._1.hex.DeliveryPlanning.view.DeliverersListPanel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import com._1.hex.DeliveryPlanning.service.DelevaryService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
