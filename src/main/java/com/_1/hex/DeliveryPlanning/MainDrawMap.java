@@ -1,11 +1,11 @@
-package com._1.hex.DeliveryPlanning.view;
+package com._1.hex.DeliveryPlanning;
 
 
-import com._1.hex.DeliveryPlanning.DeliveryPlanningApplication;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
-import com._1.hex.DeliveryPlanning.service.DelevaryService;
+import com._1.hex.DeliveryPlanning.controller.Controller;
 import com._1.hex.DeliveryPlanning.service.GraphService;
-import com._1.hex.DeliveryPlanning.service.XmlParser;
+import com._1.hex.DeliveryPlanning.utils.XmlParser;
+import com._1.hex.DeliveryPlanning.view.MainWindow;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Component
 public class MainDrawMap {
@@ -25,18 +28,31 @@ public class MainDrawMap {
             public void run() {
 
                 ApplicationContext context = SpringApplication.run(DeliveryPlanningApplication.class, args);
-                DelevaryService delevaryService = context.getBean(DelevaryService.class);
+                Controller controller = context.getBean(Controller.class);
                 GraphService graphService =  context.getBean(GraphService.class);
                 MainWindow mainWindow = context.getBean(MainWindow.class);
                 XmlParser xmlParser = new XmlParser();
 
 
                 StreetMap map;
-                String xmlPath = "src/main/java/com/_1/hex/DeliveryPlanning/utils/petitPlan.xml";
+                Path currentPath;
+                Path filePath;
+                try {
+                    currentPath = Paths.get(MainDrawMap.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+                    //System.out.println("Working Directory: " + currentPath.toString());
+                    filePath = currentPath.resolve("grandPlan.xml");
+                }
+                catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+
+                String xmlPath =  filePath.toString();
                 try {
                     map = xmlParser.parse(xmlPath);
 
-                    delevaryService.addStreetMap(map);
+                    controller.addStreetMap(map);
                     mainWindow.setStreetMap();
                     mainWindow.setVisible(true);
                     /*Intersection source =

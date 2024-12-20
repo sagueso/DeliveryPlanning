@@ -1,18 +1,11 @@
 package com._1.hex.DeliveryPlanning.view;
-
-import com._1.hex.DeliveryPlanning.model.Intersection;
-
 import javax.swing.*;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
 
 public class ControlPanel extends JPanel {
 
-    private final JScrollPane scrollPane;
     private final JPanel scrollContentPanel;
     private final JLabel controlText;
     private final JLabel nameLabel;
@@ -27,9 +20,9 @@ public class ControlPanel extends JPanel {
         super();
 
         this.states = new String[] {
-                "Click on an intersection to set it as a warehouse",
-            "Click on an intersection to set it as a start point",
-            "Click on an intersection to set it as an end point"
+                "Cliquez sur une intersection pour rajouter un entrepôt",
+            "Cliquez sur une intersection pour rajouter un point de ramassage",
+            "Cliquez sur une intersection pour rajouter un depôt"
         };
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -41,7 +34,7 @@ public class ControlPanel extends JPanel {
         this.add(Box.createRigidArea(new Dimension(0, 20)));
         this.add(nameLabel);
 
-        this.controlText = new JLabel("Click on an intersection to set it as a warehouse", SwingConstants.CENTER);
+        this.controlText = new JLabel(this.states[0], SwingConstants.CENTER);
         this.controlText.setFont(new Font("Arial", Font.PLAIN, 14));
         this.add(Box.createRigidArea(new Dimension(0, 20)));
 
@@ -52,17 +45,32 @@ public class ControlPanel extends JPanel {
         this.scrollContentPanel.add(this.controlText);
 
         // Scroll pane setup
-        this.scrollPane = new JScrollPane(scrollContentPanel);
-        this.scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove border
-        this.scrollPane.getViewport().setBackground(Color.LIGHT_GRAY); // Match background
-        this.scrollPane.setPreferredSize(new Dimension(580, 400));
+        JScrollPane scrollPane = new JScrollPane(scrollContentPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove border
+        scrollPane.getViewport().setBackground(Color.LIGHT_GRAY); // Match background
+        scrollPane.setPreferredSize(new Dimension(580, 400));
         this.add(Box.createRigidArea(new Dimension(0, 20)));
         this.add(scrollPane);
 
-        this.generatePathButton = new JButton("Generate Path");
-        this.saveRoutePathButton = new JButton("SaveRoute");
-        this.loadRoutePathButton = new JButton("LoadRoute");
-        this.returnMainButton = new JButton("Return to Main Menu");
+        this.generatePathButton = new JButton("Calculer chemin");
+        this.generatePathButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.generatePathButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.generatePathButton.getMinimumSize().height));
+        //this.generatePathButton.setBackground(Color.LIGHT_GRAY);
+
+        this.saveRoutePathButton = new JButton("Sauvegarder chemin");
+        this.saveRoutePathButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.saveRoutePathButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.saveRoutePathButton.getMinimumSize().height));
+        //this.saveRoutePathButton.setBackground(Color.LIGHT_GRAY);
+
+        this.loadRoutePathButton = new JButton("Charger chemin");
+        this.loadRoutePathButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.loadRoutePathButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.loadRoutePathButton.getMinimumSize().height));
+        //this.loadRoutePathButton.setBackground(Color.LIGHT_GRAY);
+
+        this.returnMainButton = new JButton("Choisir autre livreur");
+        this.returnMainButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.returnMainButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, this.returnMainButton.getMinimumSize().height));
+        //this.returnMainButton.setBackground(Color.LIGHT_GRAY);
 
         this.add(Box.createVerticalGlue());
         this.add(generatePathButton);
@@ -98,6 +106,11 @@ public class ControlPanel extends JPanel {
 
     public void setNameLabel(String text) { this.nameLabel.setText(text); }
 
+    /**
+     * Update the control text and return the new state by switching between states
+     * @param currentState The current state
+     * @return The new state
+     */
     public int updateControlText(int currentState) {
         currentState = (currentState + 1) % 2;
         this.controlText.setText(this.states[currentState+1]);
@@ -105,6 +118,12 @@ public class ControlPanel extends JPanel {
         return currentState;
     }
 
+    /**
+     * Populate the scroll content panel with the order of intersections and their icon, the hour and the pick up times
+     * @param orderOfIntersections List with order of intersections ordered by clicking order
+     * @param hour List of arrival distances for each intersection skipping the warehouse in the order of the route
+     * @param pickUpTimes The pickup times for each intersection in the order of the route with null if the intersection is a start point the warehouse
+     */
     public void populateScrollContentPanel(List<Integer> orderOfIntersections, List<Double> hour, List<Double> pickUpTimes) {
         scrollContentPanel.removeAll();
         scrollContentPanel.revalidate();

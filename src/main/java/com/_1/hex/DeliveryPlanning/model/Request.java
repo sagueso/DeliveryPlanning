@@ -8,8 +8,6 @@ import java.util.*;
 public class Request {
     private Warehouse warehouse;
     private final List<Delivery> trip;
-    //Key id paire d'id intersections, value paire de longueur et liste des id intersection chemin entre les deux intersections
-    //TODO LIST INTEGER
     private final Map<Pair<Long, Long>, Pair<List<Long>, Double>> distances;
 
     public Request(Warehouse warehouse) {
@@ -41,11 +39,10 @@ public class Request {
         return warehouse;
     }
 
-    public Double addDistance(Long originId, Long destinationId, List<Long> path, Double length) {
+    public void addDistance(Long originId, Long destinationId, List<Long> path, Double length) {
         Pair<Long, Long> key = new Pair<>(originId, destinationId);
         Pair<List<Long>, Double> value = new Pair<>(path, length);
         this.distances.put(key, value);
-        return length;
     }
 
     public void addDelivery(Delivery delivery) {
@@ -55,7 +52,7 @@ public class Request {
     /**
      * @param i: Warehouse is 0
      *         For each delivery, the start point is 2i+1 and the destination point is 2i+2
-     * @return
+     * @return the successor place of the intersection i
      */
    public int getPredecessor(int i) {
         if(i <= 0 || i >= 2*this.trip.size()+1) {

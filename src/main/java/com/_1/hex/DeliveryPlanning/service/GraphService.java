@@ -21,7 +21,10 @@ public class GraphService {
         this.graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     }
 
-
+    /**
+     * Sets the map to the graph for the shortest path computation with the Dijkstra algorithm and the JGraphT library
+     * @param maps the map to add
+     */
     public void  addMap(StreetMap maps) {
         // Add vertices
         for(Integer i : maps.getIntersectionsIds()){
@@ -36,21 +39,32 @@ public class GraphService {
 
     }
 
-        public boolean doesPathExists(Intersection source, Intersection target){
+    /**
+     * Check if a path exists between two intersections
+     * @param source the source intersection
+     * @param target the target intersection
+     * @return true if a path exists, false otherwise
+     */
+    public boolean doesPathExists(Intersection source, Intersection target){
 
-            DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
-            try {
-                GraphPath<Integer, DefaultWeightedEdge> graphPath =  dijkstra.getPath(source.getInternalId(), target.getInternalId());
-                if (graphPath == null) {return false;}
-                else {return true;}
-            }catch (Exception e){
-                return false;
-            }
-
+        DijkstraShortestPath<Integer, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(graph);
+        try {
+            GraphPath<Integer, DefaultWeightedEdge> graphPath =  dijkstra.getPath(source.getInternalId(), target.getInternalId());
+            return graphPath != null;
+        }catch (Exception e){
+            return false;
         }
 
+    }
+
     // Add edge with weight
-        public Pair<List<Long>, Double> computeTheShortestPath(Intersection source, Intersection target) {
+    /**
+     * Add an edge to the graph with a weight
+     * @param source the source intersection
+     * @param target the target intersection
+     * @return Pair of the list of vertices (by long id) composing the shortest route and the distance, null if no path exists
+     */
+    public Pair<List<Long>, Double> computeTheShortestPath(Intersection source, Intersection target) {
         // Compute the shortest path from vertex 2 to vertex 5
         boolean doesPathExists = doesPathExists(source, target);
         if (!doesPathExists) {
