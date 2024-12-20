@@ -1,6 +1,8 @@
-package com._1.hex.DeliveryPlanning.service;
+package com._1.hex.DeliveryPlanning.controller;
 
 import com._1.hex.DeliveryPlanning.model.*;
+import com._1.hex.DeliveryPlanning.service.GraphService;
+import com._1.hex.DeliveryPlanning.service.TspService;
 import com._1.hex.DeliveryPlanning.utils.PersistenceFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,53 +11,50 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class DelevaryService {
-    StreetMap streetMap;
-    List<Intersection> selectedIntersections;
-    List<Intersection> listRoute;
-    List<Double> distances;
-    Warehouse warehouse;
-    int nbPanel = 0; //0 - select deliverer, 1 - controlPanel, 2-....
-    Courrier person;
-    List<Courrier> courriers;
-    Intersection startPoint;
+public class Controller {
+    private StreetMap streetMap;
+    private List<Intersection> selectedIntersections;
+    private List<Intersection> listRoute;
+    private int nbPanel = 0; //0 - select deliverer, 1 - controlPanel, 2-....
+    private Courrier person;
+    private List<Courrier> couriers;
+    private Intersection startPoint;
     Intersection endPoint;
-    Request request;
-    int index=0;
-    GraphService graphService;
+    private Request request;
+    private int index=0;
+    private final GraphService graphService;
+
     @Autowired
-    TspService tspService ;
-    List<Long> solution = new ArrayList<>();
+    private TspService tspService ;
+
+    public Controller(GraphService graphService, TspService tspService) {
+        this.selectedIntersections = new ArrayList<>();
+        this.couriers = new ArrayList<>();
+        this.graphService = graphService;
+        this.tspService = tspService;
+    }
 
     public List<Intersection> getListRoute() {
         return listRoute;
     }
 
-
-    public DelevaryService(GraphService graphService,TspService tspService) {
-        this.selectedIntersections = new ArrayList<Intersection>();
-        this.courriers = new ArrayList<>();
-        this.graphService = graphService;
-        this.tspService = tspService;
+    public void addCourier(Courrier courrier) {
+        couriers.add(courrier);
     }
 
-    public Courrier getPerson() {
-        return person;
-    }
-
-    public void addCourrier(Courrier courrier) {
-        courriers.add(courrier);
-    }
-
-    public List<Courrier> getCourriers()  {
-        if (courriers.isEmpty()) {
+    /**
+     * Get the list of couriers if it is empty, read the couriers from the file
+     * @return the list of couriers
+     */
+    public List<Courrier> getCouriers()  {
+        if (couriers.isEmpty()) {
             try{
-                courriers = PersistenceFileUtils.readCouriersFromFile("COURIER-JSON-FILE");
+                couriers = PersistenceFileUtils.readCouriersFromFile("COURIER-JSON-FILE");
             }catch (IOException e){
                 System.out.println(e.getMessage());
             }
         }
-        return courriers;
+        return couriers;
     }
 
     public void setPerson(Courrier person) {
@@ -70,6 +69,10 @@ public class DelevaryService {
         this.nbPanel = nbPanel;
     }
 
+    /**
+     * Add the street map to the graph service
+     * @param streetMap the street map
+     */
     public void addStreetMap(StreetMap streetMap) {
         this.streetMap = streetMap;
         graphService.addMap(streetMap);
@@ -80,50 +83,47 @@ public class DelevaryService {
     }
 
     public void reinitializeListIntersection() {
-        this.selectedIntersections = new ArrayList<Intersection>();
+        this.selectedIntersections = new ArrayList<>();
         index = 0;
     }
 
-    public int addInergection(Intersection intersection) {
+    /**
+     * Add the intersection to the delivery service creates the request and each delivery after getting the start and end points
+     * @param intersection the intersection
+     */
+    public void addIntersection(Intersection intersection) {
         index++;
         if (index == 1 ){
-            this.warehouse = new Warehouse(intersection,"Lyon");
-            this.request = new Request(this.warehouse);
-
+            Warehouse warehouse = new Warehouse(intersection, "Lyon");
+            this.request = new Request(warehouse);
         }
         else {
-
             if (index%2==0){
                 this.startPoint = intersection;
-
-
             }
             else {
                 this.endPoint = intersection;
                 this.request.addDelivery(new Delivery(startPoint,endPoint));
             }
         }
-        /*
-        if (this.startPoint != null && this.endPoint == null) {
-            this.endPoint = warehouse;
-            this.request.addDelivery(new Delivery(startPoint,endPoint));
-        }*/
-
-
         this.selectedIntersections.add(intersection);
-        System.out.println("intersection added to delevary service from services package!" + intersection.getId());
-        return index;
+        //System.out.println("intersection added to delevary service from services package!" + intersection.getId());
     }
 
     public List<Intersection> getSelectedIntersections() {
         return selectedIntersections;
     }
 
+    /**
+     * Call tspService to compute the TSP solution for the request and gets the route of intersections
+     * @param streetMap the street map
+     * @return the list of intersections
+     */
     public List<Intersection> computeGraph(StreetMap streetMap) {
         System.out.println("the actual courier"+this.person.getName());
         List<Long> l = tspService.searchSolution(100000, this.request, graphService);
         List<Intersection> listRoute = new ArrayList<>();
-        if (l!=null && l.size()>0){
+        if (l!=null && !l.isEmpty()){
             listRoute.add(streetMap.getIntersectionById(l.get(0)));
             for (int j = 1; j < l.size(); j++) {
                 Intersection inter = streetMap.getIntersectionById(l.get(j));
@@ -136,16 +136,25 @@ public class DelevaryService {
         this.listRoute = listRoute;
         return listRoute;
     }
+
+    /**
+     * Save the route to the file
+     */
     public void saveRouteToFile(){
         try {
             //int id = this.person.getName();
             int CurrentCourierId = this.person.getId();
             PersistenceFileUtils.saveRouteToFile(new Route(CurrentCourierId,this.listRoute ,this.selectedIntersections),"ROUTE-JSON-FILE");
-            PersistenceFileUtils.saveCouriersToFile(this.courriers,"COURIER-JSON-FILE");
-        }catch (Exception e){System.out.println(e);}
+            PersistenceFileUtils.saveCouriersToFile(this.couriers,"COURIER-JSON-FILE");
+        }catch (Exception e){
+            //System.out.println(e);
+        }
 
     }
 
+    /**
+     * Get the route from the file
+     */
     public List<Integer> getRouteInt(){
         return tspService.getNodes();
     }
@@ -154,6 +163,11 @@ public class DelevaryService {
         return tspService.getDistances();
     }
 
+    /**
+     * Get the delivery duration by searching the delivery in the request corresponding to the end point
+     * @param endPoint the end point
+     * @return the delivery duration
+     */
     private Double getDeliveryDuration(Intersection endPoint){
         for(Delivery delivery: request.getTrip()){
             if(delivery.getDestinationPoint().equals(endPoint)){
@@ -166,6 +180,10 @@ public class DelevaryService {
         return null;
     }
 
+    /**
+     * Get the pickup times for the selected intersections
+     * @return the list of pickup times with null if the intersection is a start point in the order of the selected intersections
+     */
     public List<Double> getPickUpTimes()
     {
         List<Double> pickUpTimes = new ArrayList<>();
@@ -175,14 +193,18 @@ public class DelevaryService {
         return pickUpTimes;
     }
 
+    /**
+     * Load the route from the file
+     */
     public void loadRouteFromFile(){
-        List<Intersection> intersectionList = new ArrayList<>();
         try {
             Route route = PersistenceFileUtils.readRouteFromFile("ROUTE-JSON-FILE",this.person.getId());
             assert route != null;
             this.listRoute =  route.getIntersections();
             this.selectedIntersections = route.getSelectedIntersections();
-        }catch (Exception e){System.out.println(e);}
+        }catch (Exception e){
+            //System.out.println(e);
+        }
     }
 
 }

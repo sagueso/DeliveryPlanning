@@ -5,7 +5,7 @@ public class Courrier {
     private int id;
     private String name;
     private Warehouse warehouse;
-    private Delivery delivery;
+
 
     public Courrier(String name) {
         Random random = new Random();
@@ -14,13 +14,6 @@ public class Courrier {
     }
 
     public Courrier() {}
-
-    public Courrier(String name, Warehouse warehouse) {
-        Random random = new Random();
-        this.id = random.nextInt();
-        this.name = name;
-        this.warehouse = warehouse;
-    }
 
     public String getName() {
         return name;
@@ -31,9 +24,5 @@ public class Courrier {
     }
 
     public int getId() {return id;}
-
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
-    }
 
 }

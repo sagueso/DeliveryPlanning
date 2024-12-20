@@ -1,10 +1,8 @@
-package com._1.hex.DeliveryPlanning.service;
+package com._1.hex.DeliveryPlanning.utils;
 
 
 import com._1.hex.DeliveryPlanning.model.Intersection;
-import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.namespace.QName;
@@ -17,17 +15,10 @@ import javax.xml.stream.events.XMLEvent;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 @Service
 public class XmlParser {
-
-    @Autowired
-    GraphService graphService;
 
     public XmlParser() {
     }
@@ -58,7 +49,6 @@ public class XmlParser {
                         Intersection intersection = new Intersection(internalId, id, latitude, longitude);
                         internalId++;
                         map.addIntersection(intersection);
-                        //graphService.addNodes(globalId);
                         break;
                     case "troncon":
                         Attribute dest = startElement.getAttributeByName(new QName("destination"));
@@ -72,25 +62,6 @@ public class XmlParser {
                         Long origin  = org == null? null : Long.parseLong(org.getValue());
 
                         map.addStreet(origin, destination, name, length);
-                        //Street street = new Street(origin, destination, name, length);
-                        //streets.add(street);
-
-                        /*
-                        Integer idOrigin  = mapIds.get(origin);
-                        Integer idDest  = mapIds.get(destination);
-                        if (idOrigin!=null && idDest!=null && length!=null && length>0) {
-                            try{
-                                graphService.addEdge(idOrigin,idDest,length);
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-
-                        }
-                        else {
-                            System.out.println("is there such a case ?");
-                        }
-                        break;
-                        */
                 }
             }
         }

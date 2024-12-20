@@ -1,7 +1,11 @@
-package com._1.hex.DeliveryPlanning.tsp;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.tspUnitTest;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com._1.hex.DeliveryPlanning.tsp.CompleteGraph;
+import com._1.hex.DeliveryPlanning.tsp.TSP;
+import com._1.hex.DeliveryPlanning.tsp.TSP1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +29,7 @@ public class RunTSPUnitTest {
 
         // Act
         tsp.searchSolution(20000, graphNonPred);
-        long solutionCost = tsp.getSolutionCost();
+        double solutionCost = tsp.getSolutionCost();
 
         // Assert
         assertTrue(solutionCost > 0);
@@ -43,7 +47,7 @@ public class RunTSPUnitTest {
 
         // Act
         tsp1.searchSolution(20000, graphPred);
-        long solutionCost = tsp1.getSolutionCost();
+        double solutionCost = tsp1.getSolutionCost();
 
         // Assert
         assertTrue(solutionCost > 0);
