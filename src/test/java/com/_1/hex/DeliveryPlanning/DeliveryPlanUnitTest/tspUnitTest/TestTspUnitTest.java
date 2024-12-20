@@ -3,6 +3,7 @@ package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.tspUnitTest;
 import com._1.hex.DeliveryPlanning.model.*;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.TspService;
+import com._1.hex.DeliveryPlanning.tsp.TSP1;
 import com._1.hex.DeliveryPlanning.tsp.TestTsp;
 import com._1.hex.DeliveryPlanning.utils.XmlParser;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,9 +55,6 @@ public class TestTspUnitTest {
 
     @Test
     public void testNoSolutionFound() {
-        // Modify the request to make it unsolvable if needed
-        // For example, by adding impossible deliveries
-        request.getDeliveries().clear();
         List<Long> route = tspService.searchSolution(1, request, graphService);
         assertNull(route, "Route should be null when no solution is found");
     }

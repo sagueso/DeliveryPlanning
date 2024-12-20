@@ -1,7 +1,4 @@
-package com._1.hex.DeliveryPlanning.tsp;
-
-public interface TSP {
-    package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.tspUnitTest;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.tspUnitTest;
 
     import com._1.hex.DeliveryPlanning.tsp.TSP;
     import com._1.hex.DeliveryPlanning.tsp.Graph;
@@ -47,4 +44,3 @@ public interface TSP {
             assertEquals(10.0, tsp.getSolutionCost());
         }
     }
-}
