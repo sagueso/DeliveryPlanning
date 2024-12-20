@@ -1,10 +1,14 @@
 package com._1.hex.DeliveryPlanning.utils;
+import com._1.hex.DeliveryPlanning.MainDrawMap;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com._1.hex.DeliveryPlanning.model.Courrier;
 import com._1.hex.DeliveryPlanning.model.Route;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +20,20 @@ public class PersistenceFileUtils {
     public static void saveRouteToFile(Route route, String filePath) throws IOException {
         List<Route> routes;
 
+        Path currentPath;
+        Path fileP;
+        try {
+            currentPath = Paths.get(MainDrawMap.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            System.out.println("Working Directory: " + currentPath.toString());
+            fileP = currentPath.resolve(filePath);
+        }
+        catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
         // Read existing routes from the file
-        File file = new File(filePath);
+        File file = new File(fileP.toString());
         if (file.exists() && file.length() > 0) {
             routes = objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, Route.class));
         } else {
@@ -45,8 +61,20 @@ public class PersistenceFileUtils {
 
     public static Route readRouteFromFile(String filePath, int idRoute) throws IOException {
 
+        Path currentPath;
+        Path fileP;
+        try {
+            currentPath = Paths.get(MainDrawMap.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            System.out.println("Working Directory: " + currentPath.toString());
+            fileP = currentPath.resolve(filePath);
+        }
+        catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
+
         List<Route> routes = objectMapper.readValue(
-                new File(filePath),
+                new File(fileP.toString()),
                 objectMapper.getTypeFactory().constructCollectionType(List.class, Route.class)
         );
 

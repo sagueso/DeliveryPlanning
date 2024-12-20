@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Component
 public class MainDrawMap {
@@ -32,7 +35,20 @@ public class MainDrawMap {
 
 
                 StreetMap map;
-                String xmlPath = args[0];
+                Path currentPath;
+                Path filePath;
+                try {
+                    currentPath = Paths.get(MainDrawMap.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+                    System.out.println("Working Directory: " + currentPath.toString());
+                    filePath = currentPath.resolve("grandPlan.xml");
+                }
+                catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+
+                String xmlPath =  filePath.toString();
                 try {
                     map = xmlParser.parse(xmlPath);
 
