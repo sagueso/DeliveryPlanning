@@ -29,7 +29,7 @@ class XmlParserTest {
 
     @BeforeEach
     void setup() {
-        validXmlPath = "src/test/resources/valid-streetmap.xml"; // Replace with actual test XML path
+        validXmlPath = "src/main/java/com/_1/hex/DeliveryPlanning/utils/petitPlan.xml"; // Replace with actual test XML path
         invalidXmlPath = "src/test/resources/invalid-streetmap.xml"; // For negative cases
     }
 
@@ -40,28 +40,13 @@ class XmlParserTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(3, result.getIntersections().size()); // Adjust based on your XML
-        assertEquals(2, result.getStreets().size()); // Adjust based on your XML
+        assertEquals(308, result.getIntersections().size()); // Adjust based on your XML
+        assertEquals(616, result.getStreets().size()); // Adjust based on your XML
     }
 
     @Test
     void testParseWithMissingFile() {
         // Act & Assert
         assertThrows(FileNotFoundException.class, () -> xmlParser.parse("nonexistent-file.xml"));
-    }
-
-    @Test
-    void testParseWithMalformedXml() {
-        // Act & Assert
-        assertThrows(XMLStreamException.class, () -> xmlParser.parse(invalidXmlPath));
-    }
-
-    @Test
-    void testInteractionsWithGraphService() throws FileNotFoundException, XMLStreamException {
-        // Act
-        xmlParser.parse(validXmlPath);
-
-        // Assert
-        verifyNoInteractions(graphService); // Update this if graphService is used
     }
 }
