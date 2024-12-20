@@ -52,7 +52,7 @@ public class ControllerUnitTest {
 
     @Test
     public void testAddStreetMap() {
-        StreetMap streetMap = new StreetMap(); // Replace "someParameter" with actual parameter if needed
+        StreetMap streetMap = new StreetMap(null); // Replace "someParameter" with actual parameter if needed
         controller.addStreetMap(streetMap);
         verify(graphService, times(1)).addMap(streetMap);
     }
@@ -87,7 +87,7 @@ public class ControllerUnitTest {
 
     @Test
     public void testGetStreetMap() {
-        StreetMap streetMap = new StreetMap();
+        StreetMap streetMap = new StreetMap(null);
         controller.addStreetMap(streetMap);
         assertEquals(streetMap, controller.getStreetMap());
     }
