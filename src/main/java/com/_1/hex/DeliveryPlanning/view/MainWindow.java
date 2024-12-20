@@ -149,7 +149,7 @@ public class MainWindow extends JFrame {
     }
 
 
-    void setStreetMap() {
+    public void setStreetMap() {
         this.mapPanel.setStreetMap(controller.getStreetMap());
     }
 

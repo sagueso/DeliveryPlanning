@@ -1,11 +1,11 @@
-package com._1.hex.DeliveryPlanning.view;
+package com._1.hex.DeliveryPlanning;
 
 
-import com._1.hex.DeliveryPlanning.DeliveryPlanningApplication;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.controller.Controller;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.utils.XmlParser;
+import com._1.hex.DeliveryPlanning.view.MainWindow;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Component
 public class MainDrawMap {
@@ -32,7 +35,20 @@ public class MainDrawMap {
 
 
                 StreetMap map;
-                String xmlPath = "src/main/java/com/_1/hex/DeliveryPlanning/utils/grandPlan.xml";
+                Path currentPath;
+                Path filePath;
+                try {
+                    currentPath = Paths.get(MainDrawMap.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+                    //System.out.println("Working Directory: " + currentPath.toString());
+                    filePath = currentPath.resolve("plan.xml");
+                }
+                catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+
+                String xmlPath =  filePath.toString();
                 try {
                     map = xmlParser.parse(xmlPath);
 
