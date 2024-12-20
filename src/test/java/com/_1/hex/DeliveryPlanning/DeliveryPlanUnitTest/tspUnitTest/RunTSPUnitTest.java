@@ -29,7 +29,7 @@ public class RunTSPUnitTest {
 
         // Act
         tsp.searchSolution(20000, graphNonPred);
-        long solutionCost = tsp.getSolutionCost();
+        double solutionCost = tsp.getSolutionCost();
 
         // Assert
         assertTrue(solutionCost > 0);
@@ -47,7 +47,7 @@ public class RunTSPUnitTest {
 
         // Act
         tsp1.searchSolution(20000, graphPred);
-        long solutionCost = tsp1.getSolutionCost();
+        double solutionCost = tsp1.getSolutionCost();
 
         // Assert
         assertTrue(solutionCost > 0);
