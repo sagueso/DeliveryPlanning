@@ -1,5 +1,7 @@
-package com._1.hex.DeliveryPlanning.tsp;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.tspUnitTest;
 
+import com._1.hex.DeliveryPlanning.tsp.Graph;
+import com._1.hex.DeliveryPlanning.tsp.TemplateTSP;
 import org.jgrapht.alg.util.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

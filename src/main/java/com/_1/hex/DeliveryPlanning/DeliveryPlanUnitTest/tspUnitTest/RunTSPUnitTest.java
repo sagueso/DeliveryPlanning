@@ -1,7 +1,11 @@
-package com._1.hex.DeliveryPlanning.tsp;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.tspUnitTest;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com._1.hex.DeliveryPlanning.tsp.CompleteGraph;
+import com._1.hex.DeliveryPlanning.tsp.TSP;
+import com._1.hex.DeliveryPlanning.tsp.TSP1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-package com._1.hex.DeliveryPlanning.service;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.serviceUnitTest;
 
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.GraphService;

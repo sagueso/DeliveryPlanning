@@ -1,5 +1,6 @@
-package com._1.hex.DeliveryPlanning.view;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.viewUnitTest;
 
+import com._1.hex.DeliveryPlanning.view.ControlPanel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import javax.swing.*;

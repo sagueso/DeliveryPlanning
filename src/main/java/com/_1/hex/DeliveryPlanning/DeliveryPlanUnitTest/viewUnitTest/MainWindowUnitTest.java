@@ -1,4 +1,4 @@
-package com._1.hex.DeliveryPlanning.view;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.viewUnitTest;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,7 @@ import java.util.List;
 import com._1.hex.DeliveryPlanning.model.Courrier;
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.service.DelevaryService;
+import com._1.hex.DeliveryPlanning.view.MainWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

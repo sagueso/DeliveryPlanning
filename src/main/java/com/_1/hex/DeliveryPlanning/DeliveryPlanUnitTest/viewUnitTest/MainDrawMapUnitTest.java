@@ -1,10 +1,12 @@
-package com._1.hex.DeliveryPlanning.view;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.viewUnitTest;
 
 import com._1.hex.DeliveryPlanning.DeliveryPlanningApplication;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
 import com._1.hex.DeliveryPlanning.service.DelevaryService;
 import com._1.hex.DeliveryPlanning.service.GraphService;
 import com._1.hex.DeliveryPlanning.service.XmlParser;
+import com._1.hex.DeliveryPlanning.view.MainDrawMap;
+import com._1.hex.DeliveryPlanning.view.MainWindow;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;

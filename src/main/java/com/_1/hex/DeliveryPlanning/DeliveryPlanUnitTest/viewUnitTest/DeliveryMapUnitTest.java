@@ -1,8 +1,9 @@
-package com._1.hex.DeliveryPlanning.view;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.viewUnitTest;
 
 import com._1.hex.DeliveryPlanning.model.Intersection;
 import com._1.hex.DeliveryPlanning.model.Street;
 import com._1.hex.DeliveryPlanning.model.StreetMap;
+import com._1.hex.DeliveryPlanning.view.DeliveryMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

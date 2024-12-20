@@ -1,5 +1,5 @@
-package com._1.hex.DeliveryPlanningUnitTest.serviceUnitTest;
-package com._1.hex.DeliveryPlanningUnitTest.serviceUnitTest;
+package com._1.hex.DeliveryPlanning.DeliveryPlanUnitTest.serviceUnitTest;
+
 
 import com._1.hex.DeliveryPlanning.model.*;
 import com._1.hex.DeliveryPlanning.service.DelevaryService;
